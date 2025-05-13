@@ -1,0 +1,307 @@
+/* 資料表格的響應式設計 */
+
+/* 電腦版表格布局 - 產品為主的橫向設計 */
+@media (min-width: 768px) {
+  .product-based-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+  }
+  
+  .product-based-table thead tr th:first-child {
+    position: sticky;
+    left: 0;
+    z-index: 10;
+    background-color: #1a5d7a;
+  }
+  
+  .product-based-table tbody tr td:first-child {
+    position: sticky;
+    left: 0;
+    z-index: 9;
+    background-color: #fff;
+    border-right: 1px solid #e6e6e6;
+    font-weight: bold;
+  }
+  
+  .product-based-table th, 
+  .product-based-table td {
+    padding: 12px;
+    text-align: center;
+    border-bottom: 1px solid #e6e6e6;
+  }
+  
+  .product-based-table thead th {
+    background-color: #1a5d7a;
+    color: #fff;
+    font-weight: bold;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  
+  .product-based-table tbody tr:hover {
+    background-color: rgba(226, 62, 87, 0.05);
+  }
+  
+  .product-based-table tbody tr:hover td:first-child {
+    background-color: rgba(226, 62, 87, 0.05);
+  }
+  
+  /* 表格控制項樣式 */
+  .table-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+  }
+  
+  .table-controls .filter-controls {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  
+  .table-controls select,
+  .table-controls input {
+    padding: 8px 12px;
+    border: 1px solid #d6d6d6;
+    border-radius: 6px;
+    background-color: #fff;
+  }
+  
+  .table-controls select:focus,
+  .table-controls input:focus {
+    border-color: #1a5d7a;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(26, 93, 122, 0.2);
+  }
+  
+  .table-controls .view-switch {
+    display: flex;
+    gap: 0.5rem;
+  }
+  
+  .table-controls .view-button {
+    padding: 8px 15px;
+    background-color: #f7f7f7;
+    border: 1px solid #d6d6d6;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .table-controls .view-button.active {
+    background-color: #1a5d7a;
+    color: #fff;
+    border-color: #1a5d7a;
+  }
+  
+  .table-controls .view-button:hover:not(.active) {
+    background-color: #e6e6e6;
+  }
+  
+  /* 高亮重要數據 */
+  .highlight-data {
+    font-weight: bold;
+    color: #e23e57;
+  }
+  
+  /* 圖示適當間距 */
+  .table-controls i {
+    margin-right: 6px;
+  }
+  
+  /* 總計行樣式 */
+  .total-row td {
+    background-color: #f0f0f0;
+    font-weight: bold;
+  }
+  
+  .total-cell {
+    background-color: rgba(26, 93, 122, 0.1) !important;
+    font-weight: bold;
+  }
+}
+
+/* 手機版表格布局 - 保持原始設計 */
+@media (max-width: 767px) {
+  /* 保持原始的表格樣式不變 */
+  .table-controls .view-switch {
+    display: none; /* 手機版不顯示視圖切換按鈕 */
+  }
+  
+  .product-based-view {
+    display: none; /* 手機版不顯示產品視圖 */
+  }
+  
+  /* 手機版增強的篩選器 */
+  .table-controls {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+  }
+  
+  .table-controls .filter-controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .table-controls select,
+  .table-controls input {
+    width: 100%;
+    margin-bottom: 0.5rem;
+  }
+}
+
+/* 共享樣式 - 同時適用於兩種視圖 */
+.table-wrapper {
+  overflow-x: auto;
+  margin-bottom: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.table-info {
+  margin-top: 1rem;
+  color: #737373;
+  font-size: 0.875rem;
+}
+
+/* 視覺化設計元素 */
+.data-visualization {
+  margin-top: 2rem;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.chart-container {
+  padding: 1.5rem;
+  background-color: white;
+  border-radius: 8px;
+}
+
+.chart-title {
+  font-size: 1.25rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  color: #1a5d7a;
+}
+
+/* 自訂下拉選單樣式 */
+.custom-select {
+  position: relative;
+  display: inline-block;
+}
+
+.custom-select select {
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23666'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.5rem center;
+  background-size: 1.25em 1.25em;
+  padding-right: 2.5rem;
+}
+
+/* 排序指示器 */
+.sort-indicator {
+  display: inline-block;
+  width: 0;
+  height: 0;
+  margin-left: 5px;
+  vertical-align: middle;
+}
+
+.sort-asc .sort-indicator {
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-bottom: 5px solid white;
+}
+
+.sort-desc .sort-indicator {
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 5px solid white;
+}
+
+/* 表格列載入動畫 */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-row {
+  animation: fadeIn 0.3s ease forwards;
+}
+
+/* 表格儲存格高亮動畫 */
+@keyframes highlight {
+  0% { background-color: rgba(226, 62, 87, 0.3); }
+  100% { background-color: transparent; }
+}
+
+.highlight-cell {
+  animation: highlight 1.5s ease;
+}
+
+/* 自訂滾動條 */
+.table-wrapper::-webkit-scrollbar {
+  height: 8px;
+}
+
+.table-wrapper::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.table-wrapper::-webkit-scrollbar-thumb {
+  background: #1a5d7a;
+  border-radius: 4px;
+}
+
+.table-wrapper::-webkit-scrollbar-thumb:hover {
+  background: #14435a;
+}
+
+/* 表格頁腳樣式 */
+.table-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+}
+
+.table-pagination {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.page-button {
+  padding: 5px 10px;
+  border: 1px solid #d6d6d6;
+  border-radius: 4px;
+  background-color: white;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.page-button.active {
+  background-color: #1a5d7a;
+  color: white;
+  border-color: #1a5d7a;
+}
+
+.page-button:hover:not(.active) {
+  background-color: #f0f0f0;
+}
+
+.page-info {
+  color: #737373;
+  font-size: 0.875rem;
+}

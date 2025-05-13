@@ -1,0 +1,85 @@
+<!-- 數據表格區域 - 修改版 -->
+<div class="overflow-x-auto mb-12 fade-in">
+  <!-- 表格控制項 -->
+  <div class="table-controls mb-4">
+    <div class="filter-controls">
+      <div class="custom-select">
+        <select id="broker-filter" class="broker-filter">
+          <option value="">所有券商</option>
+          <!-- 將由JavaScript動態填充 -->
+        </select>
+      </div>
+      <div class="custom-select">
+        <select id="date-filter" class="date-filter">
+          <option value="">所有日期</option>
+          <!-- 將由JavaScript動態填充 -->
+        </select>
+      </div>
+      <label class="inline-flex items-center">
+        <input type="checkbox" id="show-totals" class="mr-2"> 顯示總計
+      </label>
+    </div>
+    <div class="view-switch">
+      <button id="classic-view-btn" class="view-button active">
+        <i class="fas fa-th-list"></i> 經典視圖
+      </button>
+      <button id="product-view-btn" class="view-button">
+        <i class="fas fa-table"></i> 產品視圖
+      </button>
+    </div>
+  </div>
+  
+  <!-- 經典表格視圖 -->
+  <div class="table-wrapper classic-view-table">
+    <table id="csv-table" class="w-full bg-white rounded-lg shadow-card">
+      <thead>
+        <tr class="bg-secondary text-white text-left">
+          <th class="p-4 rounded-tl-lg">券商</th>
+          <th class="p-4">產品</th>
+          <th class="p-4 dt-right font-bold">責任額</th>
+          <th class="p-4 rounded-tr-lg">募集期間</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- 表格數據將由JavaScript動態載入 -->
+      </tbody>
+    </table>
+  </div>
+  
+  <!-- 產品視圖表格容器 - 將由JavaScript動態創建 -->
+</div>
+
+<!-- 數據視覺化區域 - 將由JavaScript動態創建 -->
+
+<!-- 重點觀察區塊 - 保持不變 -->
+<div class="bg-secondary text-white p-8 rounded-lg shadow-card fade-in">
+  <h3 class="text-xl font-bold mb-4">責任額數據重點觀察</h3>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+    <div>
+      <ul class="space-y-4">
+        <li class="flex items-start">
+          <i class="fas fa-check-circle text-primary-light mt-1 mr-3"></i>
+          <span>責任額天花板持續上升：從2024年通常300萬/檔提升至2025年單檔700萬</span>
+        </li>
+        <li class="flex items-start">
+          <i class="fas fa-check-circle text-primary-light mt-1 mr-3"></i>
+          <span>募集期縮短：從月度指標變為5-7天的短期衝刺</span>
+        </li>
+      </ul>
+    </div>
+
+    <div>
+      <ul class="space-y-4">
+        <li class="flex items-start">
+          <i class="fas fa-check-circle text-primary-light mt-1 mr-3"></i>
+          <span>產品頻率加速：2025年4-5月間，同一營業員被要求同時銷售5-10檔不同產品</span>
+        </li>
+        <li class="flex items-start">
+          <i class="fas fa-check-circle text-primary-light mt-1 mr-3"></i>
+          <span>分點差異明顯：同一產品在不同分點的配額相差達50-100萬元</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>

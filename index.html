@@ -106,6 +106,7 @@
     <link rel="stylesheet" href="css/components.css" />
     <link rel="stylesheet" href="css/loader.css" />
     <link rel="stylesheet" href="enhanced-styles.css" />
+    <link rel="stylesheet" href="css/updated/data-table.css" />
 
     <style>
       .fade-in {
@@ -346,7 +347,7 @@
     </section>
 
     <!-- 事件時間軸 -->
-    <div id="timeline-section">
+    <div id="timeline-section" class="relative z-10">
       <section id="timeline" class="py-20 px-6 bg-white">
         <div class="max-w-content mx-auto">
           <div class="mb-16 text-center">
@@ -504,7 +505,7 @@
     </div>
 
     <!-- 責任額數據 -->
-    <div id="data-section">
+    <div id="data-section" class="relative z-0">
       <section id="data" class="py-20 px-6 bg-neutral-100">
         <div class="max-w-content mx-auto">
           <div class="mb-16 text-center">
@@ -516,25 +517,23 @@
             </p>
           </div>
 
-          <!-- 數據表格 -->
-          <div class="overflow-x-auto mb-12 fade-in">
-            <table
-              id="csv-table"
-              class="w-full bg-white rounded-lg shadow-card"
-            >
-              <thead>
-                <tr class="bg-secondary text-white text-left">
-                  <th class="p-4 rounded-tl-lg">券商</th>
-                  <th class="p-4">產品代號/名稱</th>
-                  <th class="p-4">個人責任額(萬元)</th>
-                  <th class="p-4 rounded-tr-lg">募集期間</th>
-                </tr>
-              </thead>
-              <tbody>
-                <!-- 表格數據將由dataLoader.js動態載入 -->
-              </tbody>
-            </table>
-          </div>
+          <!-- 載入數據表格部分 -->
+          <div id="data-table-container"></div>
+          <script>
+            // 在DOMContentLoaded事件後加載數據表格部分
+            document.addEventListener('DOMContentLoaded', function() {
+              fetch('partials/data-section.html')
+                .then(response => response.text())
+                .then(html => {
+                  document.getElementById('data-table-container').innerHTML = html;
+                })
+                .catch(error => {
+                  console.error('載入數據表格部分時出錯:', error);
+                  document.getElementById('data-table-container').innerHTML = 
+                    '<div class="text-red-500 p-4 bg-white rounded-lg shadow-card">載入數據表格部分時出錯，請重新整理頁面。</div>';
+                });
+            });
+          </script>
 
           <!-- 數據視覺化 -->
           <!-- <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
@@ -632,7 +631,7 @@
           </div> -->
 
           <!-- 重點觀察 -->
-          <div
+          <!-- <div
             class="bg-secondary text-white p-8 rounded-lg shadow-card fade-in"
           >
             <h3 class="text-xl font-bold mb-4">責任額數據重點觀察</h3>
@@ -679,7 +678,7 @@
               </div>
             </div>
           </div>
-        </div>
+        </div> -->
       </section>
     </div>
 
@@ -727,7 +726,7 @@
                     <span class="font-semibold text-neutral-800"
                       >職場霸凌：</span
                     >
-                    未達標者遭公開羞辱、獎金威脅（「不達標一根毛都沒有」）、客戶資源控制、工時剝削與休假剝奪。
+                    未達標者遭公開羞辱、獎金威脅「不達標一根毛都沒有」、客戶資源控制、工時剝削與休假剝奪。
                   </p>
                 </div>
 
@@ -737,7 +736,7 @@
                     "我這次IPO自掏腰包了600萬，我問心無愧。"
                   </p>
                   <p class="text-right text-neutral-500 text-xs">
-                    — 元富花花（社群成員）
+                    — 匿名營業員
                   </p>
                 </div>
               </div>
@@ -1291,13 +1290,14 @@
     <!-- JavaScript -->
     <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/responsive/2.4.0/js/dataTables.responsive.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.3.2/js/dataTables.buttons.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
     <script src="js/loader.js"></script>
     <script src="js/app.js"></script>
     <script src="js/templates.js"></script>
     <script src="js/animations.js"></script>
     <script src="js/templateEditor.js"></script>
-    <script src="js/dataLoader.js"></script>
+    <script src="js/enhancedDataTable.js"></script>
 
     <script>
       // 頁面載入時載入各部分內容
