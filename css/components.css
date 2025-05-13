@@ -1,0 +1,297 @@
+/* components.css - 元件相關樣式 */
+
+/* 數據條效果 */
+.data-bar {
+  height: 30px;
+  border-radius: 15px;
+  background: #f1f1f1;
+  overflow: hidden;
+  position: relative;
+}
+
+.data-bar::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background: var(--highlight-gradient);
+  border-radius: 15px;
+  opacity: 0;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 1.5s ease, opacity 0.5s ease;
+}
+
+.data-bar.animate::before {
+  opacity: 1;
+  transform: scaleX(var(--data-value));
+}
+
+.data-bar span {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-weight: bold;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  transition-delay: 1s;
+  z-index: 10;
+}
+
+/* 時間軸 */
+.timeline {
+  position: relative;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 4px;
+  height: 100%;
+  background: var(--highlight-gradient);
+  z-index: -1;
+}
+
+@media (max-width: 768px) {
+  .timeline::before {
+    left: 20px;
+  }
+}
+
+.timeline-dot {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--highlight-gradient);
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+}
+
+@media (max-width: 768px) {
+  .timeline-dot {
+    left: 20px;
+  }
+}
+
+/* 複製按鈕動畫 */
+.copy-btn.active {
+  transform: scale(0.95);
+  background-color: var(--primary-dark);
+}
+
+/* 範本編輯器樣式 */
+.template-container {
+  border: 2px solid var(--secondary-color);
+  border-radius: 8px;
+  padding: 1.5rem;
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+.template-content {
+  font-family: var(--font-sans);
+  line-height: 1.7;
+  white-space: pre-wrap;
+}
+
+/* 特殊懸浮效果 */
+.hover-lift {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hover-lift:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-hover);
+}
+
+/* 警示圓圈 */
+.alert-circle {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: var(--primary-color);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 1.5rem;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(226, 62, 87, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(226, 62, 87, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(226, 62, 87, 0);
+  }
+}
+
+/* 特殊區塊 */
+.redacted {
+  position: relative;
+  display: inline-block;
+}
+
+.redacted::after {
+  content: '';
+  position: absolute;
+  top: 40%;
+  left: 0;
+  width: 100%;
+  height: 5px;
+  background-color: #000;
+}
+
+.dark-mode .redacted::after {
+  background-color: #fff;
+}
+
+/* 彩蛋點擊區 */
+.secret-trigger {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  width: 12px;
+  height: 12px;
+  background-color: var(--secondary-color);
+  border-radius: 50%;
+  opacity: 0.3;
+  cursor: pointer;
+  z-index: 100;
+}
+
+.secret-trigger:hover {
+  opacity: 0.6;
+}
+
+/* 文件紙張效果 */
+.paper-effect {
+  background-color: #fff;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+  position: relative;
+  padding: 2rem;
+}
+
+.paper-effect::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  border-width: 0 30px 30px 0;
+  border-style: solid;
+  border-color: #f0f0f0 var(--neutral-100);
+}
+
+.dark-mode .paper-effect {
+  background-color: var(--neutral-800);
+}
+
+.dark-mode .paper-effect::before {
+  border-color: var(--neutral-700) var(--neutral-900);
+}
+
+/* 按鈕效果 */
+.btn-effect {
+  overflow: hidden;
+  position: relative;
+  z-index: 1;
+}
+
+.btn-effect::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.1);
+  transform: translateX(-100%);
+  transition: transform 0.3s ease;
+  z-index: -1;
+}
+
+.btn-effect:hover::after {
+  transform: translateX(0);
+}
+
+/* 報紙風格標題 */
+.newspaper-title {
+  font-family: var(--font-serif);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: -1px;
+  line-height: 1.1;
+  text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.1);
+}
+
+/* 表格淡入效果 */
+table {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: table-fade-in 1s ease forwards;
+  animation-delay: 0.5s;
+}
+
+@keyframes table-fade-in {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 時間軸點動畫 */
+.timeline-dot::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 40px;
+  height: 40px;
+  background-color: var(--primary-color);
+  border-radius: 50%;
+  opacity: 0.2;
+  animation: pulse-ring 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+}
+
+@keyframes pulse-ring {
+  0% {
+    width: 20px;
+    height: 20px;
+    opacity: 0.5;
+  }
+  80%, 100% {
+    width: 40px;
+    height: 40px;
+    opacity: 0;
+  }
+}
+
+/* 提示訊息效果 */
+#copy-toast {
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  animation: slide-up 0.3s ease;
+}
+
+@keyframes slide-up {
+  0% {
+    transform: translate(-50%, 20px);
+    opacity: 0;
+  }
+  100% {
+    transform: translate(-50%, 0);
+    opacity: 1;
+  }
+}
