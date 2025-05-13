@@ -531,68 +531,7 @@
                 </tr>
               </thead>
               <tbody>
-                <tr
-                  class="bg-primary bg-opacity-10 border-b border-neutral-200"
-                >
-                  <td class="p-4 font-semibold">中信</td>
-                  <td class="p-4">00983+00984</td>
-                  <td class="p-4 font-bold text-primary">700</td>
-                  <td class="p-4">2025/4/21-4/25</td>
-                </tr>
-                <!-- <tr class="bg-white border-b border-neutral-200">
-                  <td class="p-4 font-semibold">中信</td>
-                  <td class="p-4">00981A</td>
-                  <td class="p-4 font-bold">140</td>
-                  <td class="p-4">2025/5/7-5/9</td>
-                </tr>
-                <tr class="bg-white border-b border-neutral-200">
-                  <td class="p-4 font-semibold">中信</td>
-                  <td class="p-4">00982A</td>
-                  <td class="p-4 font-bold">120</td>
-                  <td class="p-4">2025/5/5-5/7</td>
-                </tr>
-                <tr class="bg-white border-b border-neutral-200">
-                  <td class="p-4 font-semibold">中信</td>
-                  <td class="p-4">00980A</td>
-                  <td class="p-4 font-bold">65</td>
-                  <td class="p-4">2025/4/15-4/18</td>
-                </tr> -->
-                <!-- <tr class="bg-white border-b border-neutral-200">
-                  <td class="p-4 font-semibold">群益</td>
-                  <td class="p-4">00953B</td>
-                  <td class="p-4 font-bold">380</td>
-                  <td class="p-4">2024/8</td>
-                </tr>
-                <tr class="bg-white border-b border-neutral-200">
-                  <td class="p-4 font-semibold">群益</td>
-                  <td class="p-4">00939+00940</td>
-                  <td class="p-4 font-bold">300(每檔)</td>
-                  <td class="p-4">2024/3</td>
-                </tr> -->
-                <tr class="bg-white border-b border-neutral-200">
-                  <td class="p-4 font-semibold">群益</td>
-                  <td class="p-4">00982A</td>
-                  <td class="p-4 font-bold">300</td>
-                  <td class="p-4">2025/5</td>
-                </tr>
-                <!-- <tr class="bg-white border-b border-neutral-200">
-                  <td class="p-4 font-semibold">富邦</td>
-                  <td class="p-4">009802</td>
-                  <td class="p-4 font-bold">300</td>
-                  <td class="p-4">2025/4</td>
-                </tr>
-                <tr class="bg-white border-b border-neutral-200">
-                  <td class="p-4 font-semibold">富邦</td>
-                  <td class="p-4">00982A</td>
-                  <td class="p-4 font-bold">200-260</td>
-                  <td class="p-4">2025/5</td>
-                </tr> -->
-                <tr class="bg-white">
-                  <td class="p-4 font-semibold rounded-bl-lg">富邦</td>
-                  <td class="p-4">00981A</td>
-                  <td class="p-4 font-bold">100</td>
-                  <td class="p-4 rounded-br-lg">2025/5</td>
-                </tr>
+                <!-- 表格數據將由dataLoader.js動態載入 -->
               </tbody>
             </table>
           </div>
@@ -1350,11 +1289,15 @@
     </div>
 
     <!-- JavaScript -->
+    <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.4.0/js/dataTables.responsive.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
     <script src="js/loader.js"></script>
     <script src="js/app.js"></script>
     <script src="js/templates.js"></script>
     <script src="js/animations.js"></script>
     <script src="js/templateEditor.js"></script>
+    <script src="js/dataLoader.js"></script>
 
     <script>
       // 頁面載入時載入各部分內容
