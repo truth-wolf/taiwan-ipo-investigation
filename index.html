@@ -90,6 +90,17 @@
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
 
+    <!-- jQuery 和 DataTables -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.datatables.net/responsive/2.4.0/css/responsive.dataTables.min.css"
+    />
+
     <!-- 自定義 CSS -->
     <link rel="stylesheet" href="css/main.css" />
     <link rel="stylesheet" href="css/components.css" />
@@ -507,7 +518,10 @@
 
           <!-- 數據表格 -->
           <div class="overflow-x-auto mb-12 fade-in">
-            <table class="w-full bg-white rounded-lg shadow-card">
+            <table
+              id="csv-table"
+              class="w-full bg-white rounded-lg shadow-card"
+            >
               <thead>
                 <tr class="bg-secondary text-white text-left">
                   <th class="p-4 rounded-tl-lg">券商</th>
@@ -1149,6 +1163,14 @@
                 <p class="text-neutral-600 text-sm">
                   檢舉前請確保您的個人資料安全，並評估可能的風險。若擔心遭到報復，可考慮匿名檢舉或透過第三方代為檢舉。提供具體事實與證據，增加檢舉的可信度。
                 </p>
+              </div>
+
+              <!-- 檢舉信範本容器 - 從txt資料夾讀取 -->
+              <div
+                id="templates-container"
+                class="mt-8 pt-6 border-t border-neutral-200"
+              >
+                <!-- 這裡會由JavaScript動態載入範本 -->
               </div>
             </div>
 

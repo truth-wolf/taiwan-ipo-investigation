@@ -33,6 +33,10 @@ document.addEventListener("DOMContentLoaded", function () {
   const templateContent = document.getElementById("template-content");
   const downloadTemplate = document.getElementById("download-template");
 
+  // 初始化函數調用
+  loadCSVData();
+  loadReportTemplates();
+
   // 閱讀進度條
   window.addEventListener("scroll", function () {
     const windowHeight = window.innerHeight;
@@ -419,9 +423,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // 移動裝置檢測與優化
   initMobileOptimization();
-
-  // 載入CSV資料
-  loadCSVData();
 });
 
 /**
@@ -768,160 +769,190 @@ function loadCSVData() {
   const csvTable = document.getElementById("csv-table");
   if (!csvTable) return;
 
-  // 使用fetch API載入CSV資料
-  fetch("data.csv")
-    .then((response) => response.text())
-    .then((data) => {
-      // 解析CSV
-      const rows = data.trim().split("\n");
-      const headers = rows[0].split(",");
-
-      // 建立表頭
-      let tableHTML = "<thead><tr class='bg-secondary text-white border-b'>";
-      headers.forEach((header) => {
-        tableHTML += `<th class="py-3 px-4 text-left cursor-pointer hover:bg-secondary-dark transition-colors sortable">${header} <i class="fas fa-sort ml-1 text-xs"></i></th>`;
-      });
-      tableHTML += "</tr></thead><tbody>";
-
-      // 建立表格內容
-      for (let i = 1; i < rows.length; i++) {
-        const cells = rows[i].split(",");
-        const rowClass = i % 2 === 0 ? "bg-gray-50" : "bg-white";
-        tableHTML += `<tr class="${rowClass} hover:bg-gray-100 transition-colors">`;
-        cells.forEach((cell, cellIndex) => {
-          // 特殊格式化 - 責任額數字添加顏色標示
-          if (cellIndex === 2) {
-            // 第三列是責任額
-            const amount = parseInt(cell);
-            let amountClass = "text-gray-800";
-
-            if (amount >= 500) {
-              amountClass = "text-red-600 font-bold";
-            } else if (amount >= 300) {
-              amountClass = "text-orange-600 font-semibold";
-            } else if (amount >= 200) {
-              amountClass = "text-yellow-700";
-            }
-
-            tableHTML += `<td class="py-3 px-4 border-b border-gray-200 ${amountClass}">${cell}</td>`;
-          } else {
-            tableHTML += `<td class="py-3 px-4 border-b border-gray-200">${cell}</td>`;
+  // 檢查是否已載入所需的庫
+  if (typeof Papa === "undefined" || typeof $.fn.DataTable === "undefined") {
+    // 載入 Papa Parse 和 DataTables
+    loadScript(
+      "https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js",
+      function () {
+        loadScript(
+          "https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js",
+          function () {
+            loadScript(
+              "https://cdn.datatables.net/responsive/2.4.0/js/dataTables.responsive.min.js",
+              function () {
+                loadCsvWithPapa();
+              }
+            );
           }
-        });
-        tableHTML += "</tr>";
+        );
       }
-
-      tableHTML += "</tbody>";
-      csvTable.innerHTML = tableHTML;
-
-      // 初始化排序功能
-      initTableSort(csvTable);
-
-      // 預設按責任額排序
-      const amountHeader = csvTable.querySelector("th:nth-child(3)");
-      if (amountHeader) {
-        setTimeout(() => {
-          amountHeader.click(); // 按責任額降序排序
-        }, 500);
-      }
-    })
-    .catch((error) => {
-      console.error("載入CSV數據時出錯:", error);
-      csvTable.innerHTML =
-        '<p class="text-red-500">載入數據時出錯，請稍後再試。</p>';
-    });
-}
-
-// 表格排序功能
-function initTableSort(table) {
-  const headers = table.querySelectorAll("th");
-  headers.forEach((header, index) => {
-    header.classList.add("sortable");
-    header.addEventListener("click", function () {
-      sortTable(table, index);
-    });
-  });
-}
-
-function sortTable(table, column) {
-  const tbody = table.querySelector("tbody");
-  const rows = Array.from(tbody.querySelectorAll("tr"));
-  const headers = table.querySelectorAll("th");
-  const header = headers[column];
-
-  // 切換排序方向
-  const isAscending = header.classList.contains("sort-asc");
-
-  // 重置所有表頭的排序標記和圖示
-  headers.forEach((h) => {
-    h.classList.remove("sort-asc", "sort-desc");
-    const icon = h.querySelector("i");
-    if (icon) {
-      icon.className = "fas fa-sort ml-1 text-xs";
-    }
-  });
-
-  // 設置當前表頭的排序標記和圖示
-  header.classList.add(isAscending ? "sort-desc" : "sort-asc");
-  const icon = header.querySelector("i");
-  if (icon) {
-    icon.className = `fas fa-sort-${
-      isAscending ? "down" : "up"
-    } ml-1 text-white`;
+    );
+  } else {
+    loadCsvWithPapa();
   }
 
-  // 排序行
-  rows.sort((a, b) => {
-    const cellA = a.querySelectorAll("td")[column].textContent.trim();
-    const cellB = b.querySelectorAll("td")[column].textContent.trim();
+  function loadCsvWithPapa() {
+    // 嘗試先讀取轉換後的檔案，若不存在則讀取原本的data.csv
+    fetch("ipo_broker_product.csv")
+      .then((response) => {
+        if (!response.ok) {
+          return fetch("data.csv").then((r) => r.text());
+        }
+        return response.text();
+      })
+      .then((csvText) => {
+        // 使用Papa Parse解析CSV
+        const results = Papa.parse(csvText, {
+          header: true,
+          skipEmptyLines: true,
+        });
 
-    // 嘗試數字排序
-    const numA = parseFloat(cellA);
-    const numB = parseFloat(cellB);
+        // 清空表格並初始化DataTables
+        $(csvTable).empty();
 
-    if (!isNaN(numA) && !isNaN(numB)) {
-      return isAscending ? numA - numB : numB - numA;
+        // 準備DataTables設定
+        const dataTable = $(csvTable).DataTable({
+          data: results.data,
+          columns: [
+            { data: results.meta.fields[0], title: "券商" },
+            { data: results.meta.fields[1], title: "產品" },
+            {
+              data: results.meta.fields[2],
+              title: "責任額",
+              className: "dt-right",
+            },
+            { data: results.meta.fields[3], title: "募集期間" },
+          ],
+          order: [[2, "desc"]], // 預設按責任額降序排序
+          pageLength: 10, // 手機版每頁10筆
+          responsive: true, // 響應式設計
+          language: {
+            search: "搜尋",
+            lengthMenu: "每頁 _MENU_ 筆",
+            info: "顯示第 _START_ 至 _END_ 筆結果，共 _TOTAL_ 筆",
+            paginate: {
+              first: "第一頁",
+              last: "最後一頁",
+              next: "下一頁",
+              previous: "上一頁",
+            },
+            zeroRecords: "沒有找到匹配的記錄",
+            infoEmpty: "沒有記錄",
+            infoFiltered: "(從 _MAX_ 筆記錄中過濾)",
+          },
+          dom: '<"top"f>rt<"bottom"lip>', // 自訂控制項佈局
+          initComplete: function () {
+            // 增加特殊樣式
+            $(".dataTables_wrapper").addClass("my-4");
+
+            // 為桌面版增加更多功能
+            if (!isMobile) {
+              // 增加額外欄位選擇器
+              const columnSelector = $(
+                '<div class="column-selector mb-4"><label class="mr-2">顯示欄位：</label></div>'
+              );
+              const additionalColumns = [
+                { title: "募集天數", visible: false },
+                { title: "平均日責任額", visible: false },
+              ];
+
+              additionalColumns.forEach((col) => {
+                const checkbox = $(
+                  `<label class="inline-flex items-center mr-4"><input type="checkbox" class="mr-1">${col.title}</label>`
+                );
+                columnSelector.append(checkbox);
+              });
+
+              $(".dataTables_wrapper .top").prepend(columnSelector);
+            }
+          },
+        });
+
+        // 為DataTable增加響應式樣式
+        $("#csv-table").wrap(
+          '<div class="table-wrap overflow-x-auto -webkit-overflow-scrolling-touch"></div>'
+        );
+
+        // 為手機版設置固定標頭
+        if (isMobile) {
+          $("#csv-table thead").addClass("sticky top-0 bg-white z-10");
+        }
+
+        // 監聽行點擊事件
+        $("#csv-table tbody").on("click", "tr", function () {
+          if (isMobile) {
+            // 手機版顯示詳情模態框
+            const data = dataTable.row(this).data();
+            showDetailModal(data);
+          }
+        });
+      })
+      .catch((error) => {
+        console.error("載入CSV數據時出錯:", error);
+        csvTable.innerHTML =
+          '<p class="text-red-500">載入數據時出錯，請稍後再試。</p>';
+      });
+  }
+
+  // 顯示詳細資料模態框
+  function showDetailModal(data) {
+    // 如果模態框不存在則創建
+    let modal = document.getElementById("data-detail-modal");
+    if (!modal) {
+      modal = document.createElement("div");
+      modal.id = "data-detail-modal";
+      modal.className =
+        "fixed inset-0 bg-black bg-opacity-80 z-50 flex items-center justify-center hidden";
+      modal.innerHTML = `
+        <div class="bg-white dark:bg-neutral-800 rounded-lg w-5/6 max-w-md overflow-hidden">
+          <div class="p-4 bg-secondary text-white">
+            <h3 class="text-lg font-bold product-title"></h3>
+          </div>
+          <div class="p-4">
+            <div class="mb-3">
+              <strong>券商：</strong><span class="broker"></span>
+            </div>
+            <div class="mb-3">
+              <strong>責任額：</strong><span class="responsibility"></span>萬
+            </div>
+            <div class="mb-3">
+              <strong>募集期間：</strong><span class="period"></span>
+            </div>
+            <div class="mt-6 text-right">
+              <button class="close-modal px-4 py-2 bg-neutral-200 rounded">關閉</button>
+            </div>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(modal);
+
+      // 添加關閉事件
+      modal
+        .querySelector(".close-modal")
+        .addEventListener("click", function () {
+          modal.classList.add("hidden");
+        });
+
+      // 點擊背景關閉
+      modal.addEventListener("click", function (e) {
+        if (e.target === modal) {
+          modal.classList.add("hidden");
+        }
+      });
     }
 
-    // 日期排序 (格式: YYYY/MM/DD)
-    if (
-      cellA.match(/^\d{4}\/\d{1,2}\/\d{1,2}/) &&
-      cellB.match(/^\d{4}\/\d{1,2}\/\d{1,2}/)
-    ) {
-      return isAscending
-        ? new Date(cellA) - new Date(cellB)
-        : new Date(cellB) - new Date(cellA);
-    }
+    // 填充數據
+    modal.querySelector(".product-title").textContent =
+      data[results.meta.fields[1]];
+    modal.querySelector(".broker").textContent = data[results.meta.fields[0]];
+    modal.querySelector(".responsibility").textContent =
+      data[results.meta.fields[2]];
+    modal.querySelector(".period").textContent = data[results.meta.fields[3]];
 
-    // 日期範圍排序 (格式: YYYY/MM/DD-YYYY/MM/DD)
-    if (
-      cellA.match(/^\d{4}\/\d{1,2}(-\d{1,2})?/) &&
-      cellB.match(/^\d{4}\/\d{1,2}(-\d{1,2})?/)
-    ) {
-      const dateA = cellA.split("-")[0];
-      const dateB = cellB.split("-")[0];
-      return isAscending
-        ? new Date(dateA) - new Date(dateB)
-        : new Date(dateB) - new Date(dateA);
-    }
-
-    // 字母排序
-    return isAscending
-      ? cellA.localeCompare(cellB, "zh-TW")
-      : cellB.localeCompare(cellA, "zh-TW");
-  });
-
-  // 重新插入排序後的行
-  rows.forEach((row) => {
-    tbody.appendChild(row);
-  });
-
-  // 交替行顏色
-  rows.forEach((row, index) => {
-    row.className = row.className.replace(/bg-gray-\d+/g, "");
-    row.classList.add(index % 2 === 0 ? "bg-white" : "bg-gray-50");
-    row.classList.add("hover:bg-gray-100", "transition-colors");
-  });
+    // 顯示模態框
+    modal.classList.remove("hidden");
+  }
 }
 
 // 輔助函數：動態載入腳本
@@ -930,4 +961,109 @@ function loadScript(url, callback) {
   script.src = url;
   script.onload = callback;
   document.head.appendChild(script);
+}
+
+// 讀取txt文件夾中的檢舉信範本
+function loadReportTemplates() {
+  const templateContainer = document.getElementById("templates-container");
+  if (!templateContainer) return;
+
+  // 創建模板列表容器
+  templateContainer.innerHTML =
+    '<div class="mb-4"><h3 class="text-xl font-bold mb-2">檢舉信範本</h3><p class="text-neutral-600 mb-2">點擊範本標題可預覽內容，點擊複製按鈕可複製全文</p></div><div id="template-list" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>';
+
+  const templateList = document.getElementById("template-list");
+
+  // 定義要獲取的模板文件列表
+  const templateFiles = [
+    { id: 1, name: "銀行串聯檢舉信-一般民眾實名版本", file: "txt/1.txt" },
+    { id: 9, name: "證券商串聯檢舉信-匿名版本", file: "txt/9.txt" },
+    { id: 11, name: "證券從業人員檢舉信-業務部門主管版本", file: "txt/11.txt" },
+  ];
+
+  // 依次載入每個模板
+  templateFiles.forEach((template) => {
+    // 創建模板卡片
+    const card = document.createElement("div");
+    card.className =
+      "bg-white dark:bg-neutral-800 p-4 rounded-lg shadow-card hover:shadow-hover transition-all";
+    card.innerHTML = `
+      <h4 class="text-lg font-semibold template-title cursor-pointer mb-3">${template.name}</h4>
+      <div class="template-preview hidden">
+        <div class="p-3 bg-neutral-100 dark:bg-neutral-700 rounded-md mb-3 max-h-32 overflow-hidden text-sm">
+          <div class="preview-content"></div>
+          <div class="text-center mt-2">
+            <span class="text-primary text-xs">點擊複製按鈕查看完整內容</span>
+          </div>
+        </div>
+      </div>
+      <div class="flex justify-end">
+        <button class="copy-btn px-3 py-1 bg-secondary text-white rounded-md hover:bg-secondary-dark transition-colors flex items-center text-sm" data-template-id="${template.id}">
+          <i class="fas fa-copy mr-1"></i> 複製範本
+        </button>
+      </div>
+    `;
+
+    templateList.appendChild(card);
+
+    // 載入模板內容
+    fetch(template.file)
+      .then((response) => response.text())
+      .then((content) => {
+        // 設置預覽內容
+        const previewEl = card.querySelector(".preview-content");
+        previewEl.textContent = content.substring(0, 100) + "...";
+
+        // 儲存完整內容到DOM中
+        const dataEl = document.createElement("div");
+        dataEl.id = `template-${template.id}`;
+        dataEl.className = "hidden";
+        dataEl.textContent = content;
+        document.body.appendChild(dataEl);
+
+        // 顯示預覽區域
+        card.querySelector(".template-preview").classList.remove("hidden");
+      })
+      .catch((error) => {
+        console.error(`載入模板 ${template.file} 時出錯:`, error);
+      });
+
+    // 標題點擊顯示/隱藏預覽
+    const titleEl = card.querySelector(".template-title");
+    titleEl.addEventListener("click", function () {
+      const previewEl = card.querySelector(".template-preview");
+      previewEl.classList.toggle("hidden");
+    });
+
+    // 複製按鈕點擊事件
+    const copyBtn = card.querySelector(".copy-btn");
+    copyBtn.addEventListener("click", function () {
+      const templateId = `template-${this.getAttribute("data-template-id")}`;
+      const templateText = document.getElementById(templateId).textContent;
+
+      // 複製到剪貼簿
+      const textarea = document.createElement("textarea");
+      textarea.value = templateText;
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand("copy");
+      document.body.removeChild(textarea);
+
+      // 顯示範本內容
+      if (editorPlaceholder && templateContent) {
+        editorPlaceholder.classList.add("hidden");
+        templateContent.classList.remove("hidden");
+        templateContent.innerHTML = formatTemplate(templateText);
+      }
+
+      // 顯示提示
+      showToast("範本已複製到剪貼簿！");
+
+      // 點擊複製按鈕動畫效果
+      this.classList.add("active");
+      setTimeout(() => {
+        this.classList.remove("active");
+      }, 300);
+    });
+  });
 }

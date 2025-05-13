@@ -24,3 +24,9 @@ Thumbs.db
 *.log
 *.bak
 *.swp
+
+# 忽略 Excel 檔案
+*.xlsx
+
+# 忽略 Python 虛擬環境
+venv/

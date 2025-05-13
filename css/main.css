@@ -22,9 +22,9 @@
   --neutral-100: #f7f7f7;
   --shadow-color: rgba(26, 93, 122, 0.06);
   --highlight-gradient: linear-gradient(90deg, #e23e57, #ff6b6b);
-  --font-sans: 'Inter', 'Noto Sans TC', sans-serif;
-  --font-serif: 'Georgia', serif;
-  --font-mono: 'Consolas', monospace;
+  --font-sans: "Inter", "Noto Sans TC", sans-serif;
+  --font-serif: "Georgia", serif;
+  --font-mono: "Consolas", monospace;
   --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.08);
   --shadow-hover: 0 10px 30px rgba(0, 0, 0, 0.12);
 }
@@ -38,7 +38,12 @@ body {
 }
 
 /* 排版控制 */
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   line-height: 1.3;
   font-weight: 700;
 }
@@ -79,6 +84,10 @@ a:hover {
   background-color: rgba(255, 255, 255, 0.85);
   box-shadow: 0 4px 30px var(--shadow-color);
   transition: all 0.3s ease;
+  width: 100%;
+  left: 0;
+  right: 0;
+  position: relative;
 }
 
 /* 特殊標記文字 */
@@ -199,7 +208,11 @@ a:hover {
 
 /* 動畫效果 */
 @keyframes bounce {
-  0%, 20%, 50%, 80%, 100% {
+  0%,
+  20%,
+  50%,
+  80%,
+  100% {
     transform: translateY(0);
   }
   40% {
@@ -219,22 +232,40 @@ a:hover {
   h1 {
     font-size: 2.25rem;
   }
-  
+
   h2 {
     font-size: 1.75rem;
   }
-  
+
   h3 {
     font-size: 1.25rem;
   }
-  
+
   .container {
     padding-left: 1rem;
     padding-right: 1rem;
   }
-  
+
   .timeline-item .absolute {
     left: 0;
     transform: translateX(-50%);
+  }
+
+  /* 修正手機版導航欄 */
+  .nav-blur {
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+    width: 100vw;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* 手機版表格樣式 */
+  .table-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin: 0 -1rem;
+    padding: 0 1rem;
+    width: calc(100% + 2rem);
   }
 }
