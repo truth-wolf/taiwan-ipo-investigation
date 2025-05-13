@@ -1,0 +1,448 @@
+/* 增強型表格視圖樣式和功能 */
+
+/* 修正timeline與data-section重疊問題 */
+#timeline-section {
+  position: relative;
+  z-index: 10;
+}
+
+#data-section {
+  position: relative;
+  z-index: 5;
+  margin-top: -1px;
+}
+
+/* 產品視圖表格樣式 - 左邊產品，右邊券商 */
+.product-based-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.product-based-table th,
+.product-based-table td {
+  padding: 12px 15px;
+  text-align: center;
+  border-bottom: 1px solid #e6e6e6;
+  white-space: nowrap;
+}
+
+.product-based-table thead {
+  background-color: #1a5d7a;
+  color: white;
+}
+
+.product-based-table th {
+  font-weight: 600;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+/* 凍結第一列產品名 */
+.product-based-table th:first-child,
+.product-based-table td:first-child {
+  position: sticky;
+  left: 0;
+  text-align: left;
+  z-index: 15;
+}
+
+.product-based-table th:first-child {
+  background-color: #1a5d7a;
+  z-index: 20;
+}
+
+.product-based-table td:first-child {
+  background-color: #f5f5f5;
+  font-weight: 500;
+  border-right: 1px solid #e6e6e6;
+}
+
+/* 高亮顯示 */
+.product-based-table tr:hover td {
+  background-color: rgba(226, 62, 87, 0.05);
+}
+
+.product-based-table tr:hover td:first-child {
+  background-color: rgba(226, 62, 87, 0.1);
+}
+
+.highlight-data {
+  color: #e23e57;
+  font-weight: 600;
+}
+
+.total-cell {
+  background-color: rgba(26, 93, 122, 0.1) !important;
+  font-weight: 600;
+}
+
+.total-row td {
+  border-top: 2px solid #e6e6e6;
+  background-color: #f7f7f7;
+  font-weight: 600;
+}
+
+/* 表格容器高度調整功能 */
+.product-table-container {
+  position: relative;
+  overflow: auto;
+  max-height: 600px;
+  transition: max-height 0.3s ease;
+  border-radius: 8px;
+}
+
+.resize-handle {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 8px;
+  background-color: #e6e6e6;
+  cursor: ns-resize;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+}
+
+.resize-handle:hover {
+  opacity: 1;
+  background-color: #1a5d7a;
+}
+
+.resize-handle::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40px;
+  height: 2px;
+  background-color: #fff;
+  border-radius: 2px;
+}
+
+/* 表格控制項樣式 */
+.enhanced-controls {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  background-color: white;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.control-group {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+/* 篩選器樣式 */
+.enhanced-filter {
+  position: relative;
+  min-width: 150px;
+}
+
+.enhanced-filter select {
+  width: 100%;
+  padding: 8px 15px;
+  padding-right: 36px;
+  border: 1px solid #e6e6e6;
+  border-radius: 6px;
+  background-color: white;
+  appearance: none;
+  -webkit-appearance: none;
+  font-size: 14px;
+  transition: border-color 0.3s, box-shadow 0.3s;
+  cursor: pointer;
+}
+
+.enhanced-filter select:hover {
+  border-color: #1a5d7a;
+}
+
+.enhanced-filter select:focus {
+  outline: none;
+  border-color: #1a5d7a;
+  box-shadow: 0 0 0 3px rgba(26, 93, 122, 0.2);
+}
+
+.enhanced-filter::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 5px solid #666;
+  pointer-events: none;
+}
+
+/* 視圖切換按鈕 */
+.view-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.view-button {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 16px;
+  border: 1px solid #e6e6e6;
+  border-radius: 6px;
+  background-color: white;
+  color: #525252;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.view-button i {
+  margin-right: 8px;
+}
+
+.view-button:hover {
+  background-color: #f7f7f7;
+}
+
+.view-button.active {
+  background-color: #1a5d7a;
+  color: white;
+  border-color: #1a5d7a;
+}
+
+/* 下載按鈕 */
+.download-button {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  background-color: #e23e57;
+  color: white;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.download-button i {
+  margin-right: 8px;
+}
+
+.download-button:hover {
+  background-color: #c1292e;
+}
+
+/* 資料統計資訊 */
+.data-stats {
+  background-color: white;
+  border-radius: 8px;
+  padding: 15px;
+  margin-top: 16px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.stat-item {
+  flex: 1;
+  padding: 0 15px;
+  border-right: 1px solid #e6e6e6;
+  text-align: center;
+}
+
+.stat-item:last-child {
+  border-right: none;
+}
+
+.stat-value {
+  font-size: 20px;
+  font-weight: 600;
+  color: #1a5d7a;
+  margin-bottom: 4px;
+}
+
+.stat-label {
+  font-size: 14px;
+  color: #737373;
+}
+
+/* 資料視覺化區塊 */
+.visualization-container {
+  margin-top: 30px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+}
+
+@media (min-width: 768px) {
+  .visualization-container {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.chart-card {
+  background-color: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.chart-header {
+  padding: 15px 20px;
+  border-bottom: 1px solid #e6e6e6;
+}
+
+.chart-title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #1a5d7a;
+}
+
+.chart-body {
+  padding: 20px;
+  height: 300px;
+}
+
+/* 版權說明 */
+.data-attribution {
+  margin-top: 30px;
+  padding: 15px;
+  background-color: #f7f7f7;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #737373;
+  border-left: 4px solid #1a5d7a;
+}
+
+/* 響應式調整 */
+@media (max-width: 767px) {
+  .enhanced-controls {
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .control-group {
+    width: 100%;
+    justify-content: space-between;
+  }
+  
+  .enhanced-filter {
+    width: 48%;
+  }
+  
+  .view-buttons {
+    display: none;
+  }
+  
+  .data-stats {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .stat-item {
+    padding: 10px 0;
+    border-right: none;
+    border-bottom: 1px solid #e6e6e6;
+  }
+  
+  .stat-item:last-child {
+    border-bottom: none;
+  }
+  
+  .product-table-container {
+    display: none;
+  }
+}
+
+/* 下載選單 */
+.download-menu {
+  position: relative;
+  display: inline-block;
+}
+
+.download-button {
+  margin-right: 0;
+}
+
+.download-options {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  width: 180px;
+  background-color: white;
+  border-radius: 6px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  z-index: 100;
+  overflow: hidden;
+  visibility: hidden;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.2s ease;
+}
+
+.download-menu:hover .download-options {
+  visibility: visible;
+  opacity: 1;
+  transform: translateY(5px);
+}
+
+.download-option {
+  padding: 10px 15px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  transition: background-color 0.2s;
+}
+
+.download-option:hover {
+  background-color: #f5f5f5;
+}
+
+.download-option i {
+  margin-right: 10px;
+  width: 16px;
+  text-align: center;
+}
+
+/* 表格排序指示器 */
+.sort-indicator {
+  display: inline-block;
+  width: 0;
+  height: 0;
+  margin-left: 6px;
+  vertical-align: middle;
+}
+
+.sort-asc .sort-indicator {
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-bottom: 5px solid white;
+}
+
+.sort-desc .sort-indicator {
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 5px solid white;
+}
+
+/* 確保主表格在產品表格顯示時隱藏 */
+.classic-view-table.hidden {
+  display: none;
+}
