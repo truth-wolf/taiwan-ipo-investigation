@@ -1,0 +1,26 @@
+# 🙅 不忽略主要 data.csv 與 txt/*，但可忽略某些暫存版本：
+
+# 忽略以 ~ 結尾的備份檔案（例如編輯器自動產生）
+*~
+
+# 忽略所有臨時或測試用 csv
+*.tmp.csv
+test_*.csv
+
+# 忽略 txt 裡的暫存或測試用檔案（但不忽略正式的 1.txt、9.txt 等）
+txt/tmp_*
+txt/test_*
+
+# macOS 系統檔
+.DS_Store
+
+# VS Code 設定（只針對個人用，建議忽略）
+.vscode/
+
+# 作業系統垃圾檔
+Thumbs.db
+
+# 日誌與備份
+*.log
+*.bak
+*.swp
