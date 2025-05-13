@@ -1,0 +1,240 @@
+/* main.css - 主要樣式文件 */
+
+/* 基礎變數 */
+:root {
+  --primary-color: #e23e57;
+  --primary-light: #ff6b6b;
+  --primary-dark: #c1292e;
+  --secondary-color: #1a5d7a;
+  --secondary-light: #61a4bc;
+  --secondary-dark: #1d3557;
+  --alert-color: #f0a500;
+  --alert-light: #ffd166;
+  --alert-dark: #e85d04;
+  --neutral-900: #171717;
+  --neutral-800: #262626;
+  --neutral-700: #404040;
+  --neutral-600: #525252;
+  --neutral-500: #737373;
+  --neutral-400: #a6a6a6;
+  --neutral-300: #d6d6d6;
+  --neutral-200: #e6e6e6;
+  --neutral-100: #f7f7f7;
+  --shadow-color: rgba(26, 93, 122, 0.06);
+  --highlight-gradient: linear-gradient(90deg, #e23e57, #ff6b6b);
+  --font-sans: 'Inter', 'Noto Sans TC', sans-serif;
+  --font-serif: 'Georgia', serif;
+  --font-mono: 'Consolas', monospace;
+  --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.08);
+  --shadow-hover: 0 10px 30px rgba(0, 0, 0, 0.12);
+}
+
+/* 基礎樣式 */
+body {
+  font-family: var(--font-sans);
+  color: var(--neutral-800);
+  line-height: 1.7;
+  overflow-x: hidden;
+}
+
+/* 排版控制 */
+h1, h2, h3, h4, h5, h6 {
+  line-height: 1.3;
+  font-weight: 700;
+}
+
+h1 {
+  font-size: 3rem;
+  margin-bottom: 1.5rem;
+}
+
+h2 {
+  font-size: 2.25rem;
+  margin-bottom: 1.25rem;
+}
+
+h3 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+p {
+  margin-bottom: 1rem;
+}
+
+a {
+  color: var(--secondary-color);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  color: var(--primary-color);
+}
+
+/* 導航樣式 */
+.nav-blur {
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  background-color: rgba(255, 255, 255, 0.85);
+  box-shadow: 0 4px 30px var(--shadow-color);
+  transition: all 0.3s ease;
+}
+
+/* 特殊標記文字 */
+.highlight-text {
+  background: var(--highlight-gradient);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-weight: 700;
+  display: inline;
+}
+
+/* 卡片懸浮效果 */
+.evidence-card {
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.evidence-card:hover {
+  transform: translateY(-8px);
+  box-shadow: var(--shadow-hover);
+}
+
+/* 淡入效果 */
+.fade-in {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.fade-in.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* 表單樣式 */
+.form-input {
+  transition: all 0.2s ease;
+  border: 2px solid var(--neutral-200);
+}
+
+.form-input:focus {
+  border-color: var(--secondary-color);
+  box-shadow: 0 0 0 3px rgba(26, 93, 122, 0.2);
+}
+
+/* 按鈕效果 */
+.btn-primary {
+  background-color: var(--primary-color);
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 9999px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-primary:hover {
+  background-color: var(--primary-dark);
+  transform: scale(1.05);
+}
+
+.btn-secondary {
+  background-color: white;
+  border: 2px solid var(--secondary-color);
+  color: var(--secondary-color);
+  padding: 0.75rem 1.5rem;
+  border-radius: 9999px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-secondary:hover {
+  background-color: var(--secondary-color);
+  color: white;
+  transform: scale(1.05);
+}
+
+/* 進度條 */
+.progress-line {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  background: var(--highlight-gradient);
+  z-index: 9999;
+  width: 0%;
+  transition: width 0.1s ease;
+}
+
+/* 暗黑模式 */
+.dark-mode {
+  background-color: var(--neutral-900);
+  color: var(--neutral-100);
+}
+
+.dark-mode .nav-blur {
+  background-color: rgba(38, 38, 38, 0.85);
+}
+
+.dark-mode a {
+  color: var(--secondary-light);
+}
+
+.dark-mode a:hover {
+  color: var(--primary-light);
+}
+
+.dark-mode .form-input {
+  background-color: var(--neutral-800);
+  border-color: var(--neutral-700);
+  color: var(--neutral-100);
+}
+
+/* 動畫效果 */
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-20px);
+  }
+  60% {
+    transform: translateY(-10px);
+  }
+}
+
+.bounce {
+  animation: bounce 2s infinite;
+}
+
+/* 響應式斷點 */
+@media (max-width: 768px) {
+  h1 {
+    font-size: 2.25rem;
+  }
+  
+  h2 {
+    font-size: 1.75rem;
+  }
+  
+  h3 {
+    font-size: 1.25rem;
+  }
+  
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  
+  .timeline-item .absolute {
+    left: 0;
+    transform: translateX(-50%);
+  }
+}

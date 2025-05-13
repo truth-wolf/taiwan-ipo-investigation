@@ -1,0 +1,706 @@
+/* 增強視覺效果的CSS - enhanced-styles.css */
+
+/* 印刷字體對比效果 */
+.newspaper-title {
+  text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.1);
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+}
+
+/* 高亮文字動畫效果 */
+.highlight-text {
+  background-size: 200% auto;
+  animation: gradient-shift 4s ease infinite;
+}
+
+@keyframes gradient-shift {
+  0% {
+    background-position: 0% center;
+  }
+  50% {
+    background-position: 100% center;
+  }
+  100% {
+    background-position: 0% center;
+  }
+}
+
+/* 揭密文件效果 */
+.paper-effect {
+  position: relative;
+}
+
+.paper-effect::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: repeating-linear-gradient(
+    45deg,
+    rgba(200, 200, 200, 0.05),
+    rgba(200, 200, 200, 0.05) 1px,
+    transparent 1px,
+    transparent 10px
+  );
+  pointer-events: none;
+}
+
+/* 數據圖表悬停效果 */
+.data-bar {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.data-bar:hover {
+  transform: scaleY(1.05);
+  box-shadow: 0 2px 15px rgba(226, 62, 87, 0.2);
+}
+
+/* 時間軸點動畫 */
+.timeline-dot {
+  position: relative;
+}
+
+.timeline-dot::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 40px;
+  height: 40px;
+  background-color: var(--primary-color);
+  border-radius: 50%;
+  opacity: 0.2;
+  animation: pulse-ring 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+}
+
+@keyframes pulse-ring {
+  0% {
+    width: 20px;
+    height: 20px;
+    opacity: 0.5;
+  }
+  80%,
+  100% {
+    width: 40px;
+    height: 40px;
+    opacity: 0;
+  }
+}
+
+/* 範本複製按鈕效果 */
+.copy-btn {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.copy-btn::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  transition: all 0.6s ease;
+}
+
+.copy-btn:hover::before {
+  left: 100%;
+}
+
+.copy-btn.active {
+  transform: scale(0.95);
+}
+
+/* 提示訊息效果 */
+#copy-toast {
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  animation: slide-up 0.3s ease;
+}
+
+@keyframes slide-up {
+  0% {
+    transform: translate(-50%, 20px);
+    opacity: 0;
+  }
+  100% {
+    transform: translate(-50%, 0);
+    opacity: 1;
+  }
+}
+
+/* 引用區塊漸變背景 */
+blockquote,
+.bg-secondary-light {
+  background: linear-gradient(
+    135deg,
+    rgba(26, 93, 122, 0.1) 0%,
+    rgba(97, 164, 188, 0.05) 100%
+  );
+}
+
+/* 表格行懸停效果 */
+table tbody tr {
+  transition: all 0.2s ease;
+}
+
+table tbody tr:hover {
+  background-color: rgba(226, 62, 87, 0.05) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* 彩蛋觸發點呼吸效果 */
+.secret-trigger {
+  animation: breathe 2s infinite alternate;
+}
+
+@keyframes breathe {
+  0% {
+    transform: scale(1);
+    opacity: 0.3;
+  }
+  100% {
+    transform: scale(1.2);
+    opacity: 0.5;
+  }
+}
+
+/* 導航欄滾動效果 */
+header {
+  transition: transform 0.3s ease, background-color 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+header.scrolled {
+  transform: translateY(-100%);
+}
+
+header.visible {
+  transform: translateY(0);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* 檢舉範本內容樣式 */
+.template-content {
+  line-height: 1.7;
+  color: var(--neutral-800);
+}
+
+.template-content strong {
+  color: var(--secondary-dark);
+}
+
+.dark-mode .template-content {
+  color: var(--neutral-100);
+}
+
+.dark-mode .template-content strong {
+  color: var(--secondary-light);
+}
+
+.template-container:focus-within {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(226, 62, 87, 0.2);
+}
+
+/* 圖表標籤動畫 */
+.data-bar span {
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.data-bar.animate span {
+  animation: pop-in 0.5s forwards;
+  animation-delay: 1s;
+}
+
+@keyframes pop-in {
+  0% {
+    opacity: 0;
+    transform: translateY(-50%) scale(0.8);
+  }
+  70% {
+    opacity: 1;
+    transform: translateY(-50%) scale(1.1);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(-50%) scale(1);
+  }
+}
+
+/* 模態框動畫 */
+.mobile-menu,
+#share-modal,
+#secret-content {
+  animation: fade-in 0.3s ease;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* 按鈕懸停發光效果 */
+.btn-effect:hover {
+  box-shadow: 0 0 15px rgba(226, 62, 87, 0.5);
+}
+
+/* 導航連結下劃線動畫 */
+header a:not(.btn-primary):hover {
+  position: relative;
+}
+
+header a:not(.btn-primary):hover::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  width: 100%;
+  height: 2px;
+  background-color: var(--primary-color);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.3s ease;
+  animation: expand 0.3s forwards;
+}
+
+@keyframes expand {
+  0% {
+    transform: scaleX(0);
+    transform-origin: left;
+  }
+  100% {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+}
+
+/* 特殊圖標旋轉效果 */
+.alert-circle {
+  position: relative;
+  overflow: hidden;
+}
+
+.alert-circle::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: conic-gradient(
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  animation: rotate 4s linear infinite;
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* 主要標題特效 */
+h1.newspaper-title {
+  position: relative;
+}
+
+h1.newspaper-title::after {
+  content: "";
+  position: absolute;
+  bottom: -10px;
+  left: 0;
+  width: 100px;
+  height: 4px;
+  background: var(--highlight-gradient);
+  animation: width-expand 1.5s ease forwards;
+}
+
+@keyframes width-expand {
+  0% {
+    width: 0;
+  }
+  100% {
+    width: 100px;
+  }
+}
+
+/* 卡片霧面玻璃效果 */
+.glass-effect {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.dark-mode .glass-effect {
+  background: rgba(38, 38, 38, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* 螢光筆標記文字效果 */
+.marker-highlight {
+  background: linear-gradient(transparent 40%, rgba(255, 107, 107, 0.4) 40%);
+  padding: 0 4px;
+}
+
+/* 重點數據跳動效果 */
+.data-bounce {
+  animation: data-bounce 2s infinite;
+}
+
+@keyframes data-bounce {
+  0%,
+  20%,
+  50%,
+  80%,
+  100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-10px);
+  }
+  60% {
+    transform: translateY(-5px);
+  }
+}
+
+/* 表格淡入效果 */
+table {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: table-fade-in 1s ease forwards;
+  animation-delay: 0.5s;
+}
+
+@keyframes table-fade-in {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 範本編輯器樣式 */
+#template-editor {
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+#template-content {
+  font-family: "Courier New", monospace;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  overflow-y: auto;
+  transition: all 0.2s ease;
+  background-color: #f8f9fa;
+}
+
+#editor-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: #999;
+  pointer-events: none;
+  background-color: #f8f9fa;
+  border-radius: 0.375rem;
+  font-style: italic;
+}
+
+#template-form fieldset {
+  transition: all 0.3s ease;
+}
+
+#template-form fieldset:hover {
+  border-color: #93c5fd;
+}
+
+#template-form legend {
+  transition: all 0.3s ease;
+}
+
+#template-form fieldset:hover legend {
+  color: #2563eb;
+}
+
+#template-form input:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.25);
+}
+
+#copy-toast {
+  animation: fadeInOut 2s ease;
+  z-index: 50;
+}
+
+@keyframes fadeInOut {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  10% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  90% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+}
+
+/* 移動裝置適配 */
+@media (max-width: 768px) {
+  .grid-cols-1.lg\:grid-cols-3 {
+    grid-template-columns: 1fr;
+  }
+
+  #template-content {
+    min-height: 300px;
+  }
+
+  #copy-toast {
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
+    white-space: nowrap;
+  }
+
+  /* 表格適配 */
+  .table-mobile {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+  }
+
+  /* 導航欄適配 */
+  .mobile-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 40;
+  }
+
+  /* 內容間距調整 */
+  section {
+    padding: 2rem 1rem;
+  }
+
+  /* 按鈕適配 */
+  button,
+  .btn {
+    width: 100%;
+    margin-bottom: 0.5rem;
+  }
+
+  /* 字體大小調整 */
+  h1 {
+    font-size: 1.75rem;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+  }
+
+  h3 {
+    font-size: 1.25rem;
+  }
+
+  /* 表單欄位排列 */
+  fieldset .grid-cols-2 {
+    grid-template-columns: 1fr;
+  }
+
+  /* 欄位間距 */
+  fieldset label,
+  fieldset input {
+    margin-bottom: 0.5rem;
+  }
+}
+
+/* 打印優化 */
+@media print {
+  #template-editor {
+    box-shadow: none;
+    border: none;
+  }
+
+  #template-content {
+    border: none;
+    min-height: auto;
+    height: auto;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
+  body,
+  html {
+    background-color: white;
+    font-size: 12pt;
+  }
+}
+
+/* 動畫效果 */
+.copy-btn,
+#download-template {
+  transition: all 0.2s ease;
+}
+
+.copy-btn:active,
+#download-template:active {
+  transform: scale(0.98);
+}
+
+/* 表單元素美化 */
+select,
+input,
+textarea {
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23666'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.5rem center;
+  background-size: 1.25em 1.25em;
+  padding-right: 2.5rem;
+}
+
+/* 高亮樣式 */
+.highlight {
+  animation: highlight 2s ease;
+}
+
+@keyframes highlight {
+  0% {
+    background-color: rgba(59, 130, 246, 0.2);
+  }
+  100% {
+    background-color: transparent;
+  }
+}
+
+/* 自動調整範本高度 */
+#template-content {
+  overflow-y: hidden; /* 隱藏捲軸，但允許內容增長 */
+  resize: none; /* 禁用手動調整大小 */
+}
+
+/* 時間軸樣式 */
+.timeline-container {
+  position: relative;
+  z-index: 10;
+}
+
+.timeline-dot {
+  box-shadow: 0 0 0 5px rgba(26, 93, 122, 0.1);
+  transition: all 0.3s ease-in-out;
+}
+
+.timeline-dot:hover {
+  transform: scale(1.2);
+  box-shadow: 0 0 0 8px rgba(26, 93, 122, 0.2);
+}
+
+.left-timeline .fade-in,
+.right-timeline .fade-in {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.left-timeline .fade-in.visible,
+.right-timeline .fade-in.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.left-timeline:nth-child(even) .fade-in,
+.right-timeline:nth-child(odd) .fade-in {
+  transition-delay: 0.2s;
+}
+
+/* 表格排序樣式 */
+th.sortable {
+  position: relative;
+  cursor: pointer;
+  user-select: none;
+}
+
+th.sortable:hover {
+  background-color: rgba(26, 93, 122, 0.8);
+}
+
+th.sort-asc i.fas,
+th.sort-desc i.fas {
+  opacity: 1;
+}
+
+#csv-table {
+  border-collapse: separate;
+  border-spacing: 0;
+  width: 100%;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+}
+
+#csv-table th:first-child {
+  border-top-left-radius: 8px;
+}
+
+#csv-table th:last-child {
+  border-top-right-radius: 8px;
+}
+
+#csv-table tr:last-child td:first-child {
+  border-bottom-left-radius: 8px;
+}
+
+#csv-table tr:last-child td:last-child {
+  border-bottom-right-radius: 8px;
+}
+
+/* 圖表樣式優化 */
+.chart-container {
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+  padding: 10px;
+  background-color: rgba(255, 255, 255, 0.7);
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.03);
+}
+
+.chart-container canvas {
+  transition: all 0.3s ease;
+}
+
+.chart-container:hover canvas {
+  transform: scale(1.01);
+}
