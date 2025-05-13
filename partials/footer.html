@@ -3,92 +3,146 @@
   <div class="max-w-content mx-auto">
     <div class="flex flex-col md:flex-row justify-between items-center mb-8">
       <div class="flex items-center mb-6 md:mb-0">
-        <div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white mr-3">
+        <div
+          class="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white mr-3"
+        >
           <i class="fas fa-search"></i>
         </div>
         <span class="font-bold text-xl">#終結IPO制度暴力</span>
       </div>
-      
+
       <div class="flex space-x-4">
-        <a href="#" class="p-2 bg-neutral-700 hover:bg-primary text-white rounded-full transition-colors">
-          <i class="fab fa-twitter"></i>
+        <a
+          href="https://www.threads.com/@anti_ipo?igshid=NTc4MTIwNjQ2YQ=="
+          class="social-icon"
+          target="_blank"
+          title="Threads"
+        >
+          <i class="fab fa-threads"></i>
         </a>
-        <a href="#" class="p-2 bg-neutral-700 hover:bg-primary text-white rounded-full transition-colors">
+        <a
+          href="https://www.instagram.com/anti_ipo?igsh=ajBkYXJuMTBnNGI2"
+          class="social-icon"
+          target="_blank"
+          title="Instagram"
+        >
+          <i class="fab fa-instagram"></i>
+        </a>
+        <a
+          href="https://www.facebook.com/share/12LhnnWM4ez/?mibextid=wwXIfr"
+          class="social-icon"
+          target="_blank"
+          title="Facebook"
+        >
           <i class="fab fa-facebook-f"></i>
-        </a>
-        <a href="#" class="p-2 bg-neutral-700 hover:bg-primary text-white rounded-full transition-colors">
-          <i class="fab fa-linkedin-in"></i>
-        </a>
-        <a href="#" class="p-2 bg-neutral-700 hover:bg-primary text-white rounded-full transition-colors">
-          <i class="fab fa-telegram"></i>
         </a>
       </div>
     </div>
-    
-    <div class="border-t border-neutral-700 pt-8 flex flex-col md:flex-row justify-between items-center">
+
+    <div
+      class="border-t border-neutral-700 pt-8 flex flex-col md:flex-row justify-between items-center"
+    >
       <p class="text-neutral-400 mb-4 md:mb-0">
         © 2025 #終結IPO制度暴力 - 集體行動專案
       </p>
-      
+
       <div class="flex flex-wrap justify-center space-x-4 text-sm">
-        <a href="#overview" class="text-neutral-400 hover:text-primary mb-2">調查概述</a>
-        <a href="#timeline" class="text-neutral-400 hover:text-primary mb-2">事件時間軸</a>
-        <a href="#data" class="text-neutral-400 hover:text-primary mb-2">責任額數據</a>
-        <a href="#impact" class="text-neutral-400 hover:text-primary mb-2">影響分析</a>
-        <a href="#actions" class="text-neutral-400 hover:text-primary mb-2">檢舉範本</a>
+        <a href="#overview" class="text-neutral-400 hover:text-primary mb-2"
+          >調查概述</a
+        >
+        <a href="#timeline" class="text-neutral-400 hover:text-primary mb-2"
+          >事件時間軸</a
+        >
+        <a href="#data" class="text-neutral-400 hover:text-primary mb-2"
+          >責任額數據</a
+        >
+        <a href="#impact" class="text-neutral-400 hover:text-primary mb-2"
+          >影響分析</a
+        >
+        <a href="#actions" class="text-neutral-400 hover:text-primary mb-2"
+          >檢舉範本</a
+        >
       </div>
     </div>
   </div>
 </footer>
 
 <!-- 回到頂部按鈕 -->
-<button id="back-to-top" class="fixed bottom-6 right-6 w-12 h-12 rounded-full bg-primary text-white flex items-center justify-center shadow-lg opacity-0 invisible translate-y-10 transition-all duration-300">
+<button
+  id="back-to-top"
+  class="fixed bottom-6 right-6 w-12 h-12 rounded-full bg-primary text-white flex items-center justify-center shadow-lg opacity-0 invisible translate-y-10 transition-all duration-300"
+>
   <i class="fas fa-arrow-up"></i>
 </button>
 
 <!-- 複製提示 -->
-<div id="copy-toast" class="fixed bottom-6 left-1/2 transform -translate-x-1/2 bg-neutral-800 text-white px-6 py-3 rounded-full shadow-lg opacity-0 invisible transition-opacity duration-300 flex items-center">
+<div
+  id="copy-toast"
+  class="fixed bottom-6 left-1/2 transform -translate-x-1/2 bg-neutral-800 text-white px-6 py-3 rounded-full shadow-lg opacity-0 invisible transition-opacity duration-300 flex items-center"
+>
   <i class="fas fa-check-circle mr-2 text-primary-light"></i>
   <span>範本已複製！</span>
 </div>
 
 <!-- 分享模態框 -->
-<div id="share-modal" class="fixed inset-0 bg-black bg-opacity-80 z-50 hidden items-center justify-center">
+<div
+  id="share-modal"
+  class="fixed inset-0 bg-black bg-opacity-80 z-50 hidden items-center justify-center"
+>
   <div class="bg-white rounded-lg p-8 max-w-md w-full relative">
-    <button id="share-close" class="absolute top-4 right-4 text-neutral-500 hover:text-neutral-800">
+    <button
+      id="share-close"
+      class="absolute top-4 right-4 text-neutral-500 hover:text-neutral-800"
+    >
       <i class="fas fa-times"></i>
     </button>
-    
+
     <h3 class="text-2xl font-bold mb-6">分享調查報告</h3>
-    
+
     <div class="mb-6">
       <p class="text-neutral-600 mb-2">複製連結</p>
       <div class="flex">
-        <input type="text" value="https://example.com/taiwan-ipo-investigation" class="flex-grow border border-neutral-300 rounded-l-lg px-4 py-2 focus:outline-none focus:border-secondary" readonly>
-        <button id="copy-link" class="bg-secondary text-white px-4 py-2 rounded-r-lg hover:bg-secondary-dark transition-colors">
+        <input
+          type="text"
+          value="https://example.com/taiwan-ipo-investigation"
+          class="flex-grow border border-neutral-300 rounded-l-lg px-4 py-2 focus:outline-none focus:border-secondary"
+          readonly
+        />
+        <button
+          id="copy-link"
+          class="bg-secondary text-white px-4 py-2 rounded-r-lg hover:bg-secondary-dark transition-colors"
+        >
           <i class="fas fa-copy"></i>
         </button>
       </div>
     </div>
-    
+
     <div>
       <p class="text-neutral-600 mb-2">分享到社群媒體</p>
       <div class="flex space-x-4">
-        <a href="#" class="share-link w-12 h-12 rounded-full bg-[#1877F2] flex items-center justify-center text-white hover:opacity-90 transition-opacity">
+        <a
+          href="https://www.facebook.com/share/12LhnnWM4ez/?mibextid=wwXIfr"
+          target="_blank"
+          class="share-link w-12 h-12 rounded-full bg-[#1877F2] flex items-center justify-center text-white hover:opacity-90 transition-opacity"
+        >
           <i class="fab fa-facebook-f"></i>
           <span class="sr-only">Facebook</span>
         </a>
-        <a href="#" class="share-link w-12 h-12 rounded-full bg-[#1DA1F2] flex items-center justify-center text-white hover:opacity-90 transition-opacity">
-          <i class="fab fa-twitter"></i>
-          <span class="sr-only">Twitter</span>
+        <a
+          href="https://www.instagram.com/anti_ipo?igsh=ajBkYXJuMTBnNGI2"
+          target="_blank"
+          class="share-link w-12 h-12 rounded-full bg-[#E4405F] flex items-center justify-center text-white hover:opacity-90 transition-opacity"
+        >
+          <i class="fab fa-instagram"></i>
+          <span class="sr-only">Instagram</span>
         </a>
-        <a href="#" class="share-link w-12 h-12 rounded-full bg-[#0A66C2] flex items-center justify-center text-white hover:opacity-90 transition-opacity">
-          <i class="fab fa-linkedin-in"></i>
-          <span class="sr-only">LinkedIn</span>
-        </a>
-        <a href="#" class="share-link w-12 h-12 rounded-full bg-[#25D366] flex items-center justify-center text-white hover:opacity-90 transition-opacity">
-          <i class="fab fa-whatsapp"></i>
-          <span class="sr-only">WhatsApp</span>
+        <a
+          href="https://www.threads.com/@anti_ipo?igshid=NTc4MTIwNjQ2YQ=="
+          target="_blank"
+          class="share-link w-12 h-12 rounded-full bg-[#000000] flex items-center justify-center text-white hover:opacity-90 transition-opacity"
+        >
+          <i class="fa-brands fa-threads share-icon"></i>
+          <span class="sr-only">Threads</span>
         </a>
       </div>
     </div>
@@ -98,27 +152,41 @@
 <!-- 彩蛋：檢舉人保護指南 -->
 <div id="secret-trigger" class="secret-trigger"></div>
 
-<div id="secret-content" class="fixed inset-0 bg-black bg-opacity-90 z-50 hidden flex-col items-center justify-center">
-  <div class="bg-white rounded-lg p-8 max-w-2xl w-full relative dark:bg-neutral-800 dark:text-white">
-    <button id="secret-close" class="absolute top-4 right-4 text-neutral-500 hover:text-neutral-800 dark:hover:text-white">
+<div
+  id="secret-content"
+  class="fixed inset-0 bg-black bg-opacity-90 z-50 hidden flex-col items-center justify-center"
+>
+  <div
+    class="bg-white rounded-lg p-8 max-w-2xl w-full relative dark:bg-neutral-800 dark:text-white"
+  >
+    <button
+      id="secret-close"
+      class="absolute top-4 right-4 text-neutral-500 hover:text-neutral-800 dark:hover:text-white"
+    >
       <i class="fas fa-times"></i>
     </button>
-    
+
     <div class="text-center mb-8">
-      <div class="w-16 h-16 rounded-full bg-primary text-white flex items-center justify-center mx-auto mb-4">
+      <div
+        class="w-16 h-16 rounded-full bg-primary text-white flex items-center justify-center mx-auto mb-4"
+      >
         <i class="fas fa-shield-alt text-2xl"></i>
       </div>
       <h3 class="text-2xl font-bold">檢舉人自我保護指南</h3>
-      <p class="text-neutral-600 dark:text-neutral-300 text-sm mt-2">此信息僅供檢舉人參考，協助保護自身權益</p>
+      <p class="text-neutral-600 dark:text-neutral-300 text-sm mt-2">
+        此信息僅供檢舉人參考，協助保護自身權益
+      </p>
     </div>
-    
+
     <div class="space-y-6">
       <div>
         <h4 class="font-bold text-lg flex items-center">
           <i class="fas fa-laptop text-primary mr-2"></i>
           數位安全
         </h4>
-        <ul class="ml-6 mt-2 space-y-2 text-neutral-600 dark:text-neutral-300 text-sm">
+        <ul
+          class="ml-6 mt-2 space-y-2 text-neutral-600 dark:text-neutral-300 text-sm"
+        >
           <li class="flex items-start">
             <i class="fas fa-check text-primary text-xs mt-1 mr-2"></i>
             <span>使用個人設備與網路收發檢舉信，避免使用公司設備</span>
@@ -137,13 +205,15 @@
           </li>
         </ul>
       </div>
-      
+
       <div>
         <h4 class="font-bold text-lg flex items-center">
           <i class="fas fa-gavel text-primary mr-2"></i>
           法律準備
         </h4>
-        <ul class="ml-6 mt-2 space-y-2 text-neutral-600 dark:text-neutral-300 text-sm">
+        <ul
+          class="ml-6 mt-2 space-y-2 text-neutral-600 dark:text-neutral-300 text-sm"
+        >
           <li class="flex items-start">
             <i class="fas fa-check text-primary text-xs mt-1 mr-2"></i>
             <span>了解《證券交易法》第14-5條「吹哨者保護」相關規定</span>
@@ -162,13 +232,15 @@
           </li>
         </ul>
       </div>
-      
+
       <div>
         <h4 class="font-bold text-lg flex items-center">
           <i class="fas fa-user-shield text-primary mr-2"></i>
           心理建設
         </h4>
-        <ul class="ml-6 mt-2 space-y-2 text-neutral-600 dark:text-neutral-300 text-sm">
+        <ul
+          class="ml-6 mt-2 space-y-2 text-neutral-600 dark:text-neutral-300 text-sm"
+        >
           <li class="flex items-start">
             <i class="fas fa-check text-primary text-xs mt-1 mr-2"></i>
             <span>確認您的財務安全網，評估可能面對的最壞情況</span>
@@ -188,9 +260,12 @@
         </ul>
       </div>
     </div>
-    
+
     <div class="mt-8 text-center">
-      <button id="secret-understand" class="py-3 px-8 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors">
+      <button
+        id="secret-understand"
+        class="py-3 px-8 bg-primary text-white rounded-lg hover:bg-primary-dark transition-colors"
+      >
         我了解了
       </button>
     </div>
