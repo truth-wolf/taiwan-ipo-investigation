@@ -123,8 +123,8 @@
   background-color: #fff;
   border: 1px solid #d1d5db;
   border-radius: 0.375rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  z-index: 9999;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  z-index: 10000; /* 提高z-index確保顯示在最上層 */
 }
 
 /* 移除懸停顯示，改為點擊後添加class來顯示 */
@@ -410,20 +410,37 @@
     background-color: var(--primary-color);
     color: white;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* 添加陰影增強立體感 */
+    position: relative;
+    z-index: 9999;
   }
 
   .download-options {
-    width: 120px;
-    right: -10px; /* 調整位置以對準按鈕 */
+    position: fixed; /* 使用固定定位 */
+    width: 150px;
+    right: auto;
     left: auto;
-    z-index: 9999; /* 確保在移動設備上顯示在最頂層 */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); /* 增強陰影 */
+    top: auto;
+    z-index: 10000; /* 確保在移動設備上顯示在最頂層 */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25); /* 增強陰影 */
+    border: 1px solid #ccc;
+    background-color: #ffffff;
   }
 
   .download-option {
-    font-size: 0.75rem;
-    padding: 0.6rem 0.5rem; /* 增加一點高度以便於點擊 */
+    font-size: 0.85rem;
+    padding: 0.8rem 0.75rem; /* 增加高度以便於點擊 */
     text-align: left;
+    border-bottom: 1px solid #eee;
+  }
+
+  .download-option:last-child {
+    border-bottom: none;
+  }
+
+  .download-option i {
+    margin-right: 8px;
+    width: 16px;
+    text-align: center;
   }
 
   /* 手機版視圖切換按鈕 */

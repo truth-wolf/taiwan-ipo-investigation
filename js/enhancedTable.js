@@ -57,11 +57,6 @@ function createEnhancedControls() {
   brokerFilterWrapper.className = "enhanced-filter broker-filter-wrapper";
   if (brokerFilter) {
     brokerFilter.className = "broker-filter-select";
-    // 添加一個圖標標籤用於手機介面
-    const brokerLabel = document.createElement("span");
-    brokerLabel.className = "filter-icon";
-    // brokerLabel.innerHTML = '<i class="fas fa-building"></i>';
-    brokerFilterWrapper.appendChild(brokerLabel);
     brokerFilterWrapper.appendChild(brokerFilter);
   }
 
@@ -69,11 +64,6 @@ function createEnhancedControls() {
   dateFilterWrapper.className = "enhanced-filter date-filter-wrapper";
   if (dateFilter) {
     dateFilter.className = "date-filter-select";
-    // 添加一個圖標標籤用於手機介面
-    const dateLabel = document.createElement("span");
-    dateLabel.className = "filter-icon";
-    // dateLabel.innerHTML = '<i class="fas fa-calendar-alt"></i>';
-    dateFilterWrapper.appendChild(dateLabel);
     dateFilterWrapper.appendChild(dateFilter);
   }
 
@@ -542,13 +532,42 @@ function setupDownloadOptions() {
     e.preventDefault(); // 防止預設行為
     e.stopPropagation(); // 防止事件冒泡
 
+    // 隱藏其他可能打開的選單
+    document
+      .querySelectorAll(".download-menu.show-options")
+      .forEach(function (menu) {
+        if (menu !== downloadMenu) {
+          menu.classList.remove("show-options");
+        }
+      });
+
     // 切換當前選單
     downloadMenu.classList.toggle("show-options");
 
     // 確保選單元素顯示在最頂層
     const optionsMenu = downloadMenu.querySelector(".download-options");
     if (optionsMenu) {
-      optionsMenu.style.zIndex = "9999";
+      // 確保z-index高於其他元素
+      optionsMenu.style.zIndex = "10000";
+
+      // 在移動設備上調整選單位置
+      if (window.innerWidth <= 767) {
+        // 獲取按鈕位置
+        const buttonRect = downloadButton.getBoundingClientRect();
+
+        // 設定選單為固定定位，並放置在按鈕正下方
+        optionsMenu.style.position = "fixed";
+        optionsMenu.style.top = buttonRect.bottom + 5 + "px";
+        optionsMenu.style.left = Math.max(5, buttonRect.left) + "px";
+        optionsMenu.style.right = "auto";
+
+        // 確保選單不會超出螢幕
+        const rightEdge = buttonRect.left + optionsMenu.offsetWidth;
+        if (rightEdge > window.innerWidth) {
+          optionsMenu.style.left = "auto";
+          optionsMenu.style.right = "5px";
+        }
+      }
     }
   });
 
@@ -578,7 +597,19 @@ function downloadTable(format) {
   const isProductView = true; // 統一使用產品視圖格式
 
   // 使用window.csvData确保獲取完整數據
-  const fullData = window.csvData || [];
+  // 先處理完整數據，確保產品編號始終為字串
+  const fullData = (window.csvData || []).map((item) => {
+    if (Array.isArray(item)) {
+      // 創建一個新的數組，保持原始數據不變
+      return [
+        item[0],
+        String(item[1]), // 確保產品編號是字串格式
+        item[2],
+        item[3],
+      ];
+    }
+    return item;
+  });
 
   switch (format) {
     case "csv":
@@ -596,13 +627,12 @@ function downloadTable(format) {
 // 下載 CSV 格式
 function downloadCSV(data, isProductView) {
   if (isProductView) {
-    const fullData = window.csvData || [];
     const productsData = {};
-    fullData.forEach((item) => {
-      const productName = String(item[1]);
+    data.forEach((item) => {
+      const productName = String(item[1]); // 確保使用字串格式
       if (!productsData[productName]) {
         productsData[productName] = {
-          name: String(productName),
+          name: productName, // 已確保是字串格式
           period: item[3],
           brokers: {},
           totalAmount: 0,
@@ -620,12 +650,12 @@ function downloadCSV(data, isProductView) {
       return avgB - avgA;
     });
 
-    const uniqueBrokers = [...new Set(fullData.map((item) => item[0]))].sort();
+    const uniqueBrokers = [...new Set(data.map((item) => item[0]))].sort();
     let csvContent =
       "產品,募集期間," + uniqueBrokers.join(",") + ",平均責任額\n";
 
     sortedProducts.forEach((product) => {
-      let row = [product.name, product.period];
+      let row = [product.name, product.period]; // product.name已確保是字串
       let productTotalAmount = 0;
       let productBrokerCount = 0;
       uniqueBrokers.forEach((broker) => {
@@ -650,16 +680,16 @@ function downloadCSV(data, isProductView) {
 
     let totalRow = ["總責任額", ""];
     uniqueBrokers.forEach((broker) => {
-      const brokerTotal = fullData
+      const brokerTotal = data
         .filter((item) => item[0] === broker)
         .reduce((sum, item) => sum + parseInt(item[2], 10), 0);
       totalRow.push(brokerTotal);
     });
-    const grandTotalAmount = fullData.reduce(
+    const grandTotalAmount = data.reduce(
       (sum, item) => sum + parseInt(item[2], 10),
       0
     );
-    const allProductEntriesCount = fullData.filter(
+    const allProductEntriesCount = data.filter(
       (row) => row[2] && !isNaN(parseInt(row[2]))
     ).length;
     const finalGrandAverage =
@@ -673,7 +703,7 @@ function downloadCSV(data, isProductView) {
 
     // 網站連結信息
     const websiteInfo =
-      "\n\n數據來源：終結IPO制度暴力調查網站 https://taiwan-ipo-investigation.org";
+      "\n\n數據來源：終結IPO制度暴力調查網站 https://truth-wolf.github.io/taiwan-ipo-investigation/";
 
     // 添加網站連結到CSV底部
     csvContent += websiteInfo;
@@ -683,17 +713,18 @@ function downloadCSV(data, isProductView) {
     let csvContent = "券商,產品,責任額,募集期間\n";
     data.forEach((item) => {
       if (Array.isArray(item)) {
-        let processedItem = [...item];
-        processedItem[1] = String(processedItem[1]);
         csvContent +=
-          processedItem
-            .map((cell) => `"${String(cell).replace(/"/g, '""')}"`)
-            .join(",") + "\n";
+          [
+            `"${item[0]}"`,
+            `"${String(item[1]).replace(/"/g, '""')}"`, // 確保產品編號為字串
+            item[2],
+            `"${item[3]}"`,
+          ].join(",") + "\n";
       } else {
         csvContent +=
           [
             `"${item.broker}"`,
-            `"${String(item.product).replace(/"/g, '""')}"`,
+            `"${String(item.product).replace(/"/g, '""')}"`, // 確保產品編號為字串
             item.amount,
             `"${item.period}"`,
           ].join(",") + "\n";
@@ -707,13 +738,12 @@ function downloadCSV(data, isProductView) {
 function downloadExcel(data, isProductView) {
   const BOM = "\uFEFF";
   if (isProductView) {
-    const fullData = window.csvData || [];
     const productsData = {};
-    fullData.forEach((item) => {
-      const productName = String(item[1]);
+    data.forEach((item) => {
+      const productName = String(item[1]); // 確保使用字串格式
       if (!productsData[productName]) {
         productsData[productName] = {
-          name: String(productName),
+          name: productName, // 已確保是字串格式
           period: item[3],
           brokers: {},
           totalAmount: 0,
@@ -731,12 +761,12 @@ function downloadExcel(data, isProductView) {
       return avgB - avgA;
     });
 
-    const uniqueBrokers = [...new Set(fullData.map((item) => item[0]))].sort();
+    const uniqueBrokers = [...new Set(data.map((item) => item[0]))].sort();
     let csvContent =
       BOM + "產品,募集期間," + uniqueBrokers.join(",") + ",平均責任額\n";
 
     sortedProducts.forEach((product) => {
-      let row = [product.name, product.period];
+      let row = [product.name, product.period]; // product.name已確保是字串
       let productTotalAmount = 0;
       let productBrokerCount = 0;
       uniqueBrokers.forEach((broker) => {
@@ -761,16 +791,16 @@ function downloadExcel(data, isProductView) {
 
     let totalRow = ["總責任額", ""];
     uniqueBrokers.forEach((broker) => {
-      const brokerTotal = fullData
+      const brokerTotal = data
         .filter((item) => item[0] === broker)
         .reduce((sum, item) => sum + parseInt(item[2], 10), 0);
       totalRow.push(brokerTotal);
     });
-    const grandTotalAmount = fullData.reduce(
+    const grandTotalAmount = data.reduce(
       (sum, item) => sum + parseInt(item[2], 10),
       0
     );
-    const allProductEntriesCount = fullData.filter(
+    const allProductEntriesCount = data.filter(
       (row) => row[2] && !isNaN(parseInt(row[2]))
     ).length;
     const finalGrandAverage =
@@ -784,7 +814,7 @@ function downloadExcel(data, isProductView) {
 
     // 網站連結信息
     const websiteInfo =
-      "\n\n數據來源：終結IPO制度暴力調查網站 https://taiwan-ipo-investigation.org";
+      "\n\n數據來源：終結IPO制度暴力調查網站 https://truth-wolf.github.io/taiwan-ipo-investigation/";
 
     // 添加網站連結到Excel底部
     csvContent += websiteInfo;
@@ -798,17 +828,18 @@ function downloadExcel(data, isProductView) {
     let csvContent = BOM + "券商,產品,責任額,募集期間\n";
     data.forEach((item) => {
       if (Array.isArray(item)) {
-        let processedItem = [...item];
-        processedItem[1] = String(processedItem[1]);
         csvContent +=
-          processedItem
-            .map((cell) => `"${String(cell).replace(/"/g, '""')}"`)
-            .join(",") + "\n";
+          [
+            `"${item[0]}"`,
+            `"${String(item[1]).replace(/"/g, '""')}"`, // 確保產品編號為字串
+            item[2],
+            `"${item[3]}"`,
+          ].join(",") + "\n";
       } else {
         csvContent +=
           [
             `"${item.broker}"`,
-            `"${String(item.product).replace(/"/g, '""')}"`,
+            `"${String(item.product).replace(/"/g, '""')}"`, // 確保產品編號為字串
             item.amount,
             `"${item.period}"`,
           ].join(",") + "\n";
@@ -835,13 +866,12 @@ function downloadPDF(data, isProductView) {
   doc.text("ETF 責任額數據", 14, 10);
 
   if (isProductView) {
-    const fullData = window.csvData || [];
     const productsData = {};
-    fullData.forEach((item) => {
-      const productName = String(item[1]);
+    data.forEach((item) => {
+      const productName = String(item[1]); // 確保使用字串格式
       if (!productsData[productName]) {
         productsData[productName] = {
-          name: String(productName),
+          name: productName, // 已確保是字串格式
           period: item[3],
           brokers: {},
           totalAmount: 0,
@@ -859,10 +889,10 @@ function downloadPDF(data, isProductView) {
       return avgB - avgA;
     });
 
-    const uniqueBrokers = [...new Set(fullData.map((item) => item[0]))].sort();
+    const uniqueBrokers = [...new Set(data.map((item) => item[0]))].sort();
     const head = [["產品", "募集期間", ...uniqueBrokers, "平均責任額"]];
     const body = sortedProducts.map((product) => {
-      let row = [product.name, product.period];
+      let row = [product.name, product.period]; // product.name已確保是字串
       let productTotalAmount = 0;
       let productBrokerCount = 0;
       uniqueBrokers.forEach((broker) => {
@@ -885,16 +915,16 @@ function downloadPDF(data, isProductView) {
 
     let totalRowData = ["總責任額", ""];
     uniqueBrokers.forEach((broker) => {
-      const brokerTotal = fullData
+      const brokerTotal = data
         .filter((item) => item[0] === broker)
         .reduce((sum, item) => sum + parseInt(item[2], 10), 0);
       totalRowData.push(brokerTotal.toLocaleString());
     });
-    const grandTotalAmount = fullData.reduce(
+    const grandTotalAmount = data.reduce(
       (sum, item) => sum + parseInt(item[2], 10),
       0
     );
-    const allProductEntriesCount = fullData.filter(
+    const allProductEntriesCount = data.filter(
       (row) => row[2] && !isNaN(parseInt(row[2]))
     ).length;
     const finalGrandAverage =
@@ -917,7 +947,7 @@ function downloadPDF(data, isProductView) {
     doc.setFontSize(8);
     doc.setTextColor(100, 100, 100);
     doc.text(
-      "數據來源：終結IPO制度暴力調查網站 https://taiwan-ipo-investigation.org",
+      "數據來源：終結IPO制度暴力調查網站 https://truth-wolf.github.io/taiwan-ipo-investigation/",
       14,
       pageHeight - 10
     );
@@ -928,14 +958,14 @@ function downloadPDF(data, isProductView) {
       if (Array.isArray(item)) {
         return [
           item[0],
-          String(item[1]),
+          String(item[1]), // 確保產品編號為字串
           parseInt(item[2], 10).toLocaleString(),
           item[3],
         ];
       }
       return [
         item.broker,
-        String(item.product),
+        String(item.product), // 確保產品編號為字串
         parseInt(item.amount, 10).toLocaleString(),
         item.period,
       ];
@@ -953,7 +983,7 @@ function downloadPDF(data, isProductView) {
     doc.setFontSize(8);
     doc.setTextColor(100, 100, 100);
     doc.text(
-      "數據來源：終結IPO制度暴力調查網站 https://taiwan-ipo-investigation.org",
+      "數據來源：終結IPO制度暴力調查網站 https://truth-wolf.github.io/taiwan-ipo-investigation/",
       14,
       pageHeight - 10
     );
