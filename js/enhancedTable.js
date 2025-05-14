@@ -524,11 +524,29 @@ function setupDownloadOptions() {
   const downloadMenu = document.querySelector(".download-menu");
   if (!downloadMenu) return;
 
+  const downloadButton = downloadMenu.querySelector(".download-button");
   const downloadOptions = downloadMenu.querySelectorAll(".download-option");
+
+  // 點擊按鈕切換選單顯示
+  downloadButton.addEventListener("click", function (e) {
+    e.stopPropagation(); // 防止事件冒泡
+    downloadMenu.classList.toggle("show-options");
+  });
+
+  // 點擊文檔其他位置關閉選單
+  document.addEventListener("click", function (e) {
+    if (!downloadMenu.contains(e.target)) {
+      downloadMenu.classList.remove("show-options");
+    }
+  });
+
+  // 點擊選項後關閉選單並執行下載
   downloadOptions.forEach((option) => {
-    option.addEventListener("click", () => {
+    option.addEventListener("click", (e) => {
+      e.stopPropagation(); // 防止事件冒泡
       const format = option.getAttribute("data-format");
       downloadTable(format);
+      downloadMenu.classList.remove("show-options");
     });
   });
 }
@@ -562,7 +580,7 @@ function downloadCSV(data, isProductView) {
       const productName = item[1];
       if (!productsData[productName]) {
         productsData[productName] = {
-          name: productName,
+          name: String(productName),
           period: item[3],
           brokers: {},
           totalAmount: 0,
@@ -636,15 +654,17 @@ function downloadCSV(data, isProductView) {
     let csvContent = "券商,產品,責任額,募集期間\n";
     data.forEach((item) => {
       if (Array.isArray(item)) {
+        let processedItem = [...item];
+        processedItem[1] = String(processedItem[1]);
         csvContent +=
-          item
+          processedItem
             .map((cell) => `"${String(cell).replace(/"/g, '""')}"`)
             .join(",") + "\n";
       } else {
         csvContent +=
           [
             `"${item.broker}"`,
-            `"${item.product}"`,
+            `"${String(item.product).replace(/"/g, '""')}"`,
             item.amount,
             `"${item.period}"`,
           ].join(",") + "\n";
@@ -664,7 +684,7 @@ function downloadExcel(data, isProductView) {
       const productName = item[1];
       if (!productsData[productName]) {
         productsData[productName] = {
-          name: productName,
+          name: String(productName),
           period: item[3],
           brokers: {},
           totalAmount: 0,
@@ -742,15 +762,17 @@ function downloadExcel(data, isProductView) {
     let csvContent = BOM + "券商,產品,責任額,募集期間\n";
     data.forEach((item) => {
       if (Array.isArray(item)) {
+        let processedItem = [...item];
+        processedItem[1] = String(processedItem[1]);
         csvContent +=
-          item
+          processedItem
             .map((cell) => `"${String(cell).replace(/"/g, '""')}"`)
             .join(",") + "\n";
       } else {
         csvContent +=
           [
             `"${item.broker}"`,
-            `"${item.product}"`,
+            `"${String(item.product).replace(/"/g, '""')}"`,
             item.amount,
             `"${item.period}"`,
           ].join(",") + "\n";
@@ -783,7 +805,7 @@ function downloadPDF(data, isProductView) {
       const productName = item[1];
       if (!productsData[productName]) {
         productsData[productName] = {
-          name: productName,
+          name: String(productName),
           period: item[3],
           brokers: {},
           totalAmount: 0,
@@ -855,16 +877,17 @@ function downloadPDF(data, isProductView) {
     });
   } else {
     const tableData = data.map((item) => {
-      if (Array.isArray(item))
+      if (Array.isArray(item)) {
         return [
           item[0],
-          item[1],
+          String(item[1]),
           parseInt(item[2], 10).toLocaleString(),
           item[3],
         ];
+      }
       return [
         item.broker,
-        item.product,
+        String(item.product),
         parseInt(item.amount, 10).toLocaleString(),
         item.period,
       ];

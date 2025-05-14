@@ -116,6 +116,14 @@ function initClassicTable(data) {
   const csvTable = document.getElementById("csv-table");
   if (!csvTable) return;
 
+  // 計算高亮閾值 - 找出最高和較高的責任額
+  const amounts = data
+    .map((item) => parseInt(item[2], 10))
+    .filter((amount) => !isNaN(amount));
+  amounts.sort((a, b) => b - a);
+  const highestAmount = amounts[0];
+  const highThreshold = highestAmount * 0.7; // 最高值的70%作為高值閾值
+
   const columns = [
     { title: "券商" },
     {
@@ -123,7 +131,7 @@ function initClassicTable(data) {
       render: function (data, type, row) {
         return '<span style="letter-spacing:-0.5px;">' + data + "</span>";
       },
-      width: "35%", // 建議寬度，可調整
+      width: "20%", // 建議寬度，可調整
     },
     {
       title: "責任額",
@@ -132,9 +140,16 @@ function initClassicTable(data) {
         if (type === "display") {
           const amount = parseInt(data, 10);
           if (!isNaN(amount)) {
-            if (amount > 1000000) {
+            // 根據閾值決定顯示樣式
+            if (amount >= 1000000 || amount === highestAmount) {
               return (
-                '<span style="color: red;">' +
+                '<span style="color: var(--primary-dark); font-weight: bold;">' +
+                amount.toLocaleString() +
+                "</span>"
+              );
+            } else if (amount >= highThreshold || amount >= 500000) {
+              return (
+                '<span style="color: var(--alert-color); font-weight: bold;">' +
                 amount.toLocaleString() +
                 "</span>"
               );
@@ -282,13 +297,59 @@ function initViewButtons() {
         toggleTableView("product")
       );
     }
+
+    // 新增：手機版視圖切換功能
+    createMobileViewToggle();
   }, 500);
+}
+
+// 新增：創建手機版視圖切換按鈕
+function createMobileViewToggle() {
+  if (window.innerWidth >= 768) return; // 僅在手機版添加
+
+  const tableWrapper =
+    document.querySelector(".table-wrapper") ||
+    document.querySelector(".overflow-x-auto");
+
+  if (!tableWrapper) return;
+
+  // 檢查是否已存在切換按鈕
+  if (document.querySelector(".mobile-view-toggle")) return;
+
+  const mobileToggle = document.createElement("div");
+  mobileToggle.className = "mobile-view-toggle";
+  mobileToggle.innerHTML = `
+    <button id="mobile-classic-btn" class="active"><i class="fas fa-th-list"></i></button>
+    <button id="mobile-product-btn"><i class="fas fa-table"></i></button>
+  `;
+
+  tableWrapper.parentNode.insertBefore(mobileToggle, tableWrapper);
+
+  // 添加事件監聽器
+  document
+    .getElementById("mobile-classic-btn")
+    .addEventListener("click", () => {
+      toggleTableView("classic");
+      document.getElementById("mobile-classic-btn").classList.add("active");
+      document.getElementById("mobile-product-btn").classList.remove("active");
+    });
+
+  document
+    .getElementById("mobile-product-btn")
+    .addEventListener("click", () => {
+      if (!productTableInitialized) initProductTable(csvData);
+      toggleTableView("product");
+      document.getElementById("mobile-product-btn").classList.add("active");
+      document.getElementById("mobile-classic-btn").classList.remove("active");
+    });
 }
 
 // 切換表格視圖
 function toggleTableView(viewType) {
   const classicViewTable = document.querySelector(".classic-view-table");
-  const productViewTable = document.querySelector(".product-based-view");
+  const productViewTable =
+    document.querySelector(".product-based-view") ||
+    document.getElementById("product-table-container");
   if (!classicViewTable || !productViewTable) {
     console.error("找不到表格容器元素");
     return;
@@ -298,16 +359,41 @@ function toggleTableView(viewType) {
   const productViewBtn = document.getElementById("product-view-btn");
 
   if (viewType === "classic") {
-    classicViewTable.classList.remove("hidden");
-    productViewTable.classList.add("hidden");
-    classicViewBtn.classList.add("active");
-    productViewBtn.classList.remove("active");
+    // 桌面版
+    if (window.innerWidth >= 768) {
+      classicViewTable.classList.remove("hidden");
+      productViewTable.classList.add("hidden");
+      if (classicViewBtn && productViewBtn) {
+        classicViewBtn.classList.add("active");
+        productViewBtn.classList.remove("active");
+      }
+    }
+    // 手機版
+    else {
+      classicViewTable.style.display = "block";
+      productViewTable.style.display = "none";
+      classicViewTable.classList.add("visible");
+      productViewTable.classList.remove("visible");
+    }
   } else if (viewType === "product") {
     if (!productTableInitialized) initProductTable(csvData);
-    classicViewTable.classList.add("hidden");
-    productViewTable.classList.remove("hidden");
-    classicViewBtn.classList.remove("active");
-    productViewBtn.classList.add("active");
+
+    // 桌面版
+    if (window.innerWidth >= 768) {
+      classicViewTable.classList.add("hidden");
+      productViewTable.classList.remove("hidden");
+      if (classicViewBtn && productViewBtn) {
+        classicViewBtn.classList.remove("active");
+        productViewBtn.classList.add("active");
+      }
+    }
+    // 手機版
+    else {
+      classicViewTable.style.display = "none";
+      productViewTable.style.display = "block";
+      classicViewTable.classList.remove("visible");
+      productViewTable.classList.add("visible");
+    }
   }
 }
 
@@ -393,15 +479,42 @@ function initProductTable(data) {
     tableHTML += `<td class="total-cell">${average}</td></tr>`;
   });
 
-  tableHTML += `<tr class="total-row"><td><strong>總責任額</strong></td><td></td>`; // Added empty cell for period column in total row
+  // 計算每個經紀商的總責任額
+  const brokerTotals = {};
+  brokers.forEach((broker) => {
+    brokerTotals[broker] = data
+      .filter((item) => item[0] === broker)
+      .reduce((sum, item) => sum + parseInt(item[2], 10), 0);
+  });
+
+  // 找出最高和第二高的總責任額，以便高亮顯示
+  const sortedTotals = Object.values(brokerTotals).sort((a, b) => b - a);
+  const highestTotal = sortedTotals[0];
+  const secondHighestTotal = sortedTotals[1];
+
+  // 總責任額行
+  tableHTML += `<tr class="total-row"><td><strong>總責任額</strong></td><td></td>`;
 
   brokers.forEach((broker) => {
     const brokerData = data.filter((item) => item[0] === broker);
-    const total = brokerData.reduce((sum, item) => sum + parseInt(item[2]), 0);
-    tableHTML += `<td class="total-cell">${total}</td>`;
+    const total = brokerData.reduce(
+      (sum, item) => sum + parseInt(item[2], 10),
+      0
+    );
+
+    // 對總額進行高亮度設定
+    let cellClass = "total-cell";
+    if (total === highestTotal) {
+      cellClass += " total-cell-highest";
+    } else if (total >= highestTotal * 0.7) {
+      // 達到最高值的70%或以上
+      cellClass += " total-cell-high";
+    }
+
+    tableHTML += `<td class="${cellClass}">${total}</td>`;
   });
 
-  const grandTotal = data.reduce((sum, item) => sum + parseInt(item[2]), 0);
+  const grandTotal = data.reduce((sum, item) => sum + parseInt(item[2], 10), 0);
   const brokerProducts = data.length;
   const grandAverage =
     brokerProducts > 0 ? Math.round(grandTotal / brokerProducts) : 0;
@@ -488,6 +601,10 @@ function addTotalInformation(data) {
   const uniqueBrokers = [...new Set(data.map((item) => item[0]))];
   const uniqueProducts = [...new Set(data.map((item) => item[1]))];
 
+  // 移除可能已存在的表格信息元素
+  const existingInfo = document.querySelector(".table-info");
+  if (existingInfo) existingInfo.remove();
+
   const infoElement = document.createElement("div");
   infoElement.className = "table-info mt-4";
   infoElement.innerHTML = `
@@ -503,10 +620,25 @@ function addTotalInformation(data) {
   `;
 
   const tableWrapper =
-    document.querySelector(".table-wrapper") ||
+    document.querySelector(".classic-view-table") ||
     document.querySelector(".overflow-x-auto");
   if (tableWrapper) {
     tableWrapper.parentNode.insertBefore(infoElement, tableWrapper.nextSibling);
+  }
+
+  // 新增：總額顯示/隱藏的控制
+  const showTotalsCheckbox = document.getElementById("show-totals");
+  if (showTotalsCheckbox) {
+    // 確保總計信息預設顯示
+    infoElement.style.display = showTotalsCheckbox.checked ? "block" : "none";
+
+    // 重新綁定事件監聽器，確保始終與最新的總計信息元素保持一致
+    showTotalsCheckbox.addEventListener("change", function () {
+      const totalInfoElement = document.querySelector(".table-info");
+      if (totalInfoElement) {
+        totalInfoElement.style.display = this.checked ? "block" : "none";
+      }
+    });
   }
 }
 

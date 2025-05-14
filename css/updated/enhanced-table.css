@@ -127,7 +127,8 @@
   z-index: 1000;
 }
 
-.download-menu:hover .download-options {
+/* 移除懸停顯示，改為點擊後添加class來顯示 */
+.download-menu.show-options .download-options {
   display: block;
 }
 
@@ -197,6 +198,28 @@
 }
 
 .product-based-table .amount-critical {
+  color: var(--primary-dark);
+  font-weight: bold;
+}
+
+/* 總和行和總額單元格高亮 */
+.product-based-table .total-row td.total-cell-high {
+  color: var(--primary-color);
+  font-weight: bold;
+}
+
+.product-based-table .total-row td.total-cell-highest {
+  color: var(--primary-dark);
+  font-weight: bold;
+}
+
+/* 經典表格中的高額單元格 */
+#csv-table td.high-amount {
+  color: var(--alert-color);
+  font-weight: bold;
+}
+
+#csv-table td.highest-amount {
   color: var(--primary-dark);
   font-weight: bold;
 }
@@ -287,31 +310,91 @@
   .enhanced-controls {
     flex-direction: column;
     align-items: stretch;
+    padding: 0.75rem;
   }
 
   .control-group {
     width: 100%;
-    justify-content: space-between;
+    justify-content: center;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+  }
+
+  .control-group:first-child {
+    margin-bottom: 0.5rem;
+    border-bottom: 1px solid #e5e7eb;
   }
 
   .enhanced-filter {
-    flex: 1;
+    min-width: auto;
+    flex: none;
+  }
+
+  .broker-filter-select,
+  .date-filter-select {
+    width: 110px; /* 固定寬度以防止拉伸 */
+    font-size: 0.75rem;
+    padding: 0.3rem 0.5rem;
+    background-size: 1.2em;
+  }
+
+  .enhanced-checkbox {
+    font-size: 0.75rem;
+    white-space: nowrap;
+  }
+
+  .enhanced-checkbox input[type="checkbox"] {
+    width: 0.85rem;
+    height: 0.85rem;
+  }
+
+  .download-button {
+    font-size: 0.75rem;
+    padding: 0.3rem 0.6rem;
+    border-radius: 0.25rem;
   }
 
   .download-options {
     width: 100%;
     right: 0;
+    left: 0;
   }
 
-  .product-table-container,
-  .view-buttons {
-    display: none; /* 隱藏產品視圖和視圖切換按鈕 */
+  .download-option {
+    font-size: 0.75rem;
+    padding: 0.5rem;
+    text-align: center;
+  }
+
+  /* 手機版視圖切換按鈕 - 顯示為圖標 */
+  .product-table-container {
+    width: 100%;
+    overflow-x: auto;
+    max-width: 100vw; /* 允許超出螢幕寬度 */
+  }
+
+  .product-table-container.visible {
+    display: block !important;
+  }
+
+  .classic-view-table.visible {
+    display: block !important;
   }
 
   .product-based-table th,
   .product-based-table td {
-    padding: 0.75rem;
+    padding: 0.5rem;
     font-size: 0.75rem;
+    white-space: nowrap; /* 防止內容換行 */
+  }
+
+  /* 固定表格頭部 */
+  .product-based-table thead th,
+  #csv-table thead th {
+    position: sticky;
+    top: 0;
+    z-index: 10;
   }
 }
 

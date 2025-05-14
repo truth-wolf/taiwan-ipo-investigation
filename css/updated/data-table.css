@@ -139,23 +139,60 @@
   .classic-view-table {
     width: 100%;
     overflow-x: auto;
+    max-height: calc(100vh - 250px); /* 限制高度，避免超出螢幕 */
   }
 
   #csv-table th,
   #csv-table td {
-    padding: 0.75rem;
+    padding: 0.75rem 0.5rem;
     font-size: 0.75rem;
   }
 
-  /* 手機版經典視圖產品欄位寬度限制 */
+  /* 手機版經典視圖產品欄位寬度限制 - 更窄 */
   #csv-table th:nth-child(2), /* Product Header */
   #csv-table td:nth-child(2) {
     /* Product Data */
-    min-width: 120px;
-    max-width: 150px;
+    min-width: 60px;
+    max-width: 80px;
     overflow: hidden;
     text-overflow: ellipsis;
-    /* white-space: nowrap; */ /* 允許換行以顯示更多內容，如果需要單行省略則取消註釋此行 */
+    white-space: nowrap; /* 限制為單行 */
+  }
+
+  /* 調整分頁控制項，確保在一行內顯示 */
+  .dataTables_paginate {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    padding-top: 0.5rem;
+    overflow-x: auto;
+  }
+
+  .dataTables_paginate .paginate_button {
+    padding: 0.25rem 0.5rem !important;
+    min-width: 1.5rem;
+    text-align: center;
+  }
+
+  /* 手機版視圖切換按鈕（圖標模式） */
+  .mobile-view-toggle {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 0.5rem;
+  }
+
+  .mobile-view-toggle button {
+    background-color: #e5e7eb;
+    border: none;
+    border-radius: 0.375rem;
+    padding: 0.3rem 0.6rem;
+    margin: 0 0.25rem;
+    font-size: 0.75rem;
+  }
+
+  .mobile-view-toggle button.active {
+    background-color: #1a5d7a;
+    color: white;
   }
 }
 
