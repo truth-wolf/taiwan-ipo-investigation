@@ -318,16 +318,19 @@ function initProductTable(data) {
 
   const brokers = [...new Set(data.map((item) => item[0]))].sort();
 
-  // 增強的產品排序邏輯
+  // 增強的產品排序邏輯 + 收集募資期間
   let productDetails = {};
   data.forEach((item) => {
     const productName = item[1];
     const amount = parseInt(item[2], 10);
+    const period = item[3]; // 募資期間
+
     if (!productDetails[productName]) {
       productDetails[productName] = {
         totalAmount: 0,
         count: 0,
         name: productName,
+        period: period, // 儲存第一個遇到的募資期間
       };
     }
     if (!isNaN(amount)) {
@@ -341,15 +344,14 @@ function initProductTable(data) {
     return p;
   });
 
-  // 按平均責任額由高到低排序
   sortedProductObjects.sort((a, b) => b.average - a.average);
-  // 現在 sortedProductObjects 數組中的產品已按平均責任額排序
 
   let tableHTML = `
     <table id="product-table" class="product-based-table w-full">
       <thead>
         <tr>
           <th>產品</th>
+          <th>募集期間</th>
           ${brokers.map((broker) => `<th>${broker}</th>`).join("")}
           <th>平均責任額</th>
         </tr>
@@ -358,9 +360,11 @@ function initProductTable(data) {
   `;
 
   sortedProductObjects.forEach((productObj) => {
-    const product = productObj.name; // 從排序後的對象中獲取產品名稱
-    tableHTML += `<tr><td>${product}</td>`;
-    let totalAmountForAverageCalc = 0; // 用於計算該產品在表格中顯示的平均責任額
+    const product = productObj.name;
+    const fundraisingPeriod = productObj.period;
+    tableHTML += `<tr><td>${product}</td><td class="fundraising-period">${fundraisingPeriod}</td>`;
+
+    let totalAmountForAverageCalc = 0;
     let brokerCountForAverageCalc = 0;
 
     brokers.forEach((broker) => {
@@ -368,21 +372,28 @@ function initProductTable(data) {
         (item) => item[1] === product && item[0] === broker
       );
       if (match) {
-        tableHTML += `<td class="highlight-data">${match[2]}</td>`;
-        totalAmountForAverageCalc += parseInt(match[2], 10);
+        const amount = parseInt(match[2], 10);
+        let amountClass = "highlight-data"; // Default
+        if (amount >= 1000000) {
+          // 1M
+          amountClass += " amount-critical";
+        } else if (amount >= 500000) {
+          // 500k
+          amountClass += " amount-warning";
+        }
+        tableHTML += `<td class="${amountClass}">${match[2]}</td>`;
+        totalAmountForAverageCalc += amount;
         brokerCountForAverageCalc++;
       } else {
         tableHTML += `<td>-</td>`;
       }
     });
 
-    // 使用預計算的平均值，或重新計算（如此處所示）以確保與表格單元格數據一致
-    // const average = brokerCountForAverageCalc > 0 ? Math.round(totalAmountForAverageCalc / brokerCountForAverageCalc) : 0;
-    const average = productObj.average; // 直接使用已排序的平均值
+    const average = productObj.average;
     tableHTML += `<td class="total-cell">${average}</td></tr>`;
   });
 
-  tableHTML += `<tr class="total-row"><td><strong>總責任額</strong></td>`;
+  tableHTML += `<tr class="total-row"><td><strong>總責任額</strong></td><td></td>`; // Added empty cell for period column in total row
 
   brokers.forEach((broker) => {
     const brokerData = data.filter((item) => item[0] === broker);

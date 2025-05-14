@@ -556,50 +556,99 @@ function downloadTable(format) {
 // 下載 CSV 格式
 function downloadCSV(data, isProductView) {
   if (isProductView) {
-    const products = [...new Set(data.map((item) => item.product))].sort();
-    const brokers = [...new Set(data.map((item) => item.broker))].sort();
-    let csvContent = "產品," + brokers.join(",") + ",平均責任額\n";
+    const fullData = window.csvData || [];
+    const productsData = {};
+    fullData.forEach((item) => {
+      const productName = item[1];
+      if (!productsData[productName]) {
+        productsData[productName] = {
+          name: productName,
+          period: item[3],
+          brokers: {},
+          totalAmount: 0,
+          brokerCount: 0,
+        };
+      }
+      productsData[productName].brokers[item[0]] = parseInt(item[2], 10);
+      productsData[productName].totalAmount += parseInt(item[2], 10);
+      productsData[productName].brokerCount++;
+    });
 
-    products.forEach((product) => {
-      let row = [product];
-      let totalAmount = 0,
-        brokerCount = 0;
-      brokers.forEach((broker) => {
-        const match = data.find(
-          (item) => item.product === product && item.broker === broker
-        );
-        if (match) {
-          row.push(match.amount);
-          totalAmount += match.amount;
-          brokerCount++;
+    const sortedProducts = Object.values(productsData).sort((a, b) => {
+      const avgA = a.brokerCount > 0 ? a.totalAmount / a.brokerCount : 0;
+      const avgB = b.brokerCount > 0 ? b.totalAmount / b.brokerCount : 0;
+      return avgB - avgA;
+    });
+
+    const uniqueBrokers = [...new Set(fullData.map((item) => item[0]))].sort();
+    let csvContent =
+      "產品,募集期間," + uniqueBrokers.join(",") + ",平均責任額\n";
+
+    sortedProducts.forEach((product) => {
+      let row = [product.name, product.period];
+      let productTotalAmount = 0;
+      let productBrokerCount = 0;
+      uniqueBrokers.forEach((broker) => {
+        const amount = product.brokers[broker];
+        if (amount !== undefined) {
+          row.push(amount);
+          productTotalAmount += amount;
+          productBrokerCount++;
         } else {
           row.push("-");
         }
       });
       const average =
-        brokerCount > 0 ? Math.round(totalAmount / brokerCount) : 0;
+        productBrokerCount > 0
+          ? Math.round(productTotalAmount / productBrokerCount)
+          : 0;
       row.push(average);
-      csvContent += row.join(",") + "\n";
+      csvContent +=
+        row.map((cell) => `"${String(cell).replace(/"/g, '""')}"`).join(",") +
+        "\n";
     });
 
-    let totalRow = ["總責任額"];
-    brokers.forEach((broker) => {
-      const brokerData = data.filter((item) => item.broker === broker);
-      const total = brokerData.reduce((sum, item) => sum + item.amount, 0);
-      totalRow.push(total);
+    let totalRow = ["總責任額", ""];
+    uniqueBrokers.forEach((broker) => {
+      const brokerTotal = fullData
+        .filter((item) => item[0] === broker)
+        .reduce((sum, item) => sum + parseInt(item[2], 10), 0);
+      totalRow.push(brokerTotal);
     });
-    const grandTotal = data.reduce((sum, item) => sum + item.amount, 0);
-    const brokerProducts = data.length;
-    const grandAverage =
-      brokerProducts > 0 ? Math.round(grandTotal / brokerProducts) : 0;
-    totalRow.push(grandAverage);
-    csvContent += totalRow.join(",");
+    const grandTotalAmount = fullData.reduce(
+      (sum, item) => sum + parseInt(item[2], 10),
+      0
+    );
+    const allProductEntriesCount = fullData.filter(
+      (row) => row[2] && !isNaN(parseInt(row[2]))
+    ).length;
+    const finalGrandAverage =
+      allProductEntriesCount > 0
+        ? Math.round(grandTotalAmount / allProductEntriesCount)
+        : 0;
+    totalRow.push(finalGrandAverage);
+    csvContent += totalRow
+      .map((cell) => `"${String(cell).replace(/"/g, '""')}"`)
+      .join(",");
 
     downloadFile(csvContent, "ETF責任額數據_產品視圖.csv", "text/csv");
   } else {
     let csvContent = "券商,產品,責任額,募集期間\n";
     data.forEach((item) => {
-      csvContent += `${item.broker},${item.product},${item.amount},${item.period}\n`;
+      if (Array.isArray(item)) {
+        csvContent +=
+          item
+            .map((cell) => `"${String(cell).replace(/"/g, '""')}"`)
+            .join(",") + "\n";
+      } else {
+        csvContent +=
+          [
+            `"${item.broker}"`,
+            `"${item.product}"`,
+            item.amount,
+            `"${item.period}"`,
+          ].join(",") + "\n";
+      }
     });
     downloadFile(csvContent, "ETF責任額數據_經典視圖.csv", "text/csv");
   }
@@ -609,44 +658,80 @@ function downloadCSV(data, isProductView) {
 function downloadExcel(data, isProductView) {
   const BOM = "\uFEFF";
   if (isProductView) {
-    const products = [...new Set(data.map((item) => item.product))].sort();
-    const brokers = [...new Set(data.map((item) => item.broker))].sort();
-    let csvContent = BOM + "產品," + brokers.join(",") + ",平均責任額\n";
+    const fullData = window.csvData || [];
+    const productsData = {};
+    fullData.forEach((item) => {
+      const productName = item[1];
+      if (!productsData[productName]) {
+        productsData[productName] = {
+          name: productName,
+          period: item[3],
+          brokers: {},
+          totalAmount: 0,
+          brokerCount: 0,
+        };
+      }
+      productsData[productName].brokers[item[0]] = parseInt(item[2], 10);
+      productsData[productName].totalAmount += parseInt(item[2], 10);
+      productsData[productName].brokerCount++;
+    });
 
-    products.forEach((product) => {
-      let row = [product];
-      let totalAmount = 0,
-        brokerCount = 0;
-      brokers.forEach((broker) => {
-        const match = data.find(
-          (item) => item.product === product && item.broker === broker
-        );
-        if (match) {
-          row.push(match.amount);
-          totalAmount += match.amount;
-          brokerCount++;
+    const sortedProducts = Object.values(productsData).sort((a, b) => {
+      const avgA = a.brokerCount > 0 ? a.totalAmount / a.brokerCount : 0;
+      const avgB = b.brokerCount > 0 ? b.totalAmount / b.brokerCount : 0;
+      return avgB - avgA;
+    });
+
+    const uniqueBrokers = [...new Set(fullData.map((item) => item[0]))].sort();
+    let csvContent =
+      BOM + "產品,募集期間," + uniqueBrokers.join(",") + ",平均責任額\n";
+
+    sortedProducts.forEach((product) => {
+      let row = [product.name, product.period];
+      let productTotalAmount = 0;
+      let productBrokerCount = 0;
+      uniqueBrokers.forEach((broker) => {
+        const amount = product.brokers[broker];
+        if (amount !== undefined) {
+          row.push(amount);
+          productTotalAmount += amount;
+          productBrokerCount++;
         } else {
           row.push("-");
         }
       });
       const average =
-        brokerCount > 0 ? Math.round(totalAmount / brokerCount) : 0;
+        productBrokerCount > 0
+          ? Math.round(productTotalAmount / productBrokerCount)
+          : 0;
       row.push(average);
-      csvContent += row.join(",") + "\n";
+      csvContent +=
+        row.map((cell) => `"${String(cell).replace(/"/g, '""')}"`).join(",") +
+        "\n";
     });
 
-    let totalRow = ["總責任額"];
-    brokers.forEach((broker) => {
-      const brokerData = data.filter((item) => item.broker === broker);
-      const total = brokerData.reduce((sum, item) => sum + item.amount, 0);
-      totalRow.push(total);
+    let totalRow = ["總責任額", ""];
+    uniqueBrokers.forEach((broker) => {
+      const brokerTotal = fullData
+        .filter((item) => item[0] === broker)
+        .reduce((sum, item) => sum + parseInt(item[2], 10), 0);
+      totalRow.push(brokerTotal);
     });
-    const grandTotal = data.reduce((sum, item) => sum + item.amount, 0);
-    const brokerProducts = data.length;
-    const grandAverage =
-      brokerProducts > 0 ? Math.round(grandTotal / brokerProducts) : 0;
-    totalRow.push(grandAverage);
-    csvContent += totalRow.join(",");
+    const grandTotalAmount = fullData.reduce(
+      (sum, item) => sum + parseInt(item[2], 10),
+      0
+    );
+    const allProductEntriesCount = fullData.filter(
+      (row) => row[2] && !isNaN(parseInt(row[2]))
+    ).length;
+    const finalGrandAverage =
+      allProductEntriesCount > 0
+        ? Math.round(grandTotalAmount / allProductEntriesCount)
+        : 0;
+    totalRow.push(finalGrandAverage);
+    csvContent += totalRow
+      .map((cell) => `"${String(cell).replace(/"/g, '""')}"`)
+      .join(",");
 
     downloadFile(
       csvContent,
@@ -656,7 +741,20 @@ function downloadExcel(data, isProductView) {
   } else {
     let csvContent = BOM + "券商,產品,責任額,募集期間\n";
     data.forEach((item) => {
-      csvContent += `${item.broker},${item.product},${item.amount},${item.period}\n`;
+      if (Array.isArray(item)) {
+        csvContent +=
+          item
+            .map((cell) => `"${String(cell).replace(/"/g, '""')}"`)
+            .join(",") + "\n";
+      } else {
+        csvContent +=
+          [
+            `"${item.broker}"`,
+            `"${item.product}"`,
+            item.amount,
+            `"${item.period}"`,
+          ].join(",") + "\n";
+      }
     });
     downloadFile(
       csvContent,
@@ -674,46 +772,109 @@ function downloadPDF(data, isProductView) {
     return;
   }
 
-  const doc = new jsPDF();
-  doc.setFontSize(12);
-  doc.text("ETF 責任額數據", 10, 10);
+  const doc = new jsPDF({ orientation: "landscape" });
+  doc.setFontSize(10);
+  doc.text("ETF 責任額數據", 14, 10);
 
   if (isProductView) {
-    const products = [...new Set(data.map((item) => item.product))].sort();
-    const brokers = [...new Set(data.map((item) => item.broker))].sort();
-    const tableData = products.map((product) => {
-      const row = [product];
-      let totalAmount = 0,
-        brokerCount = 0;
-      brokers.forEach((broker) => {
-        const match = data.find(
-          (item) => item.product === product && item.broker === broker
-        );
-        row.push(match ? match.amount : "-");
-        if (match) {
-          totalAmount += match.amount;
-          brokerCount++;
+    const fullData = window.csvData || [];
+    const productsData = {};
+    fullData.forEach((item) => {
+      const productName = item[1];
+      if (!productsData[productName]) {
+        productsData[productName] = {
+          name: productName,
+          period: item[3],
+          brokers: {},
+          totalAmount: 0,
+          brokerCount: 0,
+        };
+      }
+      productsData[productName].brokers[item[0]] = parseInt(item[2], 10);
+      productsData[productName].totalAmount += parseInt(item[2], 10);
+      productsData[productName].brokerCount++;
+    });
+
+    const sortedProducts = Object.values(productsData).sort((a, b) => {
+      const avgA = a.brokerCount > 0 ? a.totalAmount / a.brokerCount : 0;
+      const avgB = b.brokerCount > 0 ? b.totalAmount / b.brokerCount : 0;
+      return avgB - avgA;
+    });
+
+    const uniqueBrokers = [...new Set(fullData.map((item) => item[0]))].sort();
+    const head = [["產品", "募集期間", ...uniqueBrokers, "平均責任額"]];
+    const body = sortedProducts.map((product) => {
+      let row = [product.name, product.period];
+      let productTotalAmount = 0;
+      let productBrokerCount = 0;
+      uniqueBrokers.forEach((broker) => {
+        const amount = product.brokers[broker];
+        if (amount !== undefined) {
+          row.push(amount.toLocaleString());
+          productTotalAmount += amount;
+          productBrokerCount++;
+        } else {
+          row.push("-");
         }
       });
-      row.push(brokerCount > 0 ? Math.round(totalAmount / brokerCount) : 0);
+      const average =
+        productBrokerCount > 0
+          ? Math.round(productTotalAmount / productBrokerCount)
+          : 0;
+      row.push(average.toLocaleString());
       return row;
     });
+
+    let totalRowData = ["總責任額", ""];
+    uniqueBrokers.forEach((broker) => {
+      const brokerTotal = fullData
+        .filter((item) => item[0] === broker)
+        .reduce((sum, item) => sum + parseInt(item[2], 10), 0);
+      totalRowData.push(brokerTotal.toLocaleString());
+    });
+    const grandTotalAmount = fullData.reduce(
+      (sum, item) => sum + parseInt(item[2], 10),
+      0
+    );
+    const allProductEntriesCount = fullData.filter(
+      (row) => row[2] && !isNaN(parseInt(row[2]))
+    ).length;
+    const finalGrandAverage =
+      allProductEntriesCount > 0
+        ? Math.round(grandTotalAmount / allProductEntriesCount)
+        : 0;
+    totalRowData.push(finalGrandAverage.toLocaleString());
+    body.push(totalRowData);
+
     doc.autoTable({
-      head: [["產品", ...brokers, "平均責任額"]],
-      body: tableData,
+      head: head,
+      body: body,
       startY: 20,
+      styles: { fontSize: 7, cellPadding: 1.5 },
+      headStyles: { fillColor: [26, 93, 122], fontSize: 7, cellPadding: 1.5 },
     });
   } else {
-    const tableData = data.map((item) => [
-      item.broker,
-      item.product,
-      item.amount,
-      item.period,
-    ]);
+    const tableData = data.map((item) => {
+      if (Array.isArray(item))
+        return [
+          item[0],
+          item[1],
+          parseInt(item[2], 10).toLocaleString(),
+          item[3],
+        ];
+      return [
+        item.broker,
+        item.product,
+        parseInt(item.amount, 10).toLocaleString(),
+        item.period,
+      ];
+    });
     doc.autoTable({
       head: [["券商", "產品", "責任額", "募集期間"]],
       body: tableData,
       startY: 20,
+      styles: { fontSize: 8, cellPadding: 2 },
+      headStyles: { fillColor: [26, 93, 122], fontSize: 8, cellPadding: 2 },
     });
   }
 

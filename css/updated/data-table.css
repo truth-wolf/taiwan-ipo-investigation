@@ -146,6 +146,17 @@
     padding: 0.75rem;
     font-size: 0.75rem;
   }
+
+  /* 手機版經典視圖產品欄位寬度限制 */
+  #csv-table th:nth-child(2), /* Product Header */
+  #csv-table td:nth-child(2) {
+    /* Product Data */
+    min-width: 120px;
+    max-width: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    /* white-space: nowrap; */ /* 允許換行以顯示更多內容，如果需要單行省略則取消註釋此行 */
+  }
 }
 
 /* 提高樣式權重，防止被覆蓋 */
