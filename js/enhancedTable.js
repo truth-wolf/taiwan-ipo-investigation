@@ -456,65 +456,162 @@ function setupViewToggle() {
   });
 }
 
-// 創建數據統計
 function createDataStats() {
-  // 1. 用全域 csvData（Papa.parse 解析後的原始陣列）來計算
-  //    row 格式是 [broker, product, responsibility, period]
+  // 解析原始 csvData
   const parsed = csvData.map((row) => ({
     broker: row[0],
     product: row[1],
     amount: Number(row[2]) || 0,
   }));
 
-  // 2. 總責任額(萬元)＝將 amount 全部累加
-  const totalAmount = parsed.reduce((sum, r) => sum + r.amount, 0);
-
-  // 3. 券商數量＝去重後長度
+  // 計算指標
+  const rawTotal = parsed.reduce((sum, r) => sum + r.amount, 0);
   const brokerCount = new Set(parsed.map((r) => r.broker)).size;
-
-  // 4. 產品數量＝去重後長度
   const productCount = new Set(parsed.map((r) => r.product)).size;
+  const avgAmount = brokerCount > 0 ? Math.round(rawTotal / brokerCount) : 0;
 
-  // 5. 平均責任額(萬元)＝總責任額 ÷ 券商數量，再四捨五入
-  const avgAmount = brokerCount > 0 ? Math.round(totalAmount / brokerCount) : 0;
+  // 萬→億換算
+  let totalTarget, totalUnit;
+  if (rawTotal >= 10000) {
+    totalTarget = (rawTotal / 10000).toFixed(2); // 保留兩位小數
+    totalUnit = "億";
+  } else {
+    totalTarget = rawTotal;
+    totalUnit = "萬";
+  }
+  const threshold = totalUnit === "億" ? 1 : 10000;
 
-  // 6. 生成統計卡片的 HTML（Font Awesome 圖標 + Tailwind CSS）
+  // 生成卡片 HTML（使用原始彩色 ICON + 數字動畫）
   const statsHTML = `
-     <div class="stats-grid grid grid-cols-2 md:grid-cols-4 gap-4 text-center mt-6">
-      <!-- 總責任額 使用「手捧美元」圖標 -->
-      <div class="p-4 bg-white rounded shadow">
-        <i class="fas fa-hand-holding-usd fa-2x text-blue-600 mb-2"></i>
-        <p class="text-2xl font-bold">${totalAmount.toLocaleString()} 萬元</p>
-        <span class="text-sm text-gray-500">總責任額</span>
-      </div>
-      <!-- 券商數量 保持不變 -->
-      <div class="p-4 bg-white rounded shadow">
-        <i class="fas fa-building fa-2x text-green-600 mb-2"></i>
-        <p class="text-2xl font-bold">${brokerCount}</p>
-        <span class="text-sm text-gray-500">券商數量</span>
-      </div>
-      <!-- 產品數量 使用「立方體」圖標 -->
-      <div class="p-4 bg-white rounded shadow">
-        <i class="fas fa-cubes fa-2x text-yellow-600 mb-2"></i>
-        <p class="text-2xl font-bold">${productCount}</p>
-        <span class="text-sm text-gray-500">產品數量</span>
-      </div>
-      <!-- 平均責任額 保持不變 -->
-      <div class="p-4 bg-white rounded shadow">
-        <i class="fas fa-balance-scale fa-2x text-red-600 mb-2"></i>
-        <p class="text-2xl font-bold">${avgAmount.toLocaleString()} 萬元</p>
-        <span class="text-sm text-gray-500">平均責任額</span>
-      </div>
-    </div>`;
+  <div class="stats-grid grid grid-cols-2 md:grid-cols-4 gap-4 text-center mt-6">
+    <!-- 總責任額 -->
+    <div class="p-4 bg-white rounded shadow">
+      <i class="fas fa-hand-holding-usd fa-2x text-blue-600 mb-2"></i>
+      <p class="text-2xl font-bold">
+        <span 
+          class="counter" 
+          data-target="${totalTarget}" 
+          data-unit="${totalUnit}" 
+          data-threshold="${threshold}" 
+          data-decimals="${totalUnit === "億" ? 2 : 0}"
+        >0</span><span>${totalUnit}</span>
+      </p>
+      <span class="text-sm text-gray-500">總責任額</span>
+    </div>
+    <!-- 券商數量 -->
+    <div class="p-4 bg-white rounded shadow">
+      <i class="fas fa-building fa-2x text-green-600 mb-2"></i>
+      <p class="text-2xl font-bold">
+        <span 
+          class="counter" 
+          data-target="${brokerCount}" 
+          data-threshold="${brokerCount}" 
+          data-decimals="0"
+        >0</span>
+      </p>
+      <span class="text-sm text-gray-500">券商數量</span>
+    </div>
+    <!-- 產品數量 -->
+    <div class="p-4 bg-white rounded shadow">
+      <i class="fas fa-cubes fa-2x text-yellow-600 mb-2"></i>
+      <p class="text-2xl font-bold">
+        <span 
+          class="counter" 
+          data-target="${productCount}" 
+          data-threshold="${productCount}" 
+          data-decimals="0"
+        >0</span>
+      </p>
+      <span class="text-sm text-gray-500">產品數量</span>
+    </div>
+    <!-- 平均責任額 -->
+    <div class="p-4 bg-white rounded shadow">
+      <i class="fas fa-balance-scale fa-2x text-red-600 mb-2"></i>
+      <p class="text-2xl font-bold">
+        <span 
+          class="counter" 
+          data-target="${avgAmount}" 
+          data-threshold="${avgAmount}" 
+          data-decimals="0"
+        >0</span><span>萬</span>
+      </p>
+      <span class="text-sm text-gray-500">平均責任額</span>
+    </div>
+  </div>
+  `;
 
-  // 7. 移除舊的 stats-grid（如果有），並插入新版
+  // 移除舊版並插入新版
   const old = document.querySelector(".stats-grid");
   if (old) old.remove();
-  // 找到要插入的位置：放在 table-wrapper 之後
   const container =
     document.querySelector(".table-wrapper")?.parentNode || document.body;
   container.insertAdjacentHTML("beforeend", statsHTML);
+
+  // 啟動數字動畫
+  animateCounters();
 }
+
+/**
+ * animateCounters - 使用 IntersectionObserver，滑入才開始
+ */
+function animateCounters() {
+  const counters = document.querySelectorAll(".counter");
+  const duration = 2000; // 動畫總時長 ms
+
+  if (!("IntersectionObserver" in window)) {
+    counters.forEach((counter) => runCounter(counter));
+    return;
+  }
+
+  const observer = new IntersectionObserver(
+    (entries, obs) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          runCounter(entry.target);
+          obs.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.5 }
+  );
+
+  counters.forEach((counter) => observer.observe(counter));
+
+  function runCounter(counter) {
+    const rawTarget = parseFloat(counter.dataset.target) || 0;
+    const decimals = parseInt(counter.dataset.decimals, 10) || 0;
+    const start = performance.now();
+
+    function step(now) {
+      const elapsed = now - start;
+      const progress = Math.min(elapsed / duration, 1);
+      let value = progress * rawTarget;
+
+      // 處理小數或整數顯示，並用千分位格式
+      if (decimals > 0) {
+        const fixed = value.toFixed(decimals);
+        counter.textContent = Number(fixed).toLocaleString(undefined, {
+          minimumFractionDigits: decimals,
+          maximumFractionDigits: decimals,
+        });
+      } else {
+        const intVal = Math.floor(value);
+        counter.textContent = intVal.toLocaleString();
+      }
+
+      if (progress < 1) {
+        requestAnimationFrame(step);
+      }
+    }
+
+    requestAnimationFrame(step);
+  }
+}
+
+// 在 DOMContentLoaded 時呼叫一次，確保掛載 observer
+document.addEventListener("DOMContentLoaded", () => {
+  animateCounters();
+});
 
 // 添加版權說明
 function addAttribution() {

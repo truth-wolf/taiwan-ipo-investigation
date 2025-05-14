@@ -116,7 +116,7 @@
 }
 
 .resize-handle::after {
-  content: '';
+  content: "";
   position: absolute;
   top: 3px;
   left: 50%;
@@ -177,7 +177,7 @@
 }
 
 .enhanced-filter::after {
-  content: '';
+  content: "";
   position: absolute;
   top: 50%;
   right: 12px;
@@ -337,35 +337,35 @@
     flex-direction: column;
     gap: 15px;
   }
-  
+
   .control-group {
     width: 100%;
     justify-content: space-between;
   }
-  
+
   .enhanced-filter {
     width: 48%;
   }
-  
+
   .view-buttons {
     display: none;
   }
-  
+
   .data-stats {
     flex-direction: column;
     gap: 10px;
   }
-  
+
   .stat-item {
     padding: 10px 0;
     border-right: none;
     border-bottom: 1px solid #e6e6e6;
   }
-  
+
   .stat-item:last-child {
     border-bottom: none;
   }
-  
+
   .product-table-container {
     display: none;
   }
@@ -445,4 +445,30 @@
 /* 確保主表格在產品表格顯示時隱藏 */
 .classic-view-table.hidden {
   display: none;
+}
+
+/* 3D 翻轉 + 漸入動畫 */
+.counter {
+  display: inline-block;
+  font-variant-numeric: tabular-nums; /* 等寬數字 */
+  transform: perspective(500px) rotateX(90deg);
+  opacity: 0;
+  animation: counterFlip 0.8s ease-out forwards;
+}
+
+/* 閥值以上的變色樣式 */
+.counter-high {
+  color: #e23e57; /* 閥值以上變粉色 */
+}
+
+/* 預設低於閥值時的顏色 */
+.counter-low {
+  color: #3b82f6; /* 藍色 */
+}
+
+@keyframes counterFlip {
+  to {
+    transform: perspective(500px) rotateX(0deg);
+    opacity: 1;
+  }
 }
