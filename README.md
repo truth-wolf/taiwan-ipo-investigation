@@ -1,101 +1,114 @@
-# 台灣IPO與ETF募集制度問題調查報告網站
+# 📌 專案名稱：Taiwan IPO Investigation Report
 
-本專案是關於台灣證券業IPO與ETF募集過程中出現的責任額制度問題的調查報告網站。它揭露了當前制度對證券營業員與投資人造成的多重負面影響，展示了不合理的高額配額、「回單」潛規則等核心問題。
+😀 _揭露台灣證券業 IPO 與 ETF 募集制度黑幕的專案網站_
 
-## 專案結構
+## 📝 專案概述
 
-```
-taiwan-ipo-investigation/
-│
-├── index.html              # 主頁面
-├── data.csv                # 責任額數據資料
-│
-├── css/                    # CSS樣式文件
-│   ├── main.css            # 主要樣式
-│   └── components.css      # 元件相關樣式
-│
-├── js/                     # JavaScript文件
-│   ├── app.js              # 主要JavaScript邏輯
-│   ├── templates.js        # 範本處理功能
-│   └── animations.js       # 動畫與視覺效果
-│
-├── partials/               # HTML片段
-│   ├── header.html         # 頁面頂部區域
-│   └── footer.html         # 頁面底部區域
-│
-└── enhanced-styles.css     # 增強的視覺效果
-```
+🧐 本專案公開調查並分析台灣證券業中「責任額制度」對營業員與投資人造成的負面影響，透過數據視覺化、事件時間軸與檢舉範本，讓使用者一目了然真相，並提供具體工具協助檢舉。專案旨在推動「#終結 IPO 制度暴力」的行動，促使監管改革。
 
-## 技術說明
+## ✨ 核心功能亮點
 
-本專案使用了以下技術:
+- 💹 **數據揭露與視覺化**：互動表格與圖表呈現各券商 IPO/ETF 責任額分佈與時間走勢。
+- 📜 **調查時間軸**：展示所有重要事件節點，並伴隨平滑淡入動畫。
+- 📝 **檢舉信範本產生**：內建多種檢舉信格式，支援一鍵複製與下載。
+- 🎁 **自我保護彩蛋**：隱藏檢舉人安全指南，點擊觸發後顯示保護建議。
+- 🔗 **社群分享**：一鍵分享到 Threads、Instagram、Facebook，並支援複製頁面鏈結。
 
-- **HTML5**: 網頁結構
-- **CSS3/Tailwind CSS**: 樣式與響應式設計
-- **JavaScript (ES6+)**: 互動功能
-- **Modular Architecture**: 模組化設計架構
-- **Fetch API**: 動態載入內容
-- **Intersection Observer API**: 實現滾動動畫
-- **Local Storage API**: 保存使用者偏好
+## 📂 檔案與資料夾結構
 
-## 主要功能
+| 檔案／資料夾                 | 用途             | 核心邏輯或功能                                 |
+| ---------------------------- | ---------------- | ---------------------------------------------- |
+| `index.html`                 | 主頁面           | 定義網站結構、載入各區塊容器與必要腳本         |
+| `partials/header.html`       | 頁首元件         | 導覽列與漢堡選單，不含主題切換按鈕             |
+| `partials/footer.html`       | 頁尾元件         | 社群連結、回到頂端按鈕、檢舉彩蛋區             |
+| `partials/data-section.html` | 責任額數據區     | 空表格範本與篩選下拉選單容器                   |
+| `ipo_broker_product.csv`     | 責任額原始數據   | CSV 格式，包含券商、產品、責任額、期間         |
+| `txt/`                       | 檢舉信範本資料夾 | 多封純文字檔範本，可一鍵載入與複製             |
+| `css/*.css`                  | 全域與元件樣式   | 版面與動畫樣式，不含主題切換相關定義           |
+| `app.js`                     | 核心互動邏輯     | 導覽列、進度條、分享按鈕、彩蛋觸發、滾動事件   |
+| `templates.js`               | 檢舉範本模組     | 處理範本載入、複製與下載功能                   |
+| `animations.js`              | 動畫效果模組     | 控制淡入、計數、條狀圖伸展等視覺效果           |
+| `enhancedDataTable.js`       | 表格與圖表模組   | CSV 解析、DataTables 初始化、Chart.js 圖表展現 |
+| `excel_to_csv.py`            | 資料轉換腳本     | 使用 Pandas 將 Excel 轉為 CSV，供前端載入使用  |
 
-1. **揭露數據可視化**: 以圖表和表格形式展示責任額數據
-2. **時間軸展示**: 互動式時間軸展示事件發展
-3. **檢舉範本生成**: 提供三種不同類型的檢舉範本
-4. **暗黑模式**: 支援暗色主題切換
-5. **彩蛋功能**: 提供檢舉人自我保護指南
-6. **分享功能**: 支援分享到多種社交平台
+## 🏗️ 技術堆疊
 
-## 頁面結構
+- **HTML5** + **CSS3** + **Tailwind CSS**
+- **JavaScript (ES6+)**, **jQuery**, **DataTables**, **Chart.js**, **PapaParse**
+- **Font Awesome 6**, **Intersection Observer API**, **LocalStorage API**
+- **Python 3** + **Pandas** (資料預處理)
 
-- **英雄區**: 網站頂部的主要標題與介紹
-- **調查概述**: 簡要說明責任額制度問題
-- **事件時間軸**: 展示「終結IPO制度暴力」運動的發展過程
-- **責任額數據**: 以表格和圖表展示各券商的責任額數據
-- **影響分析**: 分析對營業員、投資人及市場生態的影響
-- **檢舉範本**: 提供三種檢舉範本及行動建議
-- **結論**: 總結問題與展望未來
+## 🚀 快速開始
 
-## 維護指南
+### 本地瀏覽
 
-### 添加新的責任額數據
+1. Clone 專案:
 
-1. 在 `data.csv` 文件中添加新的數據行
-2. 格式: `券商,產品名稱,個人責任額,募集期間`
+   ```bash
+   git clone https://github.com/truth-wolf/taiwan-ipo-investigation.git
+   cd taiwan-ipo-investigation
+   ```
 
-### 更新檢舉範本
+2. 啟動簡易 HTTP 伺服器:
 
-1. 在 `index.html` 中找到 `<!-- 隱藏範本內容 -->` 區塊
-2. 在對應的模板 `div` 中更新內容
+   ```bash
+   python3 -m http.server 8000
+   ```
 
-### 修改樣式
+3. 瀏覽網站:
+   打開 `http://localhost:8000` 即可
 
-- 基本樣式修改在 `css/main.css`
-- 元件相關樣式在 `css/components.css`
-- 特殊視覺效果在 `enhanced-styles.css`
+### Docker 部署
 
-### 添加新的時間線事件
+1. 建立 Dockerfile:
 
-1. 在 `index.html` 的 `loadTimelineSection()` 函數中找到時間軸 HTML
-2. 按照現有格式添加新的時間點
+   ```dockerfile
+   FROM nginx:alpine
+   COPY . /usr/share/nginx/html
+   ```
 
-## 開發建議
+2. 構建映像:
 
-1. **模組化開發**: 繼續保持模組化設計，每個文件專注於特定功能
-2. **漸進式增強**: 先確保基本功能，再添加高級交互
-3. **保持結構清晰**: 使用一致的命名和結構
-4. **優化性能**: 定期檢查和優化頁面加載性能
-5. **保持更新**: 定期更新數據和檢舉範本內容
+   ```bash
+   docker build -t taiwan-ipo-site .
+   ```
 
-## 未來可能的改進
+3. 執行容器:
 
-1. 添加真實數據的互動式圖表
-2. 實現檢舉範本在線提交功能
-3. 多語言支持（如英文版本）
-4. 添加更多證據資料庫
-5. 添加證券從業人員論壇/社群功能
+   ```bash
+   docker run -d -p 8000:80 --name taiwan-ipo-site taiwan-ipo-site
+   ```
 
-## 技術聯繫人
+4. 存取服務:
+   打開 `http://localhost:8000`
 
-如有技術問題，請聯繫專案維護人員。
+## ⚙️ 環境變數
+
+本專案為純靜態網站，不需任何環境變數即可運行。
+
+## 📄 API 文件 / Swagger
+
+此專案無後端 API，所有資料均以靜態 CSV 與文字檔呈現。
+
+## 🔒 安全與最佳實踐
+
+- **HTTPS 部署**: 強制使用 HTTPS，不使用 HTTP。
+- **內容安全**: 無使用者輸入，不涉 XSS 或 CSRF。
+- **依賴管理**: 定期更新 CDN 版本，確保函式庫安全。
+- **隱私保護**: 不收集任何個人資料。
+
+## 🤝 貢獻指南
+
+1. 提出 Issue
+2. Fork 專案
+3. 建立分支並修改
+4. 發送 Pull Request
+
+## 🪪 授權條款
+
+採用 **MIT License**，詳見 `LICENSE`。
+
+## 📬 聯絡方式
+
+- Issues: [https://github.com/truth-wolf/taiwan-ipo-investigation/issues](https://github.com/truth-wolf/taiwan-ipo-investigation/issues)
+- 維護者: truth-wolf
