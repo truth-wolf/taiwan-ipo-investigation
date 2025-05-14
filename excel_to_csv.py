@@ -1,89 +1,101 @@
 #!/usr/bin/env python3
 # excel_to_csv.py
-# 將「第 2 列為表頭」的 Excel 轉成扁平 CSV，並自動填充合併儲存格
-
-import argparse
-import re
-import sys
-from pathlib import Path
+# 把 IPO Excel（第 2 列為表頭）轉成扁平 CSV，
+# 1. 補齊合併儲存格（ffill）
+# 2. 濾掉「小計／合計／總計」列
 
 import pandas as pd
+import re
+import argparse
+from pathlib import Path
 
-# PID 正則：3–5 位數字，可選英文字母或尾部 B
-PID_RE = re.compile(r"\d{3,5}[A-Za-z]?(B)?")
+# ------------------------------------------------------------
+# 1. 判斷產品代號，用不到就給名稱
+# ------------------------------------------------------------
+
 
 def choose_product(row) -> str:
-    """
-    依 row["募集"] 或 row["名稱"] 選擇 product，
-    若募集欄符合 PID_RE 就用之，否則用名稱。
-    """
-    pid   = str(row.get("募集") or "").strip()
-    pname = str(row.get("名稱") or "").strip()
-    return pid if PID_RE.fullmatch(pid) else (pid or pname)
+    pid = str(row["代號"]).strip() if pd.notna(row["代號"]) else ""
+    pname = str(row["名稱"]).strip() if pd.notna(row["名稱"]) else ""
+    return pid if re.fullmatch(r"\d{3,5}[A-Za-z]?(B)?", pid) else (pid or pname)
 
-def convert_excel_to_csv(src: Path, dest: Path) -> None:
-    # 1) 讀 Excel（第 2 列為 header）
-    df = pd.read_excel(src, header=1)
 
-    # 2) 清洗欄位名稱：去掉換行與首尾空白
-    df.columns = (
-        df.columns
-          .astype(str)
-          .str.replace(r"[\r\n]", "", regex=True)
-          .str.strip()
+# ------------------------------------------------------------
+# 2. 辨識並排除「加總列」
+# ------------------------------------------------------------
+_SUBTOTAL_KEYWORDS = ("小計", "合計", "總計")
+
+
+def is_subtotal_row(row) -> bool:
+    name = str(row["名稱"]).strip()
+    code = str(row["代號"]).strip()
+    return any(k in name for k in _SUBTOTAL_KEYWORDS) or any(
+        k in code for k in _SUBTOTAL_KEYWORDS
     )
 
-    # 3) 向下填滿所有欄位的 NaN（處理合併儲存格）
-    df.ffill(axis=0, inplace=True)
+# ------------------------------------------------------------
+# 3. 主要流程
+# ------------------------------------------------------------
 
-    # 4) 券商欄位，假設從第 4 欄起都是券商
+
+def convert_excel_to_csv(excel_file="IPO-1.xlsx",
+                         output_file="ipo_broker_product.csv") -> str:
+
+    # 讀取，header 在第 2 列（index=1）
+    df = pd.read_excel(excel_file, header=1)
+
+    # 合併儲存格往下補 —— 只補「代號／名稱／期間」三欄
+    df[["代號", "名稱", "期間"]] = df[["代號", "名稱", "期間"]].ffill()
+
+    # 選出券商欄（第 4 欄起）
     brokers = df.columns[3:]
 
     records = []
     for _, row in df.iterrows():
+
+        # 1) 跳過「小計／合計」列
+        if is_subtotal_row(row):
+            continue
+
+        # 2) 沒有「期間」代表是分類小標或表尾，也跳過
+        if pd.isna(row["期間"]):
+            continue
+
+        product = choose_product(row)
+        period = row["期間"]
+
+        # 3) 展平：一券商⇢一列
         for b in brokers:
-            val = row.get(b)
+            val = row[b]
             if pd.isna(val):
                 continue
             records.append({
-                "broker":         b.strip(),
-                "product":        choose_product(row),
+                "broker": b,
+                "product": product,
                 "responsibility": int(val),
-                "period":         str(row.get("期間") or "").strip()
+                "period": period
             })
 
-    # 5) 建 DataFrame，過濾空 period，再依 responsibility 排序
+    # 4) 整理輸出
     out = (
-        pd.DataFrame(records)
-          .query("period == period")  # 避掉 NaN period
-          .sort_values("responsibility", ascending=False)
+        pd.DataFrame.from_records(records)
+        .sort_values("responsibility", ascending=False)
     )
+    out.to_csv(output_file, index=False, encoding="utf-8")
+    print(f"✅ 轉檔完成：{output_file}")
+    return output_file
 
-    # 6) 輸出 CSV
-    out.to_csv(dest, index=False, encoding="utf-8")
-    print(f"✅ 轉檔完成：{dest}")
 
+# ------------------------------------------------------------
+# 4. CLI
+# ------------------------------------------------------------
 if __name__ == "__main__":
     ap = argparse.ArgumentParser(
         description="Convert IPO Excel to flat CSV for GitHub Pages"
     )
-    ap.add_argument(
-        "src",
-        nargs="?",
-        default="IPO-1.xlsx",
-        help="來源 Excel 檔（第2列為欄位），預設 IPO-1.xlsx"
-    )
-    ap.add_argument(
-        "-o", "--output",
-        default="ipo_broker_product.csv",
-        help="輸出 CSV 檔，預設 ipo_broker_product.csv"
-    )
+    ap.add_argument("src", nargs="?", default="IPO-1.xlsx",
+                    help="來源 Excel 檔案（第 2 列為表頭）")
+    ap.add_argument("-o", "--output", default="ipo_broker_product.csv",
+                    help="輸出 CSV 檔名")
     args = ap.parse_args()
-
-    src  = Path(args.src)
-    dest = Path(args.output)
-    if not src.exists():
-        print(f"❌ 找不到檔案：{src}", file=sys.stderr)
-        sys.exit(1)
-
-    convert_excel_to_csv(src, dest)
+    convert_excel_to_csv(args.src, args.output)

@@ -31,6 +31,36 @@
 | `enhancedDataTable.js`       | 表格與圖表模組   | CSV 解析、DataTables 初始化、Chart.js 圖表展現 |
 | `excel_to_csv.py`            | 資料轉換腳本     | 使用 Pandas 將 Excel 轉為 CSV，供前端載入使用  |
 
+## 📂 專案目錄結構圖
+
+```bash
+taiwan-ipo-investigation/
+├── index.html                     # 主頁面
+├── Dockerfile                     # Docker 部署設定
+├── excel_to_csv.py                # Excel 轉 CSV 工具 (pandas)
+├── ipo_broker_product.csv         # 主資料集（由 Excel 轉換而來）
+├── README.md                      # 專案說明文件
+├── LICENSE                        # MIT 授權條款
+├── css/                           # 所有樣式相關檔案
+│   ├── main.css                   # 全域樣式（含排版、配色）
+│   ├── components.css             # 特定元件樣式（按鈕、時間軸）
+│   └── enhanced-styles.css        # 額外視覺動畫與印刷特效
+├── js/                            # 前端邏輯模組（可選擇放此處集中管理）
+│   ├── app.js                     # 主互動腳本：導覽列、滾動偵測、分享邏輯
+│   ├── templates.js               # 範本處理模組：載入、複製、下載
+│   ├── animations.js              # 滾動動畫與數字計數效果
+│   ├── enhancedDataTable.js       # 表格初始化與 Chart.js 整合
+│   └── automate.js (可選移除)     # 開發用：載入狀態偵測器（非必要）
+├── partials/                      # 頁面組件區塊（HTML include 模式）
+│   ├── header.html                # 頁首與導覽列
+│   ├── footer.html                # 頁尾與社群連結
+│   └── data-section.html          # 數據表格與篩選區塊
+├── txt/                           # 檢舉信純文字範本
+│   ├── 1.txt
+│   ├── 2.txt
+│   └── ...（可自訂命名與數量）
+```
+
 ## 🏗️ 技術堆疊
 
 - **HTML5** + **CSS3** + **Tailwind CSS**
