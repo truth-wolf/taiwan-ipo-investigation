@@ -24,41 +24,74 @@
 
 <!-- 數據視覺化區域 - 將由JavaScript動態創建 -->
 
-<!-- 重點觀察區塊 - 保持不變 -->
-<div class="bg-secondary text-white p-8 rounded-lg shadow-card fade-in">
-  <h3 class="text-xl font-bold mb-4">責任額數據重點觀察</h3>
+<section
+  id="insight-panel"
+  class="bg-secondary text-white p-8 rounded-lg shadow-card fade-in"
+>
+  <h3 class="text-xl font-bold mb-6">殘酷事實・即時揭露</h3>
 
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-    <div>
-      <ul class="space-y-4">
-        <li class="flex items-start">
-          <i class="fas fa-check-circle text-primary-light mt-1 mr-3"></i>
-          <span
-            >責任額天花板持續上升：從2024年通常300萬/檔提升至2025年單檔700萬(範例)</span
-          >
-        </li>
-        <li class="flex items-start">
-          <i class="fas fa-check-circle text-primary-light mt-1 mr-3"></i>
-          <span>募集期縮短：從月度指標變為5-7天的短期衝刺(範例)</span>
-        </li>
-      </ul>
-    </div>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 leading-relaxed">
+    <!-- 左欄 -->
+    <ul class="space-y-4">
+      <li class="flex items-start">
+        <i class="fas fa-exclamation-triangle text-red-400 mt-1 mr-3"></i>
+        <span>
+          <strong>瘋狂天花板</strong>：單檔責任額最高
+          <span id="ins-maxResp" class="counter text-yellow-300">0</span> 萬，
+          是平均 <span id="ins-avgResp" class="counter">0</span> 萬 的
+          <span id="ins-ratioResp" class="counter">0</span> 倍！
+        </span>
+      </li>
 
-    <div>
-      <ul class="space-y-4">
-        <li class="flex items-start">
-          <i class="fas fa-check-circle text-primary-light mt-1 mr-3"></i>
-          <span
-            >產品頻率加速：2025年4-5月間，同一營業員被要求同時銷售5-10檔不同產品(範例)</span
+      <li class="flex items-start">
+        <i class="fas fa-stopwatch text-orange-300 mt-1 mr-3"></i>
+        <span>
+          <strong>壓縮週期</strong>：平均募集期僅
+          <span id="ins-avgDays" class="counter">0</span> 天， 史上最短
+          <span id="ins-minDays" class="counter">0</span> 天， 比傳統 30 天少
+          <span id="ins-cutPct" class="counter">0</span>％！
+        </span>
+      </li>
+
+      <li class="flex items-start">
+        <i class="fas fa-calendar-alt text-green-300 mt-1 mr-3"></i>
+        <span>
+          <strong>地獄月份</strong>：<span id="ins-hellMonth" class="counter"
+            >0</span
           >
-        </li>
-        <li class="flex items-start">
-          <i class="fas fa-check-circle text-primary-light mt-1 mr-3"></i>
-          <span
-            >分點差異明顯：同一產品在不同分點的配額相差達50-100萬元(範例)</span
+          月爆出 <span id="ins-hellCount" class="counter">0</span> 檔 ETF
+          同步開賣，前線炸裂！
+        </span>
+      </li>
+    </ul>
+
+    <!-- 右欄 -->
+    <ul class="space-y-4">
+      <li class="flex items-start">
+        <i class="fas fa-burn text-pink-400 mt-1 mr-3"></i>
+        <span>
+          <strong>日爆量</strong>：平均每日必須衝
+          <span id="ins-avgPerDay" class="counter">0</span> 萬責任額！
+        </span>
+      </li>
+
+      <li class="flex items-start">
+        <i class="fas fa-hourglass-half text-blue-300 mt-1 mr-3"></i>
+        <span>
+          <strong>每小時 KPI</strong>：<span id="ins-hrQuota" class="counter"
+            >0</span
           >
-        </li>
-      </ul>
-    </div>
+          萬／小時，喘口氣都奢侈！
+        </span>
+      </li>
+
+      <li class="flex items-start">
+        <i class="fas fa-skull-crossbones text-red-500 mt-1 mr-3"></i>
+        <span>
+          <strong>最恐怖一天</strong>：<span id="ins-peakDate">—</span>
+          單日責任額飆破 <span id="ins-peakAmt" class="counter">0</span> 萬！
+        </span>
+      </li>
+    </ul>
   </div>
-</div>
+</section>
