@@ -182,30 +182,6 @@ a:hover {
   transition: width 0.1s ease;
 }
 
-/* 暗黑模式 */
-.dark-mode {
-  background-color: var(--neutral-900);
-  color: var(--neutral-100);
-}
-
-.dark-mode .nav-blur {
-  background-color: rgba(38, 38, 38, 0.85);
-}
-
-.dark-mode a {
-  color: var(--secondary-light);
-}
-
-.dark-mode a:hover {
-  color: var(--primary-light);
-}
-
-.dark-mode .form-input {
-  background-color: var(--neutral-800);
-  border-color: var(--neutral-700);
-  color: var(--neutral-100);
-}
-
 /* 動畫效果 */
 @keyframes bounce {
   0%,
