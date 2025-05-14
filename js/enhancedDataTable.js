@@ -319,8 +319,8 @@ function createMobileViewToggle() {
   const mobileToggle = document.createElement("div");
   mobileToggle.className = "mobile-view-toggle";
   mobileToggle.innerHTML = `
-    <button id="mobile-classic-btn" class="active"><i class="fas fa-th-list"></i></button>
-    <button id="mobile-product-btn"><i class="fas fa-table"></i></button>
+    <button id="mobile-classic-btn" class="active" aria-label="經典視圖"><i class="fas fa-th-list"></i></button>
+    <button id="mobile-product-btn" aria-label="產品視圖"><i class="fas fa-table"></i></button>
   `;
 
   tableWrapper.parentNode.insertBefore(mobileToggle, tableWrapper);
@@ -432,6 +432,15 @@ function initProductTable(data) {
 
   sortedProductObjects.sort((a, b) => b.average - a.average);
 
+  // 計算平均責任額的閾值，用於高亮顯示
+  const averages = sortedProductObjects
+    .map((p) => p.average)
+    .filter((a) => a > 0);
+  averages.sort((a, b) => b - a);
+  const highestAverage = averages[0];
+  const highAverageThreshold = highestAverage * 0.7; // 最高平均值的70%
+  const warningAverageThreshold = highestAverage * 0.5; // 最高平均值的50%
+
   let tableHTML = `
     <table id="product-table" class="product-based-table w-full">
       <thead>
@@ -476,7 +485,20 @@ function initProductTable(data) {
     });
 
     const average = productObj.average;
-    tableHTML += `<td class="total-cell">${average}</td></tr>`;
+    // 為平均責任額添加高亮樣式
+    let averageClass = "total-cell";
+    if (average >= highestAverage * 0.9) {
+      // 接近最高平均值
+      averageClass += " average-highest";
+    } else if (average >= highAverageThreshold) {
+      // 高於閾值
+      averageClass += " average-high";
+    } else if (average >= warningAverageThreshold) {
+      // 中等值
+      averageClass += " average-medium";
+    }
+
+    tableHTML += `<td class="${averageClass}">${average}</td></tr>`;
   });
 
   // 計算每個經紀商的總責任額
@@ -518,7 +540,7 @@ function initProductTable(data) {
   const brokerProducts = data.length;
   const grandAverage =
     brokerProducts > 0 ? Math.round(grandTotal / brokerProducts) : 0;
-  tableHTML += `<td class="total-cell">${grandAverage}</td></tr></tbody></table>`;
+  tableHTML += `<td class="total-cell-highest">${grandAverage}</td></tr></tbody></table>`;
 
   const productTableContainer = document.getElementById(
     "product-table-container"

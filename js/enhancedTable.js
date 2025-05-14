@@ -57,6 +57,11 @@ function createEnhancedControls() {
   brokerFilterWrapper.className = "enhanced-filter broker-filter-wrapper";
   if (brokerFilter) {
     brokerFilter.className = "broker-filter-select";
+    // 添加一個圖標標籤用於手機介面
+    const brokerLabel = document.createElement("span");
+    brokerLabel.className = "filter-icon";
+    // brokerLabel.innerHTML = '<i class="fas fa-building"></i>';
+    brokerFilterWrapper.appendChild(brokerLabel);
     brokerFilterWrapper.appendChild(brokerFilter);
   }
 
@@ -64,6 +69,11 @@ function createEnhancedControls() {
   dateFilterWrapper.className = "enhanced-filter date-filter-wrapper";
   if (dateFilter) {
     dateFilter.className = "date-filter-select";
+    // 添加一個圖標標籤用於手機介面
+    const dateLabel = document.createElement("span");
+    dateLabel.className = "filter-icon";
+    // dateLabel.innerHTML = '<i class="fas fa-calendar-alt"></i>';
+    dateFilterWrapper.appendChild(dateLabel);
     dateFilterWrapper.appendChild(dateFilter);
   }
 
@@ -103,8 +113,8 @@ function createEnhancedControls() {
   const downloadMenu = document.createElement("div");
   downloadMenu.className = "download-menu";
   downloadMenu.innerHTML = `
-    <button class="download-button">
-      <i class="fas fa-download"></i> 下載表格
+    <button class="download-button" aria-label="下載表格">
+      <i class="fas fa-download"></i> <span class="hidden md:inline">下載表格</span>
     </button>
     <div class="download-options">
       <div class="download-option" data-format="csv">
@@ -529,8 +539,17 @@ function setupDownloadOptions() {
 
   // 點擊按鈕切換選單顯示
   downloadButton.addEventListener("click", function (e) {
+    e.preventDefault(); // 防止預設行為
     e.stopPropagation(); // 防止事件冒泡
+
+    // 切換當前選單
     downloadMenu.classList.toggle("show-options");
+
+    // 確保選單元素顯示在最頂層
+    const optionsMenu = downloadMenu.querySelector(".download-options");
+    if (optionsMenu) {
+      optionsMenu.style.zIndex = "9999";
+    }
   });
 
   // 點擊文檔其他位置關閉選單
@@ -543,6 +562,7 @@ function setupDownloadOptions() {
   // 點擊選項後關閉選單並執行下載
   downloadOptions.forEach((option) => {
     option.addEventListener("click", (e) => {
+      e.preventDefault(); // 防止預設行為
       e.stopPropagation(); // 防止事件冒泡
       const format = option.getAttribute("data-format");
       downloadTable(format);
@@ -553,20 +573,22 @@ function setupDownloadOptions() {
 
 // 下載表格功能
 function downloadTable(format) {
-  const isProductView = document
-    .getElementById("product-view-btn")
-    .classList.contains("active");
-  const tableData = extractTableData();
+  // 不再基於當前視圖，始終以產品視圖格式下載
+  // const isProductView = document.getElementById("product-view-btn").classList.contains("active");
+  const isProductView = true; // 統一使用產品視圖格式
+
+  // 使用window.csvData确保獲取完整數據
+  const fullData = window.csvData || [];
 
   switch (format) {
     case "csv":
-      downloadCSV(tableData, isProductView);
+      downloadCSV(fullData, isProductView);
       break;
     case "excel":
-      downloadExcel(tableData, isProductView);
+      downloadExcel(fullData, isProductView);
       break;
     case "pdf":
-      downloadPDF(tableData, isProductView);
+      downloadPDF(fullData, isProductView);
       break;
   }
 }
@@ -577,7 +599,7 @@ function downloadCSV(data, isProductView) {
     const fullData = window.csvData || [];
     const productsData = {};
     fullData.forEach((item) => {
-      const productName = item[1];
+      const productName = String(item[1]);
       if (!productsData[productName]) {
         productsData[productName] = {
           name: String(productName),
@@ -649,6 +671,13 @@ function downloadCSV(data, isProductView) {
       .map((cell) => `"${String(cell).replace(/"/g, '""')}"`)
       .join(",");
 
+    // 網站連結信息
+    const websiteInfo =
+      "\n\n數據來源：終結IPO制度暴力調查網站 https://taiwan-ipo-investigation.org";
+
+    // 添加網站連結到CSV底部
+    csvContent += websiteInfo;
+
     downloadFile(csvContent, "ETF責任額數據_產品視圖.csv", "text/csv");
   } else {
     let csvContent = "券商,產品,責任額,募集期間\n";
@@ -681,7 +710,7 @@ function downloadExcel(data, isProductView) {
     const fullData = window.csvData || [];
     const productsData = {};
     fullData.forEach((item) => {
-      const productName = item[1];
+      const productName = String(item[1]);
       if (!productsData[productName]) {
         productsData[productName] = {
           name: String(productName),
@@ -753,6 +782,13 @@ function downloadExcel(data, isProductView) {
       .map((cell) => `"${String(cell).replace(/"/g, '""')}"`)
       .join(",");
 
+    // 網站連結信息
+    const websiteInfo =
+      "\n\n數據來源：終結IPO制度暴力調查網站 https://taiwan-ipo-investigation.org";
+
+    // 添加網站連結到Excel底部
+    csvContent += websiteInfo;
+
     downloadFile(
       csvContent,
       "ETF責任額數據_產品視圖.xlsx",
@@ -802,7 +838,7 @@ function downloadPDF(data, isProductView) {
     const fullData = window.csvData || [];
     const productsData = {};
     fullData.forEach((item) => {
-      const productName = item[1];
+      const productName = String(item[1]);
       if (!productsData[productName]) {
         productsData[productName] = {
           name: String(productName),
@@ -875,6 +911,18 @@ function downloadPDF(data, isProductView) {
       styles: { fontSize: 7, cellPadding: 1.5 },
       headStyles: { fillColor: [26, 93, 122], fontSize: 7, cellPadding: 1.5 },
     });
+
+    // 添加網站連結到PDF底部
+    const pageHeight = doc.internal.pageSize.height;
+    doc.setFontSize(8);
+    doc.setTextColor(100, 100, 100);
+    doc.text(
+      "數據來源：終結IPO制度暴力調查網站 https://taiwan-ipo-investigation.org",
+      14,
+      pageHeight - 10
+    );
+
+    doc.save(`ETF責任額數據_產品視圖.pdf`);
   } else {
     const tableData = data.map((item) => {
       if (Array.isArray(item)) {
@@ -899,9 +947,19 @@ function downloadPDF(data, isProductView) {
       styles: { fontSize: 8, cellPadding: 2 },
       headStyles: { fillColor: [26, 93, 122], fontSize: 8, cellPadding: 2 },
     });
-  }
 
-  doc.save(`ETF責任額數據_${isProductView ? "產品視圖" : "經典視圖"}.pdf`);
+    // 添加網站連結到PDF底部
+    const pageHeight = doc.internal.pageSize.height;
+    doc.setFontSize(8);
+    doc.setTextColor(100, 100, 100);
+    doc.text(
+      "數據來源：終結IPO制度暴力調查網站 https://taiwan-ipo-investigation.org",
+      14,
+      pageHeight - 10
+    );
+
+    doc.save(`ETF責任額數據_經典視圖.pdf`);
+  }
 }
 
 // 通用下載文件函數
