@@ -902,5 +902,118 @@ function downloadFile(content, fileName, mimeType) {
   window.URL.revokeObjectURL(link.href);
 }
 
+/**
+ * generateKeyInsights - 動態計算四大觀察數字並填入 HTML
+ * 依賴全域 csvData (PapaParse 解析後)。
+ * 調用時機：csv 讀完、表格渲染後或 DOMContentLoaded。
+ */
+function generateKeyInsights() {
+  if (typeof csvData === "undefined") return;
+
+  // 將 csvData 轉成物件陣列
+  const rows = csvData.map((r) => ({
+    broker: r[0],
+    product: r[1],
+    amount: Number(r[2]) || 0,
+    period: r[3],
+  }));
+
+  // 辨識 ROC 年度 113 / 114
+  const y113 = rows.filter((r) => r.period.startsWith("113/"));
+  const y114 = rows.filter((r) => r.period.startsWith("114/"));
+
+  // 1️⃣ 天花板比較
+  const max113 = Math.max(...y113.map((r) => r.amount));
+  const max114 = Math.max(...y114.map((r) => r.amount));
+  const avg113 = Math.round(
+    y113.reduce((s, r) => s + r.amount, 0) / y113.length
+  );
+
+  // 2️⃣ 募集期平均天數
+  const days = (arr) => {
+    const [s, e] = arr.split("-"); // 113/03/11-03/15
+    const sParts = s.split("/"); // 113 03 11
+    const eParts = e.includes("/")
+      ? e.split("/")
+      : [sParts[0], ...e.split("/")];
+    const start = new Date(
+      2000 + parseInt(sParts[0], 10) - 1911,
+      sParts[1] - 1,
+      sParts[2]
+    );
+    const end = new Date(
+      2000 + parseInt(eParts[0], 10) - 1911,
+      eParts[1] - 1,
+      eParts[2]
+    );
+    return (end - start) / 86400000 + 1; // 含首日
+  };
+  const avgDays113 = (
+    y113.reduce((s, r) => s + days(r.period), 0) / y113.length
+  ).toFixed(1);
+  const avgDays114 = (
+    y114.reduce((s, r) => s + days(r.period), 0) / y114.length
+  ).toFixed(1);
+
+  // 3️⃣ 同期同分點產品數（取最大）
+  const timeKey = (r) => r.period.slice(0, 8); // 113/03/11
+  const comboMap = {};
+  rows.forEach((r) => {
+    const key = r.broker + "_" + timeKey(r);
+    comboMap[key] = (comboMap[key] || 0) + 1;
+  });
+  const maxCombo = Math.max(...Object.values(comboMap));
+
+  // 4️⃣ 同產品不同分點配額落差
+  const productMap = {};
+  rows.forEach((r) => {
+    productMap[r.product] = productMap[r.product] || [];
+    productMap[r.product].push(r.amount);
+  });
+  const maxGap = Math.max(
+    ...Object.values(productMap).map(
+      (arr) => Math.max(...arr) - Math.min(...arr)
+    )
+  );
+
+  // ➡️ 套進畫面 (若找不到 span 就略過)
+  const format = (num) => num.toLocaleString();
+  const setText = (id, val) => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = format(val);
+  };
+
+  setText("avg113", avg113);
+  setText("max114", max114);
+  setText("avgDays113", avgDays113);
+  setText("avgDays114", avgDays114);
+  setText("maxCombo", maxCombo);
+  setText("maxGap", maxGap);
+
+  // 加上小動畫 (由 0 跑到目標值)
+  document
+    .querySelectorAll(
+      "#avg113, #max114, #avgDays113, #avgDays114, #maxCombo, #maxGap"
+    )
+    .forEach((counter) => {
+      let start = 0;
+      const endVal = Number(counter.textContent.replace(/,/g, ""));
+      const step = Math.ceil(endVal / 60); // 約 1 秒跑完
+      const tick = () => {
+        start += step;
+        if (start >= endVal) {
+          counter.textContent = format(endVal);
+        } else {
+          counter.textContent = format(start);
+          requestAnimationFrame(tick);
+        }
+      };
+      tick();
+    });
+}
+
+// █ 立即在 DOMContentLoaded 後 (或 csv 解析完成後) 執行
+document.addEventListener("DOMContentLoaded", generateKeyInsights);
+
 // 初始化增強型表格
 initEnhancedTable();
