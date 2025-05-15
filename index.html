@@ -10,6 +10,20 @@
     />
     <link rel="shortcut icon" href="icon/solid.ico" />
 
+    <!-- TEST: Set background to red to see if JS overrides it -->
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // document.body.style.backgroundColor = 'red';
+        // More robust: set a class that app.js should remove.
+        document.documentElement.classList.add("js-test-error-bg");
+      });
+    </script>
+    <style>
+      html.js-test-error-bg body {
+        background-color: red !important;
+      }
+    </style>
+
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
 

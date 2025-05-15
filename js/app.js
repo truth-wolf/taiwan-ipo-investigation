@@ -10,7 +10,8 @@
  */
 
 document.addEventListener("DOMContentLoaded", function () {
-  throw new Error("APP_JS_VERY_EARLY_TEST_ERROR"); // INTENTIONAL ERROR FOR TESTING CONSOLE
+  // throw new Error("APP_JS_VERY_EARLY_TEST_ERROR"); // Temporarily removed for background test
+  document.documentElement.classList.remove("js-test-error-bg"); // Remove test background class
 
   // 全局變數
   const body = document.body;
