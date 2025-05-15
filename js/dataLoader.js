@@ -7,11 +7,115 @@
  * - 檢舉範本載入
  */
 
+// Store parsed CSV data globally for other modules to access
+window.ipoProductData = null;
+
 // 初始化函數，由DOM載入後自動呼叫
 function initDataLoader() {
-  console.log("DataLoader 初始化...");
-  // loadCsvData();
+  console.log("DataLoader: initDataLoader() called.");
+  loadCsvData();
   loadReportTemplates();
+}
+
+/**
+ * 簡單的 CSV 解析函數 (Copied from main.js for now)
+ * 欄位名稱: broker,product,responsibility,period
+ */
+function parseCSV(csvText) {
+  console.log("DataLoader: parseCSV() called.");
+  const lines = csvText.trim().split("\n");
+  if (lines.length === 0) {
+    console.warn("DataLoader: parseCSV - No lines in CSV text.");
+    return [];
+  }
+  const headersLine = lines[0].trim();
+  const headers = headersLine
+    .replace(/^\ufeff/, "")
+    .split(",")
+    .map((h) => h.trim().toLowerCase());
+  const expectedHeaders = ["broker", "product", "responsibility", "period"];
+  let missingHeaders = false;
+  expectedHeaders.forEach((eh) => {
+    if (!headers.includes(eh)) {
+      console.warn(`CSV 檔案缺少預期的表頭: ${eh} in dataLoader`);
+      missingHeaders = true;
+    }
+  });
+  // if (missingHeaders) { console.error("CSV 檔案表頭不完整(dataLoader)。"); return []; }
+
+  console.log("DataLoader: parseCSV - Parsed headers:", headers);
+  const data = lines
+    .slice(1)
+    .map((line) => {
+      const trimmedLine = line.trim();
+      if (!trimmedLine) return null;
+      const values = trimmedLine.split(",");
+      const entry = {};
+      headers.forEach((header, i) => {
+        entry[header] = values[i]?.trim() || "";
+      });
+      expectedHeaders.forEach((eh) => {
+        if (!entry.hasOwnProperty(eh)) entry[eh] = "";
+      });
+      return entry;
+    })
+    .filter(Boolean);
+  console.log("DataLoader: parseCSV - Parsed data length:", data.length);
+  return data;
+}
+
+function loadCsvData() {
+  console.log("DataLoader: loadCsvData() called.");
+  fetch("ipo_broker_product.csv")
+    .then((response) => {
+      console.log("DataLoader: loadCsvData - Fetch response received.");
+      if (!response.ok) {
+        console.error(
+          "DataLoader: loadCsvData - Fetch error! Status:",
+          response.status
+        );
+        throw new Error(
+          `HTTP error! status: ${response.status} while fetching ipo_broker_product.csv`
+        );
+      }
+      return response.text();
+    })
+    .then((csvText) => {
+      console.log(
+        "DataLoader: loadCsvData - CSV text received, length:",
+        csvText.length
+      );
+      window.ipoProductData = parseCSV(csvText);
+      console.log(
+        "DataLoader: loadCsvData - Parsed IPO data, length:",
+        window.ipoProductData.length
+      );
+      console.log(
+        "DataLoader: loadCsvData - Dispatching 'ipoDataLoaded' event."
+      );
+      document.dispatchEvent(
+        new CustomEvent("ipoDataLoaded", { detail: window.ipoProductData })
+      );
+
+      // Placeholder for initializing DataTable if it happens here
+      // if (typeof initEnhancedDataTable === 'function') { initEnhancedDataTable(window.ipoProductData); }
+    })
+    .catch((error) => {
+      console.error(
+        "DataLoader: loadCsvData - CATCH block. Error loading IPO CSV data:",
+        error
+      );
+      window.ipoProductData = []; // Ensure it's an empty array on error
+      document.dispatchEvent(
+        new CustomEvent("ipoDataLoaded", { detail: window.ipoProductData })
+      ); // Dispatch with empty data
+      // Display error to user, perhaps in the table area
+      const tableContainer = document.getElementById("data-table-container");
+      if (tableContainer) {
+        tableContainer.innerHTML =
+          '<div class="text-red-500 p-4 bg-white rounded-lg shadow-card">無法載入主要的表格數據。請檢查CSV檔案。</div>';
+      }
+    });
 }
 
 // 載入檢舉信範本
@@ -65,7 +169,6 @@ function loadReportTemplates() {
     const button = document.createElement("button");
     button.className =
       "copy-btn w-full py-3 px-4 bg-secondary text-white rounded-lg flex items-center justify-between hover:bg-secondary-dark transition-colors btn-effect";
-    button.setAttribute("data-template", `template-${template.id}`);
     button.innerHTML = `
       <span>${template.name}</span>
       <i class="fas fa-copy"></i>
@@ -84,35 +187,24 @@ function loadReportTemplates() {
       .then((content) => {
         console.log(`成功讀取範本 ${template.file}, 內容長度:`, content.length);
 
-        // 創建隱藏的範本內容元素
-        const templateEl = document.createElement("div");
-        templateEl.id = `template-${template.id}`;
-        templateEl.className = "hidden";
-        templateEl.textContent = content;
-        document.body.appendChild(templateEl);
-
-        // 繼續為剛才的按鈕添加點擊事件
         button.addEventListener("click", function () {
-          const templateContent = document.getElementById("template-content");
-          const editorPlaceholder =
-            document.getElementById("editor-placeholder");
-
-          if (templateContent && editorPlaceholder) {
-            // 顯示範本內容
-            editorPlaceholder.classList.add("hidden");
-            templateContent.classList.remove("hidden");
-            templateContent.innerHTML = formatTemplate(content);
-
-            // 複製到剪貼簿
-            copyTextToClipboard(content);
+          if (
+            window.templateUtil &&
+            typeof window.templateUtil.displayTextInEditor === "function"
+          ) {
+            window.templateUtil.displayTextInEditor(content);
+          } else {
+            console.error("templateUtil.displayTextInEditor not available.");
+            const editor = document.getElementById("template-content");
+            if (editor) editor.textContent = content;
           }
+          copyTextToClipboard(content);
         });
       })
       .catch((error) => {
         console.error(`載入範本 ${template.file} 出錯:`, error);
-        // 為按鈕添加錯誤狀態
-        button.classList.add("bg-red-500");
-        button.classList.remove("bg-secondary");
+        button.classList.add("bg-red-500", "hover:bg-red-700");
+        button.classList.remove("bg-secondary", "hover:bg-secondary-dark");
         button.innerHTML = `
           <span>${template.name} (載入失敗)</span>
           <i class="fas fa-exclamation-triangle"></i>
@@ -120,14 +212,6 @@ function loadReportTemplates() {
         button.disabled = true;
       });
   });
-}
-
-// 格式化範本文本
-function formatTemplate(text) {
-  return text
-    .replace(/\n\n/g, "<br><br>")
-    .replace(/\n/g, "<br>")
-    .replace(/（[^）]+）/g, '<span class="text-secondary">$&</span>');
 }
 
 // 複製文本到剪貼簿
@@ -140,18 +224,18 @@ function copyTextToClipboard(text) {
   textarea.select();
 
   try {
-    const successful = document.execCommand("copy");
+    document.execCommand("copy");
     if (typeof window.showToast === "function") {
       window.showToast("範本已複製到剪貼簿！");
     } else {
-      console.log("範本已複製到剪貼簿！");
+      console.log("範本已複製到剪貼簿！(showToast not found)");
     }
   } catch (err) {
     console.error("複製失敗:", err);
     if (typeof window.showToast === "function") {
       window.showToast("複製失敗，請手動複製");
     } else {
-      console.log("複製失敗，請手動複製");
+      console.log("複製失敗，請手動複製 (showToast not found)");
     }
   }
 

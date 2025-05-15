@@ -278,18 +278,20 @@ document.addEventListener("DOMContentLoaded", function () {
   // 平滑滾動
   document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
     anchor.addEventListener("click", function (e) {
-      e.preventDefault();
-
       const targetId = this.getAttribute("href");
+      if (targetId === "#") return;
+
       const targetElement = document.querySelector(targetId);
 
       if (targetElement) {
+        e.preventDefault();
+
         window.scrollTo({
           top: targetElement.offsetTop - 80,
           behavior: "smooth",
         });
 
-        // 如果是行動選單，點擊後關閉選單
+        const mobileMenu = document.querySelector(".mobile-menu");
         if (mobileMenu && mobileMenu.classList.contains("flex")) {
           mobileMenu.classList.add("hidden");
           mobileMenu.classList.remove("flex");
@@ -422,55 +424,200 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 /**
- * 初始化數據視覺化
- * 根據CSV數據生成圖表或其他視覺化元素
+ * 初始化數據視覺化 (「殘酷事實」區塊)
+ * Waits for 'ipoDataLoaded' event from dataLoader.js or uses window.ipoProductData.
  */
-function initDataVisualization() {
-  // 如果頁面中有圖表容器則初始化
-  const chartContainer = document.getElementById("responsibility-chart");
+function setupInsightPanelListener() {
+  console.log("Main.js: setupInsightPanelListener() called.");
+  const insightPanel = document.getElementById("insight-panel");
+  if (!insightPanel) {
+    console.warn(
+      "Main.js: Insight panel element not found, cannot initialize."
+    );
+    return;
+  }
 
-  if (!chartContainer) return;
+  let dataProcessed = false; // Flag to prevent processing multiple times
 
-  // 使用 CSV 數據繪製圖表
-  // 這裡可以使用 fetch 載入 data.csv 或者從 HTML data 屬性獲取數據
-  fetch("data.csv")
-    .then((response) => response.text())
-    .then((csvData) => {
-      // 解析 CSV 數據
-      const data = parseCSV(csvData);
+  const processDataForInsightPanel = (data) => {
+    if (dataProcessed) {
+      console.log(
+        "Main.js: Data for insight panel already processed, skipping."
+      );
+      return;
+    }
+    if (!data || data.length === 0) {
+      console.warn("Main.js: No data received for Insight Panel.");
+      insightPanel.innerHTML =
+        '<div class="text-yellow-300 p-4">注意：數據分析區無可用資料。</div>';
+      return;
+    }
+    console.log(
+      "Main.js: Processing data for Insight Panel, length:",
+      data.length
+    );
 
-      // 建立圖表（這裡省略具體實現）
-      console.log("Data loaded:", data.length, "entries");
+    const parseMinguoDate = (minguoDateStr) => {
+      if (!minguoDateStr || !minguoDateStr.includes("/")) return null;
+      const parts = minguoDateStr.split("/");
+      if (parts.length < 3) return null;
+      const year = parseInt(parts[0], 10) + 1911;
+      const month = parseInt(parts[1], 10) - 1;
+      const day = parseInt(parts[2], 10);
+      if (isNaN(year) || isNaN(month) || isNaN(day)) return null;
+      try {
+        return new Date(year, month, day);
+      } catch (e) {
+        return null;
+      }
+    };
+    const getDurationDays = (periodStr) => {
+      if (!periodStr || !periodStr.includes("-") || periodStr.trim() === "-") {
+        const partsCheck = periodStr ? periodStr.split("-") : [];
+        if (
+          partsCheck.length < 2 ||
+          !partsCheck[0].trim() ||
+          !partsCheck[1].trim()
+        )
+          return 0;
+      }
+      const [startStr, endStr] = periodStr.split("-");
+      let startDate = parseMinguoDate(startStr.trim());
+      let endDate = parseMinguoDate(endStr.trim());
+      if (startDate && endStr.trim().split("/").length === 2) {
+        const startYearMinguo = startStr.trim().split("/")[0];
+        endDate = parseMinguoDate(startYearMinguo + "/" + endStr.trim());
+      }
+      if (!startDate || !endDate || endDate < startDate) return 0;
+      const diffTime = Math.abs(endDate - startDate);
+      return Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+    };
 
-      // 您可以在這裡使用 Chart.js 或其他圖表庫
-    })
-    .catch((error) => {
-      console.error("Error loading data:", error);
+    let maxResp = 0,
+      totalResp = 0,
+      totalEntriesForAvgResp = 0;
+    let minDays = Infinity,
+      totalDays = 0,
+      totalEntriesForAvgDays = 0;
+    const monthCounts = {};
+    let dailyRespArray = [];
+    let peakAmt = 0,
+      peakDateInfo = "—";
+    data.forEach((item) => {
+      const respString = String(item.responsibility || "").trim();
+      const resp = parseFloat(respString);
+      if (!isNaN(resp)) {
+        if (resp > maxResp) maxResp = resp;
+        totalResp += resp;
+        totalEntriesForAvgResp++;
+      }
+      const period = String(item.period || "").trim();
+      const duration = getDurationDays(period);
+      if (duration > 0) {
+        if (duration < minDays) minDays = duration;
+        totalDays += duration;
+        totalEntriesForAvgDays++;
+        if (!isNaN(resp)) {
+          const dailyResp = resp / duration;
+          dailyRespArray.push(dailyResp);
+          if (dailyResp > peakAmt) {
+            peakAmt = dailyResp;
+            peakDateInfo = `${item.broker} ${item.product} (${period})`;
+          }
+        }
+        const startMinguoDate = period.split("-")[0].trim();
+        if (startMinguoDate && startMinguoDate.includes("/")) {
+          const monthPart = startMinguoDate.split("/")[1];
+          if (monthPart) {
+            const jsMonth = parseInt(monthPart, 10);
+            if (!isNaN(jsMonth))
+              monthCounts[jsMonth] = (monthCounts[jsMonth] || 0) + 1;
+          }
+        }
+      }
     });
-}
+    const avgResp =
+      totalEntriesForAvgResp > 0 ? totalResp / totalEntriesForAvgResp : 0;
+    const ratioResp = avgResp > 0 ? maxResp / avgResp : 0;
+    const avgDays =
+      totalEntriesForAvgDays > 0 ? totalDays / totalEntriesForAvgDays : 0;
+    const cutPct = avgDays > 0 ? Math.max(0, ((30 - avgDays) / 30) * 100) : 0;
+    if (minDays === Infinity) minDays = 0;
+    let hellMonth = 0,
+      hellCount = 0;
+    for (const monthKey in monthCounts) {
+      if (monthCounts[monthKey] > hellCount) {
+        hellCount = monthCounts[monthKey];
+        hellMonth = parseInt(monthKey, 10);
+      }
+    }
+    const avgPerDay =
+      dailyRespArray.length > 0
+        ? dailyRespArray.reduce((a, b) => a + b, 0) / dailyRespArray.length
+        : 0;
+    const hrQuota = avgPerDay > 0 ? avgPerDay / 8 : 0;
 
-/**
- * 簡單的 CSV 解析函數
- */
-function parseCSV(csvText) {
-  const lines = csvText.split("\n");
-  const headers = lines[0].split(",");
+    const updateElementTextAndPrepareForAnimation = (
+      id,
+      value,
+      fractionDigits = 0
+    ) => {
+      const element = document.getElementById(id);
+      if (element) {
+        let textValue =
+          typeof value === "number"
+            ? value.toFixed(fractionDigits)
+            : String(value);
+        element.textContent = textValue;
+        if (element.classList.contains("counter"))
+          element.dataset.target = textValue;
+      } else {
+        console.warn(
+          `Main.js: Element with id '${id}' not found for insight panel.`
+        );
+      }
+    };
+    updateElementTextAndPrepareForAnimation("ins-maxResp", maxResp);
+    updateElementTextAndPrepareForAnimation("ins-avgResp", avgResp, 1);
+    updateElementTextAndPrepareForAnimation("ins-ratioResp", ratioResp, 1);
+    updateElementTextAndPrepareForAnimation("ins-avgDays", avgDays, 1);
+    updateElementTextAndPrepareForAnimation("ins-minDays", minDays);
+    updateElementTextAndPrepareForAnimation("ins-cutPct", cutPct);
+    updateElementTextAndPrepareForAnimation(
+      "ins-hellMonth",
+      hellMonth || "N/A"
+    );
+    updateElementTextAndPrepareForAnimation("ins-hellCount", hellCount);
+    updateElementTextAndPrepareForAnimation("ins-avgPerDay", avgPerDay, 1);
+    updateElementTextAndPrepareForAnimation("ins-hrQuota", hrQuota, 1);
+    updateElementTextAndPrepareForAnimation("ins-peakDate", peakDateInfo);
+    updateElementTextAndPrepareForAnimation("ins-peakAmt", peakAmt, 1);
 
-  return lines
-    .slice(1)
-    .map((line) => {
-      if (!line.trim()) return null;
+    console.log("Main.js: Insight panel data updated.");
+    dataProcessed = true; // Set flag
+    if (
+      window.animationsModule &&
+      typeof window.animationsModule.reobserveCounters === "function"
+    ) {
+      window.animationsModule.reobserveCounters(
+        insightPanel.querySelectorAll(".counter")
+      );
+    }
+  };
 
-      const values = line.split(",");
-      const entry = {};
+  document.addEventListener("ipoDataLoaded", function (event) {
+    console.log("Main.js: Event 'ipoDataLoaded' received.");
+    processDataForInsightPanel(event.detail);
+  });
 
-      headers.forEach((header, i) => {
-        entry[header.trim()] = values[i]?.trim() || "";
-      });
-
-      return entry;
-    })
-    .filter(Boolean);
+  // Optional: Attempt to process if data already exists and event was missed (e.g. script order)
+  // This should be used cautiously or if DOMContentLoaded order can be guaranteed for dataLoader first.
+  // setTimeout(() => {
+  //   if (!dataProcessed && window.ipoProductData) {
+  //      console.log("Main.js: Processing pre-existing window.ipoProductData for insight panel.");
+  //      processDataForInsightPanel(window.ipoProductData);
+  //   }
+  // }, 500); // Delay to give event listener a chance
 }
 
 // 初始化移動裝置選單
@@ -499,17 +646,24 @@ function initMobileNav() {
 function initSmoothScroll() {
   document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
     anchor.addEventListener("click", function (e) {
-      e.preventDefault();
-
       const targetId = this.getAttribute("href");
       if (targetId === "#") return;
 
       const targetElement = document.querySelector(targetId);
+
       if (targetElement) {
-        targetElement.scrollIntoView({
+        e.preventDefault();
+
+        window.scrollTo({
+          top: targetElement.offsetTop - 80,
           behavior: "smooth",
-          block: "start",
         });
+
+        const mobileMenu = document.querySelector(".mobile-menu");
+        if (mobileMenu && mobileMenu.classList.contains("flex")) {
+          mobileMenu.classList.add("hidden");
+          mobileMenu.classList.remove("flex");
+        }
       }
     });
   });
@@ -759,8 +913,6 @@ function initMobileOptimization() {
     document.body.classList.add("mobile");
   }
 }
-
-// CSV資料載入功能已移至dataLoader.js
 
 // 輔助函數：動態載入腳本
 function loadScript(url, callback) {

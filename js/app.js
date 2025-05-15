@@ -10,6 +10,8 @@
  */
 
 document.addEventListener("DOMContentLoaded", function () {
+  throw new Error("APP_JS_VERY_EARLY_TEST_ERROR"); // INTENTIONAL ERROR FOR TESTING CONSOLE
+
   // 全局變數
   const body = document.body;
   const progressLine = document.querySelector(".progress-line");
@@ -35,8 +37,10 @@ document.addEventListener("DOMContentLoaded", function () {
   initSecretFeature();
   initShareFeature();
   initSmoothScroll();
+  initDarkMode();
 
   // 載入其他模組
+  loadDataModule();
   loadTemplateModule();
   loadAnimationsModule();
 
@@ -289,6 +293,32 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
+  // Dark Mode功能
+  function initDarkMode() {
+    if (darkModeToggle) {
+      darkModeToggle.addEventListener("click", function () {
+        body.classList.toggle("dark-mode");
+        darkModeToggle.innerHTML = body.classList.contains("dark-mode")
+          ? '<i class="fas fa-sun"></i>'
+          : '<i class="fas fa-moon"></i>';
+        localStorage.setItem("darkMode", body.classList.contains("dark-mode"));
+      });
+      if (localStorage.getItem("darkMode") === "true") {
+        body.classList.add("dark-mode");
+        darkModeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+      }
+    }
+  }
+
+  // 載入 DataLoader 模組
+  function loadDataModule() {
+    if (typeof initDataLoader === "function") {
+      initDataLoader();
+    } else {
+      console.warn("DataLoader模組 (initDataLoader) 尚未載入或不可用。");
+    }
+  }
+
   // 載入範本模組
   function loadTemplateModule() {
     if (typeof window.templateModule === "function") {
@@ -309,22 +339,25 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // 顯示提示函數
   window.showToast = function (message) {
-    const toast = document.getElementById("copy-toast");
-    if (!toast) return;
-
-    const messageElement = toast.querySelector("span");
-
-    if (messageElement) {
-      messageElement.textContent = message;
+    let toastEl = document.getElementById("copy-toast");
+    if (!toastEl) {
+      console.warn("Toast element #copy-toast not found.");
+      return;
     }
 
-    toast.classList.remove("opacity-0", "invisible");
-    toast.classList.add("opacity-100", "visible");
+    const messageSpan = toastEl.querySelector("span");
+    if (messageSpan) {
+      messageSpan.textContent = message;
+    } else {
+      toastEl.textContent = message;
+    }
 
-    // 3秒後自動隱藏
+    toastEl.classList.remove("opacity-0", "invisible");
+    toastEl.classList.add("opacity-100", "visible");
+
     setTimeout(function () {
-      toast.classList.add("opacity-0", "invisible");
-      toast.classList.remove("opacity-100", "visible");
+      toastEl.classList.remove("opacity-100", "visible");
+      toastEl.classList.add("opacity-0", "invisible");
     }, 3000);
   };
 });
