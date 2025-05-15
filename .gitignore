@@ -30,6 +30,7 @@ Thumbs.db
 
 # 忽略 Python 虛擬環境
 venv/
+.venv/
 
 # 忽略 Windows 批次檔
 *.bat
