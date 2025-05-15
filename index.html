@@ -127,6 +127,7 @@
     <link rel="stylesheet" href="css/updated/data-table.css" />
     <link rel="stylesheet" href="css/updated/enhanced-table.css" />
     <link rel="stylesheet" href="css/updated/fixes.css" />
+    <link rel="stylesheet" href="css/updated/formula-tooltip.css" />
 
     <style>
       .fade-in {
@@ -1356,6 +1357,51 @@
             el.classList.add("visible");
           });
         }, 500);
+
+        // // 固定表格標頭的直接解決方案
+        // setTimeout(function () {
+        //   // 為表格添加固定標題樣式
+        //   const tableStyle = document.createElement("style");
+        //   tableStyle.textContent = `
+        //   .table-wrapper {
+        //     overflow: auto;
+        //     max-height: 80vh;
+        //   }
+        //   #csv-table thead,
+        //   #product-table thead {
+        //     position: sticky;
+        //     top: 0;
+        //     z-index: 10;
+        //   }
+        //   #csv-table thead th,
+        //   #product-table thead th {
+        //     position: sticky;
+        //     top: 0;
+        //     z-index: 10;
+        //     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        //   }
+        // `;
+        //   document.head.appendChild(tableStyle);
+
+        //   // 確保表格有正確的容器結構
+        //   const tableWrapper = document.querySelector(".table-wrapper");
+        //   if (tableWrapper) {
+        //     tableWrapper.style.overflow = "auto";
+        //     tableWrapper.style.maxHeight = "80vh";
+        //   }
+
+        //   // 直接應用樣式到表格標頭
+        //   const tableHeaders = document.querySelectorAll(
+        //     "#csv-table thead, #product-table thead"
+        //   );
+        //   tableHeaders.forEach((header) => {
+        //     header.style.position = "sticky";
+        //     header.style.top = "0";
+        //     header.style.zIndex = "10";
+        //   });
+
+        //   console.log("直接應用表格標頭固定樣式完成");
+        // }, 2000);
       });
     </script>
   </body>

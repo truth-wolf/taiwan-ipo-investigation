@@ -36,17 +36,32 @@
 >
   <h3 class="text-xl font-bold mb-6 flex items-center gap-2">
     <span>殘酷事實・即時揭露</span>
-    <div class="relative">
+    <div class="relative" id="formula-info-container">
       <button
         id="formula-info-btn"
         class="w-5 h-5 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center transition-colors"
+        style="position: relative; z-index: 20; cursor: pointer"
+        aria-label="顯示公式說明"
+        tabindex="0"
+        onmouseover="document.getElementById('formula-info-fixed').style.display = 'block';"
+        onmouseout="if (!window.formulaInfoLocked) document.getElementById('formula-info-fixed').style.display = 'none';"
+        onclick="toggleFormulaInfo()"
       >
         <i class="fas fa-info-circle text-xs"></i>
       </button>
-      <!-- 公式說明浮動框 -->
+
+      <!-- 公式說明浮動框（固定版本） -->
       <div
-        id="formula-info"
-        class="hidden absolute right-0 top-8 w-72 bg-white/10 backdrop-blur-sm rounded-lg p-4 shadow-xl z-10 text-xs"
+        id="formula-info-fixed"
+        class="absolute right-0 top-8 w-72 rounded-lg p-4 shadow-xl z-30 text-xs"
+        style="
+          display: none;
+          background-color: rgba(26, 93, 122, 0.95);
+          backdrop-filter: blur(4px);
+          box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+        "
+        onmouseover="this.style.display = 'block';"
+        onmouseout="if (!window.formulaInfoLocked) this.style.display = 'none';"
       >
         <h4 class="font-semibold mb-2 text-white/90">📊 計算公式說明</h4>
         <ul class="space-y-2 text-white/80">
@@ -94,9 +109,6 @@
           <span id="ins-hellYear" class="counter">0</span> 年
           <span id="ins-hellMonth" class="counter">0</span> 月爆出
           <span id="ins-hellCount" class="counter">0</span> 檔商品同步開賣
-          <!-- <span class="text-xs text-white/70 block mt-1">
-            <i class="fas fa-info-circle mr-1"></i>依商品代碼去重後計算
-          </span> -->
         </span>
       </li>
     </ul>
@@ -131,52 +143,43 @@
     </ul>
   </div>
 
-  <!-- 添加公式說明的JavaScript -->
+  <!-- 內嵌公式說明控制腳本 -->
   <script>
-    document.addEventListener("DOMContentLoaded", function () {
-      const formulaBtn = document.getElementById("formula-info-btn");
-      const formulaInfo = document.getElementById("formula-info");
-      let isVisible = false;
+    // 用於跟踪公式說明框的固定狀態
+    window.formulaInfoLocked = false;
 
-      // 點擊按鈕切換顯示
-      formulaBtn.addEventListener("click", function (e) {
-        e.stopPropagation();
-        isVisible = !isVisible;
-        formulaInfo.classList.toggle("hidden", !isVisible);
-      });
+    // 切換公式說明框的顯示狀態
+    function toggleFormulaInfo() {
+      window.formulaInfoLocked = !window.formulaInfoLocked;
+      const infoPanel = document.getElementById("formula-info-fixed");
 
-      // 點擊其他地方關閉
-      document.addEventListener("click", function (e) {
-        if (isVisible && !formulaInfo.contains(e.target)) {
-          isVisible = false;
-          formulaInfo.classList.add("hidden");
-        }
-      });
+      if (window.formulaInfoLocked) {
+        infoPanel.style.display = "block";
+      } else {
+        infoPanel.style.display = "none";
+      }
+    }
 
-      // 滑鼠懸浮也可以顯示
-      formulaBtn.addEventListener("mouseenter", function () {
-        isVisible = true;
-        formulaInfo.classList.remove("hidden");
-      });
+    // 點擊其他區域關閉公式說明框
+    document.addEventListener("click", function (e) {
+      if (window.formulaInfoLocked) {
+        const infoBtn = document.getElementById("formula-info-btn");
+        const infoPanel = document.getElementById("formula-info-fixed");
 
-      formulaBtn.addEventListener("mouseleave", function (e) {
-        // 檢查滑鼠是否移動到公式說明框上
-        const rect = formulaInfo.getBoundingClientRect();
         if (
-          e.clientX < rect.left ||
-          e.clientX > rect.right ||
-          e.clientY < rect.top ||
-          e.clientY > rect.bottom
+          e.target !== infoBtn &&
+          e.target !== infoPanel &&
+          !infoPanel.contains(e.target)
         ) {
-          isVisible = false;
-          formulaInfo.classList.add("hidden");
+          window.formulaInfoLocked = false;
+          infoPanel.style.display = "none";
         }
-      });
+      }
+    });
 
-      formulaInfo.addEventListener("mouseleave", function () {
-        isVisible = false;
-        formulaInfo.classList.add("hidden");
-      });
+    // 確保公式說明功能在頁面載入後正常工作
+    document.addEventListener("DOMContentLoaded", function () {
+      console.log("公式說明功能初始化完成");
     });
   </script>
 </section>

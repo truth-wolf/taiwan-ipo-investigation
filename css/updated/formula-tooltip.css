@@ -1,0 +1,75 @@
+/* 
+ * formula-tooltip.css - 自訂公式說明樣式
+ * 
+ * 為公式說明按鈕和提示框提供專屬樣式，確保在各種環境下能正確顯示
+ */
+
+/* 公式說明按鈕樣式 */
+.formula-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px !important;
+  height: 20px !important;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.2);
+  cursor: pointer;
+  z-index: 20;
+  transition: all 0.2s ease;
+}
+
+.formula-btn:hover {
+  background-color: rgba(255, 255, 255, 0.4);
+  transform: scale(1.1);
+}
+
+/* 公式說明提示框樣式 */
+.formula-tooltip {
+  position: absolute;
+  right: 0;
+  top: 100%;
+  margin-top: 8px;
+  width: 280px;
+  max-width: 90vw;
+  padding: 16px;
+  border-radius: 8px;
+  background-color: rgba(26, 93, 122, 0.95);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  color: white;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+  z-index: 30;
+  display: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.formula-tooltip.visible {
+  display: block;
+}
+
+.formula-tooltip h4 {
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.formula-tooltip ul {
+  margin: 0;
+  padding: 0;
+}
+
+.formula-tooltip li {
+  list-style: none;
+  margin-bottom: 8px;
+}
+
+/* 確保公式說明按鈕在各種螢幕尺寸下都能正確顯示 */
+@media (max-width: 768px) {
+  .formula-tooltip {
+    right: -100px;
+    width: 250px;
+  }
+}

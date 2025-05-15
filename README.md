@@ -30,6 +30,7 @@
 | `animations.js`              | 動畫效果模組     | 控制淡入、計數、條狀圖伸展等視覺效果           |
 | `enhancedDataTable.js`       | 表格與圖表模組   | CSV 解析、DataTables 初始化、Chart.js 圖表展現 |
 | `excel_to_csv.py`            | 資料轉換腳本     | 使用 Pandas 將 Excel 轉為 CSV，供前端載入使用  |
+| `js/fix/*.js`                | 功能修復腳本     | 修復表格標頭固定與公式說明提示功能             |
 
 ## 📂 專案目錄結構圖
 
@@ -44,13 +45,23 @@ taiwan-ipo-investigation/
 ├── css/                           # 所有樣式相關檔案
 │   ├── main.css                   # 全域樣式（含排版、配色）
 │   ├── components.css             # 特定元件樣式（按鈕、時間軸）
-│   └── enhanced-styles.css        # 額外視覺動畫與印刷特效
-├── js/                            # 前端邏輯模組（可選擇放此處集中管理）
+│   ├── enhanced-styles.css        # 額外視覺動畫與印刷特效
+│   └── updated/                   # 更新和修復的樣式
+│       ├── data-table.css         # 表格樣式
+│       ├── enhanced-table.css     # 表格增強功能
+│       ├── fixes.css              # 修復樣式
+│       ├── enhanced-fixes.css     # 額外修復樣式
+│       └── formula-tooltip.css    # 公式說明提示樣式
+├── js/                            # 前端邏輯模組
 │   ├── app.js                     # 主互動腳本：導覽列、滾動偵測、分享邏輯
 │   ├── templates.js               # 範本處理模組：載入、複製、下載
 │   ├── animations.js              # 滾動動畫與數字計數效果
 │   ├── enhancedDataTable.js       # 表格初始化與 Chart.js 整合
-│   └── automate.js (可選移除)     # 開發用：載入狀態偵測器（非必要）
+│   ├── automate.js (可選移除)     # 開發用：載入狀態偵測器（非必要）
+│   └── fix/                       # 功能修復腳本
+│       ├── formula-tooltip.js     # 公式說明提示功能
+│       ├── sticky-table-header.js # 表格標頭固定功能
+│       └── ...                    # 其他修復腳本
 ├── partials/                      # 頁面組件區塊（HTML include 模式）
 │   ├── header.html                # 頁首與導覽列
 │   ├── footer.html                # 頁尾與社群連結
@@ -59,6 +70,8 @@ taiwan-ipo-investigation/
 │   ├── 1.txt
 │   ├── 2.txt
 │   └── ...（可自訂命名與數量）
+├── docs/                          # 文檔與報告
+│   └── fix-report.md              # 功能修復報告
 ```
 
 ## 🏗️ 技術堆疊
@@ -67,6 +80,16 @@ taiwan-ipo-investigation/
 - **JavaScript (ES6+)**, **jQuery**, **DataTables**, **Chart.js**, **PapaParse**
 - **Font Awesome 6**, **Intersection Observer API**, **LocalStorage API**
 - **Python 3** + **Pandas** (資料預處理)
+
+## 📋 最近更新 (2025年5月16日)
+
+- **功能修復**：
+  - 修復了公式說明提示功能，現在滑鼠滑過或點擊按鈕時能正確顯示公式說明
+  - 實現了表格標頭固定功能，在向下滾動頁面時表格標頭保持在視圖頂部
+  - 優化了整體UI/UX體驗，提高響應性和使用者友好度
+- **文檔更新**：
+  - 添加了功能修復報告 (`docs/fix-report.md`)
+  - 更新了README.md，添加了最新的目錄結構和更新日誌
 
 ## 🚀 快速開始
 
