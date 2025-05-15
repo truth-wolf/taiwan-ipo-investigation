@@ -32,9 +32,38 @@
 
 <section
   id="insight-panel"
-  class="bg-secondary text-white p-8 rounded-lg shadow-card fade-in"
+  class="bg-secondary text-white p-8 rounded-lg shadow-card fade-in relative"
 >
-  <h3 class="text-xl font-bold mb-6">殘酷事實・即時揭露</h3>
+  <h3 class="text-xl font-bold mb-6 flex items-center gap-2">
+    <span>殘酷事實・即時揭露</span>
+    <div class="relative">
+      <button
+        id="formula-info-btn"
+        class="w-5 h-5 rounded-full bg-white/20 hover:bg-white/30 flex items-center justify-center transition-colors"
+      >
+        <i class="fas fa-info-circle text-xs"></i>
+      </button>
+      <!-- 公式說明浮動框 -->
+      <div
+        id="formula-info"
+        class="hidden absolute right-0 top-8 w-72 bg-white/10 backdrop-blur-sm rounded-lg p-4 shadow-xl z-10 text-xs"
+      >
+        <h4 class="font-semibold mb-2 text-white/90">📊 計算公式說明</h4>
+        <ul class="space-y-2 text-white/80">
+          <li>• 最高責任額 = MAX(所有商品責任額)</li>
+          <li>• 最低責任額 = MIN(所有非零責任額)</li>
+          <li>• 最高/最低倍數 = 最高責任額 / 最低責任額</li>
+          <li>• 平均募集天數 = SUM(募集天數) / 商品數</li>
+          <li>• 每日責任額 = 責任額 / 募集天數</li>
+          <li>• 每小時配額 = 每日責任額 / 8</li>
+          <li>
+            • 地獄月份計算： <br />1. 依年月分組統計商品數 <br />2.
+            找出單月商品數最多的月份 <br />3. 顯示年份及該月商品數量
+          </li>
+        </ul>
+      </div>
+    </div>
+  </h3>
 
   <div class="grid grid-cols-1 md:grid-cols-2 gap-6 leading-relaxed">
     <!-- 左欄 -->
@@ -44,8 +73,7 @@
         <span>
           <strong>瘋狂天花板</strong>：單檔責任額最高
           <span id="ins-maxResp" class="counter text-yellow-300">0</span> 萬，
-          是平均 <span id="ins-avgResp" class="counter">0</span> 萬 的
-          <span id="ins-ratioResp" class="counter">0</span> 倍！
+          是最低額度的 <span id="ins-ratioResp" class="counter">0</span> 倍！
         </span>
       </li>
 
@@ -62,11 +90,13 @@
       <li class="flex items-start">
         <i class="fas fa-calendar-alt text-green-300 mt-1 mr-3"></i>
         <span>
-          <strong>地獄月份</strong>：<span id="ins-hellMonth" class="counter"
-            >0</span
-          >
-          月爆出 <span id="ins-hellCount" class="counter">0</span> 檔 ETF
-          同步開賣，前線炸裂！
+          <strong>地獄月份</strong>：
+          <span id="ins-hellYear" class="counter">0</span> 年
+          <span id="ins-hellMonth" class="counter">0</span> 月爆出
+          <span id="ins-hellCount" class="counter">0</span> 檔商品同步開賣
+          <!-- <span class="text-xs text-white/70 block mt-1">
+            <i class="fas fa-info-circle mr-1"></i>依商品代碼去重後計算
+          </span> -->
         </span>
       </li>
     </ul>
@@ -100,4 +130,53 @@
       </li>
     </ul>
   </div>
+
+  <!-- 添加公式說明的JavaScript -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const formulaBtn = document.getElementById("formula-info-btn");
+      const formulaInfo = document.getElementById("formula-info");
+      let isVisible = false;
+
+      // 點擊按鈕切換顯示
+      formulaBtn.addEventListener("click", function (e) {
+        e.stopPropagation();
+        isVisible = !isVisible;
+        formulaInfo.classList.toggle("hidden", !isVisible);
+      });
+
+      // 點擊其他地方關閉
+      document.addEventListener("click", function (e) {
+        if (isVisible && !formulaInfo.contains(e.target)) {
+          isVisible = false;
+          formulaInfo.classList.add("hidden");
+        }
+      });
+
+      // 滑鼠懸浮也可以顯示
+      formulaBtn.addEventListener("mouseenter", function () {
+        isVisible = true;
+        formulaInfo.classList.remove("hidden");
+      });
+
+      formulaBtn.addEventListener("mouseleave", function (e) {
+        // 檢查滑鼠是否移動到公式說明框上
+        const rect = formulaInfo.getBoundingClientRect();
+        if (
+          e.clientX < rect.left ||
+          e.clientX > rect.right ||
+          e.clientY < rect.top ||
+          e.clientY > rect.bottom
+        ) {
+          isVisible = false;
+          formulaInfo.classList.add("hidden");
+        }
+      });
+
+      formulaInfo.addEventListener("mouseleave", function () {
+        isVisible = false;
+        formulaInfo.classList.add("hidden");
+      });
+    });
+  </script>
 </section>

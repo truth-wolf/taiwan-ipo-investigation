@@ -164,18 +164,32 @@ function updateInsightPanel(data) {
 
 /**
  * 分析數據並更新統計數字
+ *
+ * 計算邏輯說明：
+ * 1. maxResp: 最高責任額，單一商品中最高的責任額
+ * 2. avgResp: 平均責任額，所有商品責任額的平均值
+ * 3. ratioResp: 最高/平均責任額比率，顯示極端值的程度
+ * 4. avgDays: 平均募集天數
+ * 5. minDays: 最短募集天數
+ * 6. cutPct: 相對於30天的縮減百分比
+ * 7. hellMonth: 地獄月份（最多商品開賣的月份）
+ * 8. hellCount: 地獄月份的商品數量
+ * 9. avgPerDay: 每日平均責任額
+ * 10. hrQuota: 每小時平均配額（假設8小時工作日）
+ * 11. peakAmt: 單日最高責任額
  */
 function analyzeDataForInsights(data) {
   console.log(`DataLoader: 開始分析 ${data.length} 筆數據用於統計`);
 
-  // 日期處理函數
+  // 日期處理函數 - 轉換民國年為西元年
   const parseMinguoDate = (minguoDateStr) => {
     if (!minguoDateStr || !minguoDateStr.includes("/")) return null;
 
     const parts = minguoDateStr.split("/");
     if (parts.length < 3) return null;
 
-    const year = parseInt(parts[0], 10) + 1911; // 民國轉西元
+    // 民國年轉西元年
+    const year = parseInt(parts[0], 10) + 1911;
     const month = parseInt(parts[1], 10) - 1; // 月份0-11
     const day = parseInt(parts[2], 10);
 
@@ -188,7 +202,7 @@ function analyzeDataForInsights(data) {
     }
   };
 
-  // 計算時間段天數
+  // 計算募集期間天數
   const getDurationDays = (periodStr) => {
     if (!periodStr || !periodStr.includes("-") || periodStr.trim() === "-") {
       return 0;
@@ -206,21 +220,24 @@ function analyzeDataForInsights(data) {
 
     if (!startDate || !endDate || endDate < startDate) return 0;
 
+    // 計算天數差（包含起始日）
     const diffTime = Math.abs(endDate - startDate);
-    return Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1; // 加1因為包含首尾日
+    return Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
   };
 
   // 初始化分析變數
-  let maxResp = 0,
-    totalResp = 0,
-    totalEntriesForAvgResp = 0;
-  let minDays = Infinity,
-    totalDays = 0,
-    totalEntriesForAvgDays = 0;
-  const monthCounts = {};
-  let dailyRespArray = [];
-  let peakAmt = 0,
-    peakDateInfo = "—";
+  let maxResp = 0; // 最高責任額
+  let minResp = Infinity; // 最低責任額（非零）
+  let totalResp = 0; // 總責任額
+  let totalEntriesForAvgResp = 0; // 有效責任額數量
+  let minDays = Infinity; // 最短募集天數
+  let totalDays = 0; // 總募集天數
+  let totalEntriesForAvgDays = 0; // 有效募集期間數量
+  const monthCounts = {}; // 各月份商品數量統計
+  let dailyRespArray = []; // 每日責任額陣列
+  let peakAmt = 0; // 單日最高責任額
+  let peakDateInfo = "—"; // 最高責任額的日期資訊
+  let yearMonthCounts = {}; // 按年月統計的商品數量
 
   // 分析每筆數據
   data.forEach((item) => {
@@ -228,8 +245,12 @@ function analyzeDataForInsights(data) {
     const respString = String(item.responsibility || "").trim();
     const resp = parseFloat(respString);
 
-    if (!isNaN(resp)) {
+    if (!isNaN(resp) && resp > 0) {
+      // 確保責任額大於0
+      // 更新最高責任額
       if (resp > maxResp) maxResp = resp;
+      // 更新最低責任額（非零）
+      if (resp < minResp) minResp = resp;
       totalResp += resp;
       totalEntriesForAvgResp++;
     }
@@ -239,6 +260,7 @@ function analyzeDataForInsights(data) {
     const duration = getDurationDays(period);
 
     if (duration > 0) {
+      // 更新最短募集天數
       if (duration < minDays) minDays = duration;
       totalDays += duration;
       totalEntriesForAvgDays++;
@@ -248,71 +270,102 @@ function analyzeDataForInsights(data) {
         const dailyResp = resp / duration;
         dailyRespArray.push(dailyResp);
 
+        // 更新單日最高責任額
         if (dailyResp > peakAmt) {
           peakAmt = dailyResp;
           peakDateInfo = `${item.broker} ${item.product} (${period})`;
         }
       }
 
-      // 統計月份分布
-      const startMinguoDate = period.split("-")[0].trim();
-      if (startMinguoDate && startMinguoDate.includes("/")) {
-        const monthPart = startMinguoDate.split("/")[1];
-        if (monthPart) {
-          const jsMonth = parseInt(monthPart, 10);
-          if (!isNaN(jsMonth)) {
-            monthCounts[jsMonth] = (monthCounts[jsMonth] || 0) + 1;
+      // 統計年月分布（改進版 - 加入商品去重）
+      const startDate = period.split("-")[0].trim();
+      if (startDate && startDate.includes("/")) {
+        const [year, month] = startDate.split("/").map((part) => part.trim());
+        if (year && month) {
+          // 確保年月格式正確
+          const yearNum = parseInt(year, 10);
+          const monthNum = parseInt(month, 10);
+
+          if (
+            !isNaN(yearNum) &&
+            !isNaN(monthNum) &&
+            monthNum >= 1 &&
+            monthNum <= 12
+          ) {
+            // 初始化年份物件
+            if (!yearMonthCounts[yearNum]) {
+              yearMonthCounts[yearNum] = {};
+            }
+            // 初始化月份的商品集合
+            if (!yearMonthCounts[yearNum][monthNum]) {
+              yearMonthCounts[yearNum][monthNum] = new Set();
+            }
+            // 將商品代碼加入集合（自動去重）
+            yearMonthCounts[yearNum][monthNum].add(item.product);
           }
         }
       }
     }
   });
 
+  // 找出「地獄月份」- 依年月分組找出最多商品的月份（去重後）
+  let hellYear = 0;
+  let hellMonth = 0;
+  let hellCount = 0;
+
+  // 遍歷每個年份
+  Object.entries(yearMonthCounts).forEach(([year, months]) => {
+    // 遍歷該年份的每個月份
+    Object.entries(months).forEach(([month, products]) => {
+      // 取得去重後的商品數量
+      const uniqueProductCount = products.size;
+      if (uniqueProductCount > hellCount) {
+        hellCount = uniqueProductCount;
+        hellYear = parseInt(year, 10);
+        hellMonth = parseInt(month, 10);
+      }
+    });
+  });
+
   // 計算統計結果
-  const avgResp =
-    totalEntriesForAvgResp > 0 ? totalResp / totalEntriesForAvgResp : 0;
-  const ratioResp = avgResp > 0 ? maxResp / avgResp : 0;
+  if (minResp === Infinity) minResp = 0;
+  const ratioResp = minResp > 0 ? (maxResp / minResp).toFixed(1) : 0; // 最高/最低比率
   const avgDays =
-    totalEntriesForAvgDays > 0 ? totalDays / totalEntriesForAvgDays : 0;
-  const cutPct = avgDays > 0 ? Math.max(0, ((30 - avgDays) / 30) * 100) : 0;
+    totalEntriesForAvgDays > 0
+      ? (totalDays / totalEntriesForAvgDays).toFixed(1)
+      : 0;
+  const cutPct =
+    avgDays > 0 ? Math.max(0, ((30 - avgDays) / 30) * 100).toFixed(1) : 0;
 
   if (minDays === Infinity) minDays = 0;
-
-  // 找出「地獄月份」- 集中開賣最多檔ETF的月份
-  let hellMonth = 0,
-    hellCount = 0;
-
-  for (const monthKey in monthCounts) {
-    if (monthCounts[monthKey] > hellCount) {
-      hellCount = monthCounts[monthKey];
-      hellMonth = parseInt(monthKey, 10);
-    }
-  }
 
   // 計算平均每日責任額和每小時配額
   const avgPerDay =
     dailyRespArray.length > 0
-      ? dailyRespArray.reduce((a, b) => a + b, 0) / dailyRespArray.length
+      ? (
+          dailyRespArray.reduce((a, b) => a + b, 0) / dailyRespArray.length
+        ).toFixed(1)
       : 0;
-  const hrQuota = avgPerDay > 0 ? avgPerDay / 8 : 0;
+  const hrQuota = avgPerDay > 0 ? (avgPerDay / 8).toFixed(1) : 0;
 
   // 更新UI元素
-  updateStatElement("ins-maxResp", maxResp);
-  updateStatElement("ins-avgResp", avgResp, 1);
-  updateStatElement("ins-ratioResp", ratioResp, 1);
-  updateStatElement("ins-avgDays", avgDays, 1);
-  updateStatElement("ins-minDays", minDays);
-  updateStatElement("ins-cutPct", cutPct);
-  updateStatElement("ins-hellMonth", hellMonth || "N/A");
-  updateStatElement("ins-hellCount", hellCount);
-  updateStatElement("ins-avgPerDay", avgPerDay, 1);
-  updateStatElement("ins-hrQuota", hrQuota, 1);
-  updateStatElement("ins-peakDate", peakDateInfo);
-  updateStatElement("ins-peakAmt", peakAmt, 1);
+  updateStatElement("ins-maxResp", maxResp); // 最高責任額
+  updateStatElement("ins-minResp", minResp); // 最低責任額
+  updateStatElement("ins-ratioResp", ratioResp); // 最高/最低比率
+  updateStatElement("ins-avgDays", avgDays); // 平均募集天數
+  updateStatElement("ins-minDays", minDays); // 最短募集天數
+  updateStatElement("ins-cutPct", cutPct); // 縮減百分比
+  updateStatElement("ins-hellYear", hellYear); // 地獄年份
+  updateStatElement("ins-hellMonth", hellMonth); // 地獄月份
+  updateStatElement("ins-hellCount", hellCount); // 地獄月份商品數
+  updateStatElement("ins-avgPerDay", avgPerDay); // 每日平均責任額
+  updateStatElement("ins-hrQuota", hrQuota); // 每小時平均配額
+  updateStatElement("ins-peakDate", peakDateInfo); // 最高責任額日期
+  updateStatElement("ins-peakAmt", peakAmt, 1); // 單日最高責任額
 
   console.log("DataLoader: 數據分析完成，統計元素已更新");
 
-  // 觸發計數器動畫 (如果動畫模組已載入)
+  // 觸發計數器動畫
   if (
     window.animationsModule &&
     typeof window.animationsModule.reobserveCounters === "function"
