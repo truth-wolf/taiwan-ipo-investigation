@@ -72,7 +72,7 @@ function createEnhancedControls() {
   totalCheckbox.innerHTML = `
     <label class="inline-flex items-center">
       <input type="checkbox" id="show-totals" class="mr-2"> 
-      <span>顯示總計</span>
+      <span></span>
     </label>
   `;
 
