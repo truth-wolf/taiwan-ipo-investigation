@@ -524,3 +524,116 @@
   position: relative;
   z-index: 10;
 }
+
+/* ===== 表格固定標頭與列策略 - 清除舊規則，重新實現 ===== */
+/* 重置所有可能被設置為sticky的元素 */
+#csv-table thead th,
+#csv-table tbody td,
+.product-based-table thead th,
+.product-based-table tbody td {
+  position: static;
+  left: auto;
+  top: auto;
+  z-index: auto;
+}
+
+/* 經典視圖表格固定策略 */
+#csv-table {
+  /* 確保表格使用正確的佈局模式 */
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+/* 經典視圖固定標頭 */
+#csv-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background-color: #1a5d7a;
+}
+
+/* 經典視圖固定第一列（券商） */
+#csv-table tbody td:first-child {
+  position: sticky;
+  left: 0;
+  z-index: 10;
+  background-color: #fff;
+}
+
+#csv-table tbody tr:hover td:first-child {
+  background-color: #f9fafb;
+}
+
+/* 經典視圖標頭左上角需要最高的z-index */
+#csv-table thead th:first-child {
+  position: sticky;
+  left: 0;
+  top: 0;
+  z-index: 30;
+  background-color: #1a5d7a;
+}
+
+/* 產品視圖表格固定策略 */
+.product-based-table {
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+/* 產品視圖固定標頭 */
+.product-based-table thead th {
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 20 !important;
+  background-color: #1a5d7a !important;
+}
+
+/* 產品視圖固定第一列（產品） */
+.product-based-table tbody td:first-child {
+  position: sticky !important;
+  left: 0 !important;
+  z-index: 10 !important;
+  background-color: #fff !important;
+}
+
+.product-based-table tbody tr:hover td:first-child {
+  background-color: #f9fafb !important;
+}
+
+/* 標頭左上角需要最高的z-index */
+.product-based-table thead th:first-child {
+  position: sticky !important;
+  left: 0 !important;
+  top: 0 !important;
+  z-index: 30 !important;
+  background-color: #1a5d7a !important;
+}
+
+/* 產品視圖固定第二列（募集期間） */
+.product-based-table tbody td:nth-child(2) {
+  position: sticky !important;
+  left: 130px !important; /* 根據第一列寬度調整 */
+  z-index: 9 !important;
+  background-color: #fff !important;
+}
+
+.product-based-table tbody tr:hover td:nth-child(2) {
+  background-color: #f9fafb !important;
+}
+
+/* 第二列標頭也需要固定 */
+.product-based-table thead th:nth-child(2) {
+  position: sticky !important;
+  left: 130px !important;
+  top: 0 !important;
+  z-index: 29 !important;
+  background-color: #1a5d7a !important;
+}
+
+/* 總計行背景色修正 */
+.product-based-table .total-row td:first-child {
+  background-color: #e5e7eb !important;
+}
+
+.product-based-table .total-row td:nth-child(2) {
+  background-color: #e5e7eb !important;
+}

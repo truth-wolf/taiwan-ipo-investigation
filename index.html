@@ -1301,15 +1301,16 @@
     <script src="https://cdn.datatables.net/responsive/2.4.0/js/dataTables.responsive.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.3.2/js/dataTables.buttons.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
+    <!-- 核心腳本 -->
     <script src="js/loader.js"></script>
-    <script src="js/app.js"></script>
+    <script src="js/dataLoader.js"></script>
     <script src="js/templates.js"></script>
     <script src="js/animations.js"></script>
-    <script src="js/templateEditor.js"></script>
+    <script src="js/tableUtil.js"></script>
     <script src="js/enhancedDataTable.js"></script>
     <script src="js/enhancedTable.js"></script>
-    <script src="js/dataLoader.js"></script>
-    <!-- <script src="js/timeline.js"></script> -->
+    <!-- 主程序入口點必須最後加載 -->
+    <script src="js/app.js"></script>
 
     <script>
       // 頁面載入時載入各部分內容
@@ -1342,6 +1343,11 @@
         // 初始化範本功能
         if (typeof window.templateModule === "function") {
           window.templateModule();
+        }
+
+        // 初始化增強型表格
+        if (typeof initEnhancedDataTable === "function") {
+          initEnhancedDataTable();
         }
 
         // 使所有淡入元素可見

@@ -1,61 +1,62 @@
 /**
- * app.js - 主要JavaScript邏輯
+ * app.js - 主要JavaScript入口點
  *
- * 這個文件包含網站的核心功能:
- * - 導航和UI控制
- * - 暗黑模式切換
- * - 滾動事件處理
- * - 分享功能
- * - 彩蛋功能
+ * 這個文件是網站的核心啟動點:
+ * - 初始化各模組
+ * - 統一管理功能加載順序
+ * - 提供全局工具函數
  */
 
 document.addEventListener("DOMContentLoaded", function () {
-  // throw new Error("APP_JS_VERY_EARLY_TEST_ERROR"); // Temporarily removed for background test
-  document.documentElement.classList.remove("js-test-error-bg"); // Remove test background class
+  // 移除測試背景類
+  document.documentElement.classList.remove("js-test-error-bg");
 
-  // 全局變數
-  const body = document.body;
-  const progressLine = document.querySelector(".progress-line");
-  const menuToggle = document.querySelector(".menu-toggle");
-  const mobileMenu = document.querySelector(".mobile-menu");
-  const menuClose = document.querySelector(".menu-close");
-  const darkModeToggle = document.getElementById("darkModeToggle");
-  const backToTop = document.getElementById("back-to-top");
-  const secretTrigger = document.getElementById("secret-trigger");
-  const secretContent = document.getElementById("secret-content");
-  const secretClose = document.getElementById("secret-close");
-  const secretUnderstand = document.getElementById("secret-understand");
-  const shareBtn = document.getElementById("share-btn");
-  const mobileShareBtn = document.getElementById("mobile-share-btn");
-  const shareModal = document.getElementById("share-modal");
-  const shareClose = document.getElementById("share-close");
-  const copyLink = document.getElementById("copy-link");
+  console.log("App: 初始化核心功能...");
 
-  // 初始化所有功能
+  // 初始化核心UI功能
+  initHeaderAndNav();
   initScrollEvents();
+  initSmoothScroll();
   initMobileMenu();
   initBackToTop();
   initSecretFeature();
   initShareFeature();
-  initSmoothScroll();
-  initDarkMode();
+
+  // 初始化數據模組
+  initDataLoader();
 
   // 載入其他模組
-  loadDataModule();
-  loadTemplateModule();
-  loadAnimationsModule();
+  loadTemplates();
+  loadAnimations();
 
-  // 閱讀進度條
+  console.log("App: 核心功能初始化完成");
+
+  /**
+   * 初始化頁面頭部和導航
+   */
+  function initHeaderAndNav() {
+    loadPartialContent("header-container", "partials/header.html");
+    loadPartialContent("footer-container", "partials/footer.html");
+  }
+
+  /**
+   * 初始化滾動事件
+   */
   function initScrollEvents() {
+    const progressLine = document.querySelector(".progress-line");
+    if (!progressLine) return;
+
     window.addEventListener("scroll", function () {
-      updateProgressBar();
+      updateProgressBar(progressLine);
       updateFixedHeader();
+      updateFadeElements();
     });
   }
 
-  function updateProgressBar() {
-    if (!progressLine) return;
-
+  /**
+   * 更新進度條
+   */
+  function updateProgressBar(progressLine) {
     const windowHeight = window.innerHeight;
     const documentHeight = document.documentElement.scrollHeight - windowHeight;
     const scrollTop = window.scrollY;
@@ -63,6 +64,9 @@ document.addEventListener("DOMContentLoaded", function () {
     progressLine.style.width = width;
   }
 
+  /**
+   * 更新固定頭部
+   */
   function updateFixedHeader() {
     const header = document.querySelector("header");
     if (!header) return;
@@ -85,27 +89,78 @@ document.addEventListener("DOMContentLoaded", function () {
     this.lastScrollPosition = scrollPosition;
   }
 
-  // 行動選單控制
+  /**
+   * 更新淡入元素
+   */
+  function updateFadeElements() {
+    document.querySelectorAll(".fade-in:not(.visible)").forEach((el) => {
+      const elementTop = el.getBoundingClientRect().top;
+      const elementVisible = 150;
+
+      if (elementTop < window.innerHeight - elementVisible) {
+        el.classList.add("visible");
+      }
+    });
+  }
+
+  /**
+   * 初始化平滑滾動
+   * 修復錨點跳轉問題
+   */
+  function initSmoothScroll() {
+    document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+      anchor.addEventListener("click", function (e) {
+        const targetId = this.getAttribute("href");
+        if (targetId === "#") return;
+
+        const targetElement = document.querySelector(targetId);
+
+        if (targetElement) {
+          e.preventDefault();
+          const yOffset = -80; // 頂部導航偏移量
+          const y =
+            targetElement.getBoundingClientRect().top +
+            window.pageYOffset +
+            yOffset;
+
+          window.scrollTo({
+            top: y,
+            behavior: "smooth",
+          });
+
+          // 如果行動選單打開，則關閉它
+          const mobileMenu = document.querySelector(".mobile-menu");
+          if (mobileMenu && !mobileMenu.classList.contains("hidden")) {
+            mobileMenu.classList.add("hidden");
+            document.body.style.overflow = "";
+          }
+        }
+      });
+    });
+  }
+
+  /**
+   * 初始化行動選單
+   */
   function initMobileMenu() {
+    const menuToggle = document.querySelector(".menu-toggle");
+    const mobileMenu = document.querySelector(".mobile-menu");
+    const menuClose = document.querySelector(".menu-close");
+
     if (!menuToggle || !mobileMenu || !menuClose) return;
 
     menuToggle.addEventListener("click", function () {
       mobileMenu.classList.remove("hidden");
       mobileMenu.classList.add("flex");
-
-      // 防止背景滾動
       document.body.style.overflow = "hidden";
     });
 
     menuClose.addEventListener("click", function () {
       mobileMenu.classList.add("hidden");
       mobileMenu.classList.remove("flex");
-
-      // 恢復背景滾動
       document.body.style.overflow = "";
     });
 
-    // 點擊選單項目後關閉選單
     mobileMenu.querySelectorAll("a").forEach((link) => {
       link.addEventListener("click", function () {
         mobileMenu.classList.add("hidden");
@@ -115,8 +170,11 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // 回到頂部按鈕
+  /**
+   * 初始化回到頂部按鈕
+   */
   function initBackToTop() {
+    const backToTop = document.getElementById("back-to-top");
     if (!backToTop) return;
 
     window.addEventListener("scroll", function () {
@@ -137,8 +195,15 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // 彩蛋功能
+  /**
+   * 初始化彩蛋功能
+   */
   function initSecretFeature() {
+    const secretTrigger = document.getElementById("secret-trigger");
+    const secretContent = document.getElementById("secret-content");
+    const secretClose = document.getElementById("secret-close");
+    const secretUnderstand = document.getElementById("secret-understand");
+
     if (!secretTrigger || !secretContent || !secretClose || !secretUnderstand)
       return;
 
@@ -151,8 +216,6 @@ document.addEventListener("DOMContentLoaded", function () {
         secretContent.classList.remove("hidden");
         secretContent.classList.add("flex");
         secretClickCount = 0;
-
-        // 防止背景滾動
         document.body.style.overflow = "hidden";
       }
     });
@@ -160,40 +223,39 @@ document.addEventListener("DOMContentLoaded", function () {
     secretClose.addEventListener("click", function () {
       secretContent.classList.add("hidden");
       secretContent.classList.remove("flex");
-
-      // 恢復背景滾動
       document.body.style.overflow = "";
     });
 
     secretUnderstand.addEventListener("click", function () {
       secretContent.classList.add("hidden");
       secretContent.classList.remove("flex");
-
-      // 恢復背景滾動
       document.body.style.overflow = "";
     });
 
-    // 鍵盤組合觸發彩蛋（Ctrl+Shift+X）
     document.addEventListener("keydown", function (e) {
       if (e.ctrlKey && e.shiftKey && e.key === "X") {
         secretContent.classList.remove("hidden");
         secretContent.classList.add("flex");
-
-        // 防止背景滾動
         document.body.style.overflow = "hidden";
       }
     });
   }
 
-  // 分享功能
+  /**
+   * 初始化分享功能
+   */
   function initShareFeature() {
+    const shareBtn = document.getElementById("share-btn");
+    const mobileShareBtn = document.getElementById("mobile-share-btn");
+    const shareModal = document.getElementById("share-modal");
+    const shareClose = document.getElementById("share-close");
+    const copyLink = document.getElementById("copy-link");
+
     if (!shareBtn || !shareModal || !shareClose) return;
 
     shareBtn.addEventListener("click", function () {
       shareModal.classList.remove("hidden");
       shareModal.classList.add("flex");
-
-      // 防止背景滾動
       document.body.style.overflow = "hidden";
     });
 
@@ -202,7 +264,7 @@ document.addEventListener("DOMContentLoaded", function () {
         shareModal.classList.remove("hidden");
         shareModal.classList.add("flex");
 
-        // 關閉行動選單
+        const mobileMenu = document.querySelector(".mobile-menu");
         if (mobileMenu) {
           mobileMenu.classList.add("hidden");
           mobileMenu.classList.remove("flex");
@@ -213,34 +275,26 @@ document.addEventListener("DOMContentLoaded", function () {
     shareClose.addEventListener("click", function () {
       shareModal.classList.add("hidden");
       shareModal.classList.remove("flex");
-
-      // 恢復背景滾動
       document.body.style.overflow = "";
     });
 
-    // 點擊分享模態框以外的地方關閉
     shareModal.addEventListener("click", function (e) {
       if (e.target === shareModal) {
         shareModal.classList.add("hidden");
         shareModal.classList.remove("flex");
-
-        // 恢復背景滾動
         document.body.style.overflow = "";
       }
     });
 
-    // 分享連結複製
     if (copyLink) {
       copyLink.addEventListener("click", function () {
         const linkInput = copyLink.parentElement.querySelector("input");
         linkInput.select();
         document.execCommand("copy");
-
         showToast("連結已複製！");
       });
     }
 
-    // 社群分享按鈕
     document.querySelectorAll(".share-link").forEach((link) => {
       link.addEventListener("click", function (e) {
         e.preventDefault();
@@ -275,53 +329,10 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // 平滑滾動
-  function initSmoothScroll() {
-    document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
-      anchor.addEventListener("click", function (e) {
-        e.preventDefault();
-
-        const targetId = this.getAttribute("href");
-        const targetElement = document.querySelector(targetId);
-
-        if (targetElement) {
-          window.scrollTo({
-            top: targetElement.offsetTop - 80,
-            behavior: "smooth",
-          });
-        }
-      });
-    });
-  }
-
-  // Dark Mode功能
-  function initDarkMode() {
-    if (darkModeToggle) {
-      darkModeToggle.addEventListener("click", function () {
-        body.classList.toggle("dark-mode");
-        darkModeToggle.innerHTML = body.classList.contains("dark-mode")
-          ? '<i class="fas fa-sun"></i>'
-          : '<i class="fas fa-moon"></i>';
-        localStorage.setItem("darkMode", body.classList.contains("dark-mode"));
-      });
-      if (localStorage.getItem("darkMode") === "true") {
-        body.classList.add("dark-mode");
-        darkModeToggle.innerHTML = '<i class="fas fa-sun"></i>';
-      }
-    }
-  }
-
-  // 載入 DataLoader 模組
-  function loadDataModule() {
-    if (typeof initDataLoader === "function") {
-      initDataLoader();
-    } else {
-      console.warn("DataLoader模組 (initDataLoader) 尚未載入或不可用。");
-    }
-  }
-
-  // 載入範本模組
-  function loadTemplateModule() {
+  /**
+   * 載入範本模組
+   */
+  function loadTemplates() {
     if (typeof window.templateModule === "function") {
       window.templateModule();
     } else {
@@ -329,8 +340,10 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  // 載入動畫模組
-  function loadAnimationsModule() {
+  /**
+   * 載入動畫模組
+   */
+  function loadAnimations() {
     if (typeof window.animationsModule === "function") {
       window.animationsModule();
     } else {
@@ -338,27 +351,58 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  // 顯示提示函數
-  window.showToast = function (message) {
-    let toastEl = document.getElementById("copy-toast");
-    if (!toastEl) {
-      console.warn("Toast element #copy-toast not found.");
-      return;
-    }
+  /**
+   * 載入部分內容
+   */
+  function loadPartialContent(containerId, url) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
 
-    const messageSpan = toastEl.querySelector("span");
-    if (messageSpan) {
-      messageSpan.textContent = message;
-    } else {
-      toastEl.textContent = message;
-    }
-
-    toastEl.classList.remove("opacity-0", "invisible");
-    toastEl.classList.add("opacity-100", "visible");
-
-    setTimeout(function () {
-      toastEl.classList.remove("opacity-100", "visible");
-      toastEl.classList.add("opacity-0", "invisible");
-    }, 3000);
-  };
+    fetch(url)
+      .then((response) => {
+        if (!response.ok)
+          throw new Error(`HTTP error! status: ${response.status}`);
+        return response.text();
+      })
+      .then((html) => {
+        container.innerHTML = html;
+        // 觸發內容載入完成事件
+        document.dispatchEvent(
+          new CustomEvent("partialContentLoaded", {
+            detail: { containerId, url },
+          })
+        );
+      })
+      .catch((error) => {
+        console.error(`載入 ${url} 失敗:`, error);
+        container.innerHTML = `<div class="text-red-500 p-4">內容載入失敗</div>`;
+      });
+  }
 });
+
+/**
+ * 顯示toast提示
+ * 全局可用
+ */
+window.showToast = function (message) {
+  let toastEl = document.getElementById("copy-toast");
+  if (!toastEl) {
+    console.warn("Toast element #copy-toast not found.");
+    return;
+  }
+
+  const messageSpan = toastEl.querySelector("span");
+  if (messageSpan) {
+    messageSpan.textContent = message;
+  } else {
+    toastEl.textContent = message;
+  }
+
+  toastEl.classList.remove("opacity-0", "invisible");
+  toastEl.classList.add("opacity-100", "visible");
+
+  setTimeout(function () {
+    toastEl.classList.remove("opacity-100", "visible");
+    toastEl.classList.add("opacity-0", "invisible");
+  }, 3000);
+};

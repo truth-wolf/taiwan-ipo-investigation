@@ -1,0 +1,4 @@
+請幫我完成點擊<a href="#data" class="py-4 px-8 border-2 border-secondary text-secondary rounded-full font-semibold hover:bg-secondary hover:text-white transition-colors flex items-center justify-center">
+            <i class="fas fa-chart-bar mr-2"></i>
+            查看數據
+          </a>需要跳轉到錨點的修復， 詳細分析解決方法，並且直接幫我修改 然後透過Puppeteer工具幫我測試@http://127.0.0.1/taiwan-ipo-investigation/#data 網頁功能是否正常 並且測試表格的各個UI/UX功能，還有調查應該怎麼做才能讓表格標頭停留，讓使用者點擊產品視圖往下滑時也可以看到券商表頭和產品與募集期間固定停留效果，請給予完整的修正報告，直到修正好為止才能停止，否則持續修正

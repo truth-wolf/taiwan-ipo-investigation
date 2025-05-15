@@ -346,12 +346,12 @@ function createMobileViewToggle() {
 
 // 切換表格視圖
 function toggleTableView(viewType) {
+  console.log("切換表格視圖到:", viewType);
   const classicViewTable = document.querySelector(".classic-view-table");
-  const productViewTable =
-    document.querySelector(".product-based-view") ||
-    document.getElementById("product-table-container");
+  const productViewTable = document.getElementById("product-table-container");
+
   if (!classicViewTable || !productViewTable) {
-    console.error("找不到表格容器元素");
+    console.error("找不到表格容器元素", { classicViewTable, productViewTable });
     return;
   }
 
@@ -359,42 +359,65 @@ function toggleTableView(viewType) {
   const productViewBtn = document.getElementById("product-view-btn");
 
   if (viewType === "classic") {
-    // 桌面版
-    if (window.innerWidth >= 768) {
-      classicViewTable.classList.remove("hidden");
-      productViewTable.classList.add("hidden");
-      if (classicViewBtn && productViewBtn) {
-        classicViewBtn.classList.add("active");
-        productViewBtn.classList.remove("active");
-      }
+    // 確保經典視圖顯示
+    classicViewTable.style.display = "block";
+    classicViewTable.classList.remove("hidden");
+
+    // 隱藏產品視圖
+    productViewTable.style.display = "none";
+    productViewTable.classList.add("hidden");
+
+    // 更新按鈕狀態
+    if (classicViewBtn && productViewBtn) {
+      classicViewBtn.classList.add("active");
+      productViewBtn.classList.remove("active");
     }
-    // 手機版
-    else {
-      classicViewTable.style.display = "block";
-      productViewTable.style.display = "none";
+
+    // 手機版特殊處理
+    if (window.innerWidth < 768) {
       classicViewTable.classList.add("visible");
       productViewTable.classList.remove("visible");
     }
   } else if (viewType === "product") {
-    if (!productTableInitialized) initProductTable(csvData);
-
-    // 桌面版
-    if (window.innerWidth >= 768) {
-      classicViewTable.classList.add("hidden");
-      productViewTable.classList.remove("hidden");
-      if (classicViewBtn && productViewBtn) {
-        classicViewBtn.classList.remove("active");
-        productViewBtn.classList.add("active");
-      }
+    // 確保產品表格已初始化
+    if (!productTableInitialized) {
+      console.log("產品表格尚未初始化，正在初始化...");
+      initProductTable(csvData);
     }
-    // 手機版
-    else {
-      classicViewTable.style.display = "none";
-      productViewTable.style.display = "block";
+
+    // 顯示產品視圖
+    productViewTable.style.display = "block";
+    productViewTable.classList.remove("hidden");
+
+    // 隱藏經典視圖
+    classicViewTable.style.display = "none";
+    classicViewTable.classList.add("hidden");
+
+    // 更新按鈕狀態
+    if (classicViewBtn && productViewBtn) {
+      classicViewBtn.classList.remove("active");
+      productViewBtn.classList.add("active");
+    }
+
+    // 手機版特殊處理
+    if (window.innerWidth < 768) {
       classicViewTable.classList.remove("visible");
       productViewTable.classList.add("visible");
     }
   }
+
+  console.log("視圖切換後狀態:", {
+    經典視圖: {
+      display: classicViewTable.style.display,
+      hidden: classicViewTable.classList.contains("hidden"),
+      visible: classicViewTable.classList.contains("visible"),
+    },
+    產品視圖: {
+      display: productViewTable.style.display,
+      hidden: productViewTable.classList.contains("hidden"),
+      visible: productViewTable.classList.contains("visible"),
+    },
+  });
 }
 
 // 初始化產品表格 (產品-券商視圖)
