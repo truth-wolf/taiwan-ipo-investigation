@@ -34,9 +34,17 @@ function loadReportTemplates() {
 
   // 範本文件列表
   const templateFiles = [
-    { id: "1", name: "銀行串聯檢舉信版本一", file: "txt/1.txt" },
-    { id: "9", name: "檢舉信版本九", file: "txt/9.txt" },
-    { id: "11", name: "檢舉信版本 LUCKY 11", file: "txt/11.txt" },
+    { id: "1", name: "一般民眾實名檢舉（銀行商品責任額）", file: "txt/1.txt" },
+    {
+      id: "9",
+      name: "群益印美戰略基金檢舉（地緣風險未揭露）",
+      file: "txt/9.txt",
+    },
+    {
+      id: "11",
+      name: "一般民眾實名檢舉（IPO制度與ETF回單機制）",
+      file: "txt/11.txt",
+    },
   ];
 
   console.log("準備加載", templateFiles.length, "個範本檔案");

@@ -34,3 +34,4 @@ venv/
 # 忽略 Windows 批次檔
 *.bat
 *.sh
+*.pdf
