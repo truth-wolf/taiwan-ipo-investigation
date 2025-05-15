@@ -126,7 +126,11 @@ document.addEventListener("DOMContentLoaded", function () {
         const loader = document.getElementById("page-loader");
         if (loader) {
           loader.classList.add("fade-out");
-          setTimeout(() => loader.remove(), 500);
+          setTimeout(() => {
+            loader.remove();
+            // 觸發載入完成事件
+            document.dispatchEvent(new CustomEvent("loaderCompleted"));
+          }, 500);
         }
       }, 500);
     }

@@ -31,6 +31,7 @@
 | `enhancedDataTable.js`       | 表格與圖表模組   | CSV 解析、DataTables 初始化、Chart.js 圖表展現 |
 | `excel_to_csv.py`            | 資料轉換腳本     | 使用 Pandas 將 Excel 轉為 CSV，供前端載入使用  |
 | `js/fix/*.js`                | 功能修復腳本     | 修復表格標頭固定與公式說明提示功能             |
+| `shareModal.js`              | 分享功能模組     | 模態窗、社群分享功能                           |
 
 ## 📂 專案目錄結構圖
 
@@ -51,12 +52,14 @@ taiwan-ipo-investigation/
 │       ├── enhanced-table.css     # 表格增強功能
 │       ├── fixes.css              # 修復樣式
 │       ├── enhanced-fixes.css     # 額外修復樣式
-│       └── formula-tooltip.css    # 公式說明提示樣式
+│       ├── formula-tooltip.css    # 公式說明提示樣式
+│       └── shareModal.css         # 分享模態窗樣式
 ├── js/                            # 前端邏輯模組
-│   ├── app.js                     # 主互動腳本：導覽列、滾動偵測、分享邏輯
+│   ├── app.js                     # 主互動腳本：導覽列、滾動偵測
 │   ├── templates.js               # 範本處理模組：載入、複製、下載
 │   ├── animations.js              # 滾動動畫與數字計數效果
 │   ├── enhancedDataTable.js       # 表格初始化與 Chart.js 整合
+│   ├── shareModal.js              # 分享功能模組：模態窗、社群分享
 │   ├── automate.js (可選移除)     # 開發用：載入狀態偵測器（非必要）
 │   └── fix/                       # 功能修復腳本
 │       ├── formula-tooltip.js     # 公式說明提示功能
@@ -71,7 +74,10 @@ taiwan-ipo-investigation/
 │   ├── 2.txt
 │   └── ...（可自訂命名與數量）
 ├── docs/                          # 文檔與報告
-│   └── fix-report.md              # 功能修復報告
+│   ├── fix-report.md              # 功能修復報告
+│   ├── share-feature.md           # 分享功能實現報告
+│   └── CHANGELOG.md               # 更新日誌
+└── share-feature.md          # 分享功能實現報告
 ```
 
 ## 🏗️ 技術堆疊
@@ -81,15 +87,18 @@ taiwan-ipo-investigation/
 - **Font Awesome 6**, **Intersection Observer API**, **LocalStorage API**
 - **Python 3** + **Pandas** (資料預處理)
 
-## 📋 最近更新 (2025年5月16日)
+## 📋 最近更新 (2025 年 5 月 20 日)
 
-- **功能修復**：
-  - 修復了公式說明提示功能，現在滑鼠滑過或點擊按鈕時能正確顯示公式說明
-  - 實現了表格標頭固定功能，在向下滾動頁面時表格標頭保持在視圖頂部
-  - 優化了整體UI/UX體驗，提高響應性和使用者友好度
+- **全新分享功能**：
+  - 添加精美動畫分享模態窗，支持分享至 Threads 和 LINE 社群
+  - 導航欄新增互動式分享按鈕，使用脈衝動畫引導用戶
+  - 優化首次訪問體驗，開場動畫後自動顯示分享選項
+- **數據功能改進**：
+  - 修正地獄月份計算邏輯，使用 Set 數據結構確保正確去重
+  - 優化公式顯示機制，滑鼠懸浮時顯示詳細計算方法
 - **文檔更新**：
-  - 添加了功能修復報告 (`docs/fix-report.md`)
-  - 更新了README.md，添加了最新的目錄結構和更新日誌
+  - 添加分享功能報告 (`docs/share-feature.md`)
+  - 更新 CHANGELOG 與 README 文檔，記錄最新功能變更
 
 ## 🚀 快速開始
 
