@@ -45,6 +45,16 @@ function loadReportTemplates() {
       name: "一般民眾實名檢舉（IPO制度與ETF回單機制）",
       file: "txt/11.txt",
     },
+    {
+      id: "101",
+      name: "責任額與回單機制檢舉",
+      file: "txt/101.txt",
+    },
+    {
+      id: "102",
+      name: "職場霸凌與勞權檢舉",
+      file: "txt/102.txt",
+    },
   ];
 
   console.log("準備加載", templateFiles.length, "個範本檔案");
