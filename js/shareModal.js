@@ -152,11 +152,15 @@ window.shareModal = (function () {
       hideWelcomeModal,
       checkFirstVisit,
       checkAndShowWelcomeModal,
+      markUserInteraction,
     };
   }
 
   // 創建模態窗 DOM
   function createModals() {
+    // 檢查並載入FontAwesome
+    ensureFontAwesomeLoaded();
+
     // 創建包含模態窗的容器
     const modalsContainer = document.createElement("div");
     modalsContainer.id = "modalsContainer";
@@ -165,6 +169,97 @@ window.shareModal = (function () {
     // 附加到 body
     document.body.appendChild(modalsContainer);
     console.log("ShareModal: 模態窗DOM已創建");
+  }
+
+  // 確保 FontAwesome 已被載入
+  function ensureFontAwesomeLoaded() {
+    if (!document.querySelector('link[href*="font-awesome"]')) {
+      const fontAwesomeLink = document.createElement("link");
+      fontAwesomeLink.rel = "stylesheet";
+      fontAwesomeLink.href =
+        "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css";
+      fontAwesomeLink.integrity =
+        "sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ==";
+      fontAwesomeLink.crossOrigin = "anonymous";
+      document.head.appendChild(fontAwesomeLink);
+      console.log("ShareModal: FontAwesome 已載入");
+    }
+
+    // 添加內嵌font-awesome備用樣式，防止圖標顯示問題
+    const faBackupStyle = document.createElement("style");
+    faBackupStyle.textContent = `
+      @font-face {
+        font-family: 'Font Awesome 5 Free';
+        font-style: normal;
+        font-weight: 900;
+        font-display: auto;
+        src: url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/webfonts/fa-solid-900.woff2") format("woff2");
+      }
+      
+      @font-face {
+        font-family: 'Font Awesome 5 Brands';
+        font-style: normal;
+        font-weight: 400;
+        font-display: auto;
+        src: url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/webfonts/fa-brands-400.woff2") format("woff2");
+      }
+      
+      .fas {
+        font-family: 'Font Awesome 5 Free';
+        font-weight: 900;
+      }
+      
+      .fab {
+        font-family: 'Font Awesome 5 Brands';
+        font-weight: 400;
+      }
+      
+      /* 常用圖標備用樣式 */
+      .fa-megaphone:before {
+        content: "\\f674";
+      }
+      
+      .fa-paper-plane:before {
+        content: "\\f1d8";
+      }
+      
+      .fa-times:before {
+        content: "\\f00d";
+      }
+      
+      .fa-info-circle:before {
+        content: "\\f05a";
+      }
+      
+      .fa-comment-dots:before {
+        content: "\\f4ad";
+      }
+      
+      .fa-line:before {
+        content: "\\f3c0";
+      }
+      
+      .fa-at:before {
+        content: "\\f1fa";
+      }
+      
+      .fa-link:before {
+        content: "\\f0c1";
+      }
+      
+      .fa-copy:before {
+        content: "\\f0c5";
+      }
+      
+      .fa-check-circle:before {
+        content: "\\f058";
+      }
+      
+      .fa-arrow-right:before {
+        content: "\\f061";
+      }
+    `;
+    document.head.appendChild(faBackupStyle);
   }
 
   // 注入 CSS 樣式
@@ -479,10 +574,25 @@ window.shareModal = (function () {
 
       .welcome-icon i {
         font-size: 28px;
+        color: #e23e57;
         background: linear-gradient(135deg, #e23e57, #ff6b6b);
         -webkit-background-clip: text;
         background-clip: text;
         -webkit-text-fill-color: transparent;
+        display: inline-block;
+        width: auto;
+        height: auto;
+        line-height: 1;
+      }
+      
+      .option-icon {
+        color: #e23e57;
+        margin-right: 10px;
+        margin-top: 3px;
+      }
+      
+      .option-text {
+        color: #525252;
       }
 
       .welcome-modal .modal-title {
@@ -497,42 +607,57 @@ window.shareModal = (function () {
       .option-item {
         display: flex;
         margin-bottom: 12px;
-        align-items: flex-start;
       }
       
-      .option-icon {
-        color: #e23e57;
-        margin-right: 10px;
-        margin-top: 3px;
-      }
-      
-      .option-text {
-        color: #525252;
-      }
-      
+      /* 修改勾選框樣式為粉紅色可愛勾勾 */
       .dont-show-again {
         display: flex;
         align-items: center;
-        gap: 0.8rem;
-        margin-top: 20px;
-        padding: 5px;
-        border-radius: 4px;
-        font-size: 0.9rem;
-        color: #525252;
-        cursor: pointer;
+        margin: 20px 0;
       }
       
-      .dont-show-again input {
-        width: 1.35rem;
-        height: 1.35rem;
-        accent-color: #2563EB;
+      .dont-show-again input[type="checkbox"] {
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        width: 20px;
+        height: 20px;
+        border: 2px solid #e23e57;
+        border-radius: 5px;
+        margin-right: 10px;
+        position: relative;
         cursor: pointer;
+        transition: all 0.2s ease;
+        background-color: white;
+      }
+      
+      .dont-show-again input[type="checkbox"]:checked {
+        background-color: #e23e57;
+      }
+      
+      .dont-show-again input[type="checkbox"]:checked::after {
+        content: '\\2764';  /* 心形符號 */
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 12px;
+        color: white;
       }
       
       .dont-show-again label {
-        font-size: 0.95rem;
-        color: #374151;
         cursor: pointer;
+        color: #525252;
+        font-size: 0.9rem;
+        transition: color 0.2s ease;
+      }
+      
+      .dont-show-again label:hover {
+        color: #e23e57;
       }
 
       .action-button {
@@ -748,10 +873,23 @@ window.shareModal = (function () {
 
     if (welcomeElements.actionBtn) {
       welcomeElements.actionBtn.addEventListener("click", () => {
+        console.log("ShareModal: 參與行動按鈕被點擊");
         handleWelcomeModalClose();
+
+        // 添加延遲以確保歡迎模態窗已完全關閉
         setTimeout(() => {
-          showShareModal();
-        }, 300);
+          console.log("ShareModal: 準備顯示分享模態窗");
+          // 直接使用window.shareModalControls來調用showShareModal
+          if (
+            window.shareModalControls &&
+            typeof window.shareModalControls.showShareModal === "function"
+          ) {
+            window.shareModalControls.showShareModal();
+            console.log("ShareModal: 分享模態窗已顯示");
+          } else {
+            console.error("ShareModal: showShareModal函數未定義");
+          }
+        }, 500);
       });
     }
 
@@ -824,7 +962,6 @@ window.shareModal = (function () {
   // 處理歡迎模態窗關閉
   function handleWelcomeModalClose() {
     hideWelcomeModal();
-    resumeCounterAnimations();
 
     // 檢查是否選中"不再顯示"
     if (
@@ -833,6 +970,14 @@ window.shareModal = (function () {
     ) {
       localStorage.setItem("endipo_dont_show_welcome", "true");
     }
+
+    // 只有在兩個模態窗都關閉時，才恢復計數器動畫
+    if (
+      !shareModal.classList.contains("active") &&
+      !welcomeModal.classList.contains("active")
+    ) {
+      resumeCounterAnimations();
+    }
   }
 
   // 標記用戶已與分享功能互動
@@ -840,12 +985,15 @@ window.shareModal = (function () {
     localStorage.setItem("endipo_user_interacted", "true");
     // 設定用戶交互標記後，確保幫助提示不顯示
     updateHelpTooltipVisibility(false);
+    // 將用戶標記為"不再自動顯示"
+    localStorage.setItem("endipo_disable_auto_welcome", "true");
   }
 
   // 更新幫助提示的顯示狀態
   function updateHelpTooltipVisibility(isAutoShow) {
     const helpTooltip = document.querySelector(".help-tooltip");
     if (helpTooltip) {
+      // 只在自動顯示時才顯示幫助提示
       helpTooltip.style.display = isAutoShow ? "flex" : "none";
     }
   }
@@ -865,6 +1013,11 @@ window.shareModal = (function () {
       shareModal.classList.remove("active");
       document.body.style.overflow = ""; // 恢復背景滾動
       console.log("ShareModal: 分享模態窗隱藏");
+
+      // 只有在兩個模態窗都關閉時，才恢復計數器動畫
+      if (!welcomeModal.classList.contains("active")) {
+        resumeCounterAnimations();
+      }
     }
   }
 
@@ -950,9 +1103,15 @@ window.shareModal = (function () {
       return;
     }
 
-    // 檢查用戶是否已經與分享按鈕互動
+    // 檢查用戶是否已經與分享按鈕互動，如果互動過則不再自動顯示
     const userInteracted = localStorage.getItem("endipo_user_interacted");
     if (userInteracted === "true") {
+      return;
+    }
+
+    // 檢查是否禁用自動顯示（點擊分享後設置）
+    const disableAutoShow = localStorage.getItem("endipo_disable_auto_welcome");
+    if (disableAutoShow === "true") {
       return;
     }
 
@@ -975,24 +1134,23 @@ window.shareModal = (function () {
     // 先暫停計數器動畫
     pauseCounterAnimations();
 
-    // 頁面載入完成後顯示歡迎模態窗
-    document.addEventListener("DOMContentLoaded", () => {
-      setTimeout(() => {
-        // 檢查是否選擇了"不再顯示"
-        const dontShowAgain = localStorage.getItem("endipo_dont_show_welcome");
-        if (dontShowAgain === "true") {
-          resumeCounterAnimations();
-          return;
-        }
+    console.log("ShareModal: 檢查是否顯示歡迎模態窗");
 
-        // 首次訪問時顯示歡迎模態窗(非自動顯示)
-        showWelcomeModal(false);
-        localStorage.setItem(
-          "endipo_welcome_last_shown",
-          new Date().getTime().toString()
-        );
-      }, 800);
-    });
+    // 檢查是否選擇了"不再顯示"
+    const dontShowAgain = localStorage.getItem("endipo_dont_show_welcome");
+    if (dontShowAgain === "true") {
+      console.log("ShareModal: 用戶選擇不再顯示，跳過顯示歡迎模態窗");
+      resumeCounterAnimations();
+      return;
+    }
+
+    // 立即顯示歡迎模態窗
+    showWelcomeModal(false);
+    localStorage.setItem(
+      "endipo_welcome_last_shown",
+      new Date().getTime().toString()
+    );
+    console.log("ShareModal: 顯示歡迎模態窗");
 
     // 設置定時器，每分鐘檢查一次
     setInterval(() => {
@@ -1033,6 +1191,26 @@ window.shareModal = (function () {
     init: init,
   };
 })();
+
+// 將markUserInteraction暴露為全局函數
+window.markUserInteraction = function () {
+  if (
+    window.shareModalControls &&
+    typeof window.shareModalControls.markUserInteraction === "function"
+  ) {
+    window.shareModalControls.markUserInteraction();
+  } else {
+    // 備用方案，直接設置localStorage
+    localStorage.setItem("endipo_user_interacted", "true");
+    localStorage.setItem("endipo_disable_auto_welcome", "true");
+
+    // 嘗試更新幫助提示的顯示狀態
+    const helpTooltip = document.querySelector(".help-tooltip");
+    if (helpTooltip) {
+      helpTooltip.style.display = "none";
+    }
+  }
+};
 
 // 創建懸浮式分享按鈕
 function createFloatingShareButton() {
@@ -1127,7 +1305,7 @@ function createFloatingShareButton() {
   // 添加點擊事件
   floatingShareBtn.addEventListener("click", () => {
     window.shareModalControls.showShareModal();
-    markUserInteraction();
+    window.markUserInteraction();
 
     // 移除彈跳動畫
     floatingShareBtn.classList.remove("bouncing");
@@ -1181,16 +1359,59 @@ function setupIdleMonitoring(button) {
   );
 }
 
-// 標記用戶已與分享功能互動（全局可用）
-function markUserInteraction() {
-  localStorage.setItem("endipo_user_interacted", "true");
-}
-
 document.addEventListener("DOMContentLoaded", function () {
-  window.shareModalControls = window.shareModal.init();
+  console.log("ShareModal: DOM內容已載入");
+  try {
+    window.shareModalControls = window.shareModal.init();
+    console.log("ShareModal: 控制器已初始化");
 
-  // 初始化歡迎模態窗與定時顯示功能
-  window.shareModalControls.checkAndShowWelcomeModal();
+    // 確保全局API正確
+    if (!window.showShareModal && window.shareModalControls.showShareModal) {
+      window.showShareModal = window.shareModalControls.showShareModal;
+    }
+
+    if (!window.hideShareModal && window.shareModalControls.hideShareModal) {
+      window.hideShareModal = window.shareModalControls.hideShareModal;
+    }
+
+    // 等待短暫時間後再顯示歡迎模態窗，確保DOM完全渲染
+    setTimeout(() => {
+      // 初始化歡迎模態窗與定時顯示功能
+      if (
+        window.shareModalControls &&
+        typeof window.shareModalControls.checkAndShowWelcomeModal === "function"
+      ) {
+        window.shareModalControls.checkAndShowWelcomeModal();
+        console.log("ShareModal: 檢查並顯示歡迎模態窗");
+      } else {
+        console.error("ShareModal: 無法調用checkAndShowWelcomeModal函數");
+      }
+    }, 1000);
+  } catch (e) {
+    console.error("ShareModal: 初始化時發生錯誤", e);
+  }
 
   console.log("ShareModal: 初始化完成");
 });
+
+// 為了確保在某些瀏覽器下DOMContentLoaded事件可能已觸發的情況，添加額外檢查
+if (document.readyState === "loading") {
+  console.log("ShareModal: 文檔仍在加載中，監聽DOMContentLoaded事件");
+} else {
+  console.log("ShareModal: 文檔已完成加載，立即初始化");
+  // 文檔已完成加載，立即初始化
+  if (!window.shareModalControls) {
+    window.shareModalControls = window.shareModal.init();
+
+    // 初始化歡迎模態窗與定時顯示功能
+    setTimeout(() => {
+      if (
+        window.shareModalControls &&
+        typeof window.shareModalControls.checkAndShowWelcomeModal === "function"
+      ) {
+        window.shareModalControls.checkAndShowWelcomeModal();
+        console.log("ShareModal: 已初始化並顯示歡迎模態窗");
+      }
+    }, 1000);
+  }
+}
