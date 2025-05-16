@@ -1,6 +1,6 @@
 /**
  * enhancedDataTable.js - 完整優化版本
- * 
+ *
  * 提供多種表格視圖與功能:
  * - 經典視圖 (券商-產品)
  * - 產品視圖 (產品-券商)
@@ -30,13 +30,16 @@ function initEnhancedDataTable() {
     displayError("載入失敗：缺少必要程式庫");
     return;
   }
-  
+
   // 檢查SheetJS庫是否載入
-  if (typeof XLSX === 'undefined') {
+  if (typeof XLSX === "undefined") {
     console.log("SheetJS庫未預載入，嘗試動態載入...");
-    loadScript("https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js", function() {
-      console.log("SheetJS庫動態載入完成");
-    });
+    loadScript(
+      "https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js",
+      function () {
+        console.log("SheetJS庫動態載入完成");
+      }
+    );
   } else {
     console.log("SheetJS庫已預先載入");
   }
@@ -44,8 +47,8 @@ function initEnhancedDataTable() {
   // 等待DOM載入完成
   document.addEventListener("DOMContentLoaded", function () {
     let attempts = 0;
-    const maxAttempts = 100; 
-    const intervalTime = 100; 
+    const maxAttempts = 100;
+    const intervalTime = 100;
     let pollerIntervalId;
 
     const executeMainLogic = function () {
@@ -69,8 +72,6 @@ function initEnhancedDataTable() {
               if (window.innerWidth >= 768) {
                 prepareProductTableContainer();
                 initViewButtons();
-<<<<<<< Updated upstream
-=======
                 // 初始化完成後自動切換到產品視圖
                 setTimeout(() => {
                   initProductTable(csvData);
@@ -79,7 +80,6 @@ function initEnhancedDataTable() {
               } else {
                 // 手機版初始化
                 createMobileViewToggle();
->>>>>>> Stashed changes
               }
               initDataVisualizations(csvData);
               generateKeyInsights();
@@ -177,7 +177,8 @@ function initClassicTable(data) {
                 amount.toLocaleString() +
                 "</span>"
               );
-            } else if (amount >= 100000) { // 10萬以上的一般高亮
+            } else if (amount >= 100000) {
+              // 10萬以上的一般高亮
               return (
                 '<span style="color: #e23e57; font-weight: bold;">' +
                 amount.toLocaleString() +
@@ -207,29 +208,35 @@ function initClassicTable(data) {
         first: "<i class='fas fa-angle-double-left'></i>",
         last: "<i class='fas fa-angle-double-right'></i>",
         next: "<i class='fas fa-angle-right'></i>",
-        previous: "<i class='fas fa-angle-left'></i>"
+        previous: "<i class='fas fa-angle-left'></i>",
       },
       zeroRecords: "沒有找到匹配的記錄",
       infoEmpty: "沒有記錄",
       infoFiltered: "(從 _MAX_ 筆記錄中過濾)",
     },
     // 在初始化時檢查SheetJS庫
-    initComplete: function() {
-      console.log("檢查SheetJS庫的可用性:", typeof XLSX !== 'undefined' ? "已載入" : "未載入");
-      if (typeof XLSX === 'undefined') {
+    initComplete: function () {
+      console.log(
+        "檢查SheetJS庫的可用性:",
+        typeof XLSX !== "undefined" ? "已載入" : "未載入"
+      );
+      if (typeof XLSX === "undefined") {
         console.warn("SheetJS庫未載入，Excel功能可能不可用");
         // 動態載入SheetJS庫
-        loadScript("https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js", function() {
-          console.log("SheetJS庫已動態載入");
-        });
+        loadScript(
+          "https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js",
+          function () {
+            console.log("SheetJS庫已動態載入");
+          }
+        );
       }
-      
+
       // 如果數據存在，高亮顯示第一行
       if (data.length > 0) {
         const firstRow = $("#csv-table tbody tr:first-child");
         firstRow.addClass("bg-primary bg-opacity-10");
       }
-      
+
       // 添加總計資訊
       addTotalInformation(data);
     },
@@ -251,22 +258,29 @@ function initClassicTable(data) {
   `;
 
   $(".view-buttons").html(viewControls);
-  
+
   // 添加匯出CSV按鈕功能
-  $("#export-csv-btn").on("click", function() {
+  $("#export-csv-btn").on("click", function () {
     console.log("準備匯出CSV...");
     try {
-      const csvContent = [['\u5238\u5546', '\u7522\u54c1', '\u8cac\u4efb\u984d', '\u52df\u96c6\u671f\u9593']]
-      data.forEach(row => csvContent.push(row));
-      
+      const csvContent = [
+        [
+          "\u5238\u5546",
+          "\u7522\u54c1",
+          "\u8cac\u4efb\u984d",
+          "\u52df\u96c6\u671f\u9593",
+        ],
+      ];
+      data.forEach((row) => csvContent.push(row));
+
       // 轉換為CSV格式
-      let csvString = '';
-      csvContent.forEach(row => {
-        csvString += row.join(',') + '\n';
+      let csvString = "";
+      csvContent.forEach((row) => {
+        csvString += row.join(",") + "\n";
       });
-      
+
       // 創建下載連結
-      const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
+      const blob = new Blob([csvString], { type: "text/csv;charset=utf-8;" });
       const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.setAttribute("href", url);
@@ -420,57 +434,66 @@ function createMobileViewToggle() {
       document.getElementById("mobile-classic-btn").classList.remove("active");
       document.getElementById("mobile-export-btn").classList.remove("active");
     });
-    
+
   // 添加手機版匯出按鈕功能
-  document
-    .getElementById("mobile-export-btn")
-    .addEventListener("click", () => {
-      console.log("手機版 - 準備匯出選單");
-      // 顯示匯出選項選單
-      const exportMenu = document.createElement("div");
-      exportMenu.className = "mobile-export-menu";
-      exportMenu.innerHTML = `
+  document.getElementById("mobile-export-btn").addEventListener("click", () => {
+    console.log("手機版 - 準備匯出選單");
+    // 顯示匯出選項選單
+    const exportMenu = document.createElement("div");
+    exportMenu.className = "mobile-export-menu";
+    exportMenu.innerHTML = `
         <div class="mobile-export-options">
           <button id="mobile-export-csv"><i class="fas fa-file-csv"></i> 匯出CSV</button>
           <button id="mobile-export-excel"><i class="fas fa-file-excel"></i> 匯出Excel</button>
           <button id="mobile-export-cancel">取消</button>
         </div>
       `;
-      document.body.appendChild(exportMenu);
-      
-      // 設置選單位置
-      const buttonRect = document.getElementById("mobile-export-btn").getBoundingClientRect();
-      exportMenu.style.position = "fixed";
-      exportMenu.style.top = (buttonRect.bottom + 10) + "px";
-      exportMenu.style.left = (window.innerWidth / 2 - 100) + "px";
-      
-      // 添加事件處理
-      document.getElementById("mobile-export-csv").addEventListener("click", function() {
+    document.body.appendChild(exportMenu);
+
+    // 設置選單位置
+    const buttonRect = document
+      .getElementById("mobile-export-btn")
+      .getBoundingClientRect();
+    exportMenu.style.position = "fixed";
+    exportMenu.style.top = buttonRect.bottom + 10 + "px";
+    exportMenu.style.left = window.innerWidth / 2 - 100 + "px";
+
+    // 添加事件處理
+    document
+      .getElementById("mobile-export-csv")
+      .addEventListener("click", function () {
         // 觸發CSV匯出邏輯
         $("#export-csv-btn").trigger("click");
         document.body.removeChild(exportMenu);
       });
-      
-      document.getElementById("mobile-export-excel").addEventListener("click", function() {
+
+    document
+      .getElementById("mobile-export-excel")
+      .addEventListener("click", function () {
         // 觸發Excel匯出邏輯
         $("#download-excel-btn").trigger("click");
         document.body.removeChild(exportMenu);
       });
-      
-      document.getElementById("mobile-export-cancel").addEventListener("click", function() {
+
+    document
+      .getElementById("mobile-export-cancel")
+      .addEventListener("click", function () {
         document.body.removeChild(exportMenu);
       });
-      
-      // 點擊其他區域關閉選單
-      document.addEventListener("click", function closeMenu(e) {
-        if (!exportMenu.contains(e.target) && e.target.id !== "mobile-export-btn") {
-          if (document.body.contains(exportMenu)) {
-            document.body.removeChild(exportMenu);
-          }
-          document.removeEventListener("click", closeMenu);
+
+    // 點擊其他區域關閉選單
+    document.addEventListener("click", function closeMenu(e) {
+      if (
+        !exportMenu.contains(e.target) &&
+        e.target.id !== "mobile-export-btn"
+      ) {
+        if (document.body.contains(exportMenu)) {
+          document.body.removeChild(exportMenu);
         }
-      });
+        document.removeEventListener("click", closeMenu);
+      }
     });
+  });
 }
 
 // 切換表格視圖
@@ -820,32 +843,39 @@ function addTotalInformation(data) {
       }
     });
   }
-  
+
   // 添加下載Excel功能
   const downloadExcelBtn = document.getElementById("download-excel-btn");
   if (downloadExcelBtn) {
-    downloadExcelBtn.addEventListener("click", function() {
+    downloadExcelBtn.addEventListener("click", function () {
       console.log("準備下載Excel檔案...");
-      if (typeof XLSX === 'undefined') {
+      if (typeof XLSX === "undefined") {
         console.error("SheetJS庫未載入，無法下載Excel");
         alert("Excel功能暫時無法使用，請稍後再試。");
         return;
       }
-      
+
       try {
         // 準備工作表數據
-        const wsData = [['\u5238\u5546', '\u7522\u54c1', '\u8cac\u4efb\u984d', '\u52df\u96c6\u671f\u9593']];
-        data.forEach(row => wsData.push(row));
-        
+        const wsData = [
+          [
+            "\u5238\u5546",
+            "\u7522\u54c1",
+            "\u8cac\u4efb\u984d",
+            "\u52df\u96c6\u671f\u9593",
+          ],
+        ];
+        data.forEach((row) => wsData.push(row));
+
         // 創建工作表
         const ws = XLSX.utils.aoa_to_sheet(wsData);
-        
+
         // 創建工作簿並添加工作表
         const wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, '\u8cac\u4efb\u984d\u6578\u64da');
-        
+        XLSX.utils.book_append_sheet(wb, ws, "\u8cac\u4efb\u984d\u6578\u64da");
+
         // 下載Excel檔案
-        XLSX.writeFile(wb, 'IPO責任額數據.xlsx');
+        XLSX.writeFile(wb, "IPO責任額數據.xlsx");
         console.log("Excel檔案下載成功");
       } catch (error) {
         console.error("Excel檔案生成失敗:", error);
@@ -1207,11 +1237,11 @@ function loadScript(url, callback) {
   console.log("動態載入腳本:", url);
   const script = document.createElement("script");
   script.src = url;
-  script.onload = function() {
+  script.onload = function () {
     console.log("腳本載入成功:", url);
     if (callback) callback();
   };
-  script.onerror = function() {
+  script.onerror = function () {
     console.error("腳本載入失敗:", url);
   };
   document.head.appendChild(script);
@@ -1223,5 +1253,5 @@ initEnhancedDataTable();
 // 導出模組
 window.enhancedDataTable = {
   init: initEnhancedDataTable,
-  toggleTableView: toggleTableView
+  toggleTableView: toggleTableView,
 };
