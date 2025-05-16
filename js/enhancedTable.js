@@ -9,8 +9,39 @@
  * - 數據統計和視覺化
  */
 
-// 初始化函數
-function initEnhancedTable() {
+// 在文件開頭添加 SheetJS 檢查和載入邏輯
+function loadSheetJS() {
+  return new Promise((resolve, reject) => {
+    if (window.XLSX) {
+      resolve();
+      return;
+    }
+
+    const script = document.createElement("script");
+    script.src =
+      "https://cdn.sheetjs.com/xlsx-0.19.3/package/dist/xlsx.full.min.js";
+    script.integrity =
+      "sha384-JoVUgRwWGZRMqz5JDhPGQOYPm5v8Vj5oQJZgQ1nJCT0PI5g3Ot2wNQOrVgPD4qhw";
+    script.crossOrigin = "anonymous";
+    script.onload = resolve;
+    script.onerror = () => reject(new Error("無法載入 SheetJS 庫"));
+    document.head.appendChild(script);
+  });
+}
+
+// 修改初始化函數
+async function initEnhancedTable() {
+  try {
+    await loadSheetJS();
+    console.log("SheetJS 庫載入成功");
+  } catch (error) {
+    console.error("SheetJS 載入失敗:", error);
+    alert("Excel 下載功能暫時無法使用，請稍後再試");
+  }
+
+  // 注入 CSS 樣式
+  injectCSS();
+
   // 等待表格容器準備好
   const checkInterval = setInterval(() => {
     if (document.querySelector("#csv-table_wrapper")) {
@@ -106,17 +137,6 @@ function createEnhancedControls() {
     <button class="download-button" aria-label="下載表格">
       <i class="fas fa-download"></i> <span class="hidden md:inline">下載表格</span>
     </button>
-    <div class="download-options">
-      <div class="download-option" data-format="csv">
-        <i class="fas fa-file-csv"></i> CSV 格式
-      </div>
-      <div class="download-option" data-format="excel">
-        <i class="fas fa-file-excel"></i> Excel 格式
-      </div>
-      <div class="download-option" data-format="pdf">
-        <i class="fas fa-file-pdf"></i> PDF 格式
-      </div>
-    </div>
   `;
 
   rightGroup.appendChild(viewButtons);
@@ -519,88 +539,314 @@ function setupResizeHandle() {
   }
 }
 
-// 設置下載選項
-function setupDownloadOptions() {
-  const downloadMenu = document.querySelector(".download-menu");
-  if (!downloadMenu) return;
+// 創建下載模態窗
+function createDownloadModal() {
+  const modalStyle = document.createElement("style");
+  modalStyle.textContent = `
+    .download-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
 
-  const downloadButton = downloadMenu.querySelector(".download-button");
-  const downloadOptions = downloadMenu.querySelectorAll(".download-option");
+    .download-modal.show {
+      display: flex;
+      animation: modalFadeIn 0.3s ease-out;
+    }
 
-  // 點擊按鈕切換選單顯示
-  downloadButton.addEventListener("click", function (e) {
-    e.preventDefault(); // 防止預設行為
-    e.stopPropagation(); // 防止事件冒泡
+    @keyframes modalFadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
 
-    // 隱藏其他可能打開的選單
-    document
-      .querySelectorAll(".download-menu.show-options")
-      .forEach(function (menu) {
-        if (menu !== downloadMenu) {
-          menu.classList.remove("show-options");
-        }
-      });
+    .download-modal-content {
+      background: white;
+      border-radius: 16px;
+      width: 90%;
+      max-width: 340px;
+      position: relative;
+      overflow: hidden;
+      transform: translateY(20px);
+      opacity: 0;
+      animation: modalSlideIn 0.3s ease-out forwards;
+      animation-delay: 0.1s;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
 
-    // 切換當前選單
-    downloadMenu.classList.toggle("show-options");
-
-    // 確保選單元素顯示在最頂層
-    const optionsMenu = downloadMenu.querySelector(".download-options");
-    if (optionsMenu) {
-      // 確保z-index高於其他元素
-      optionsMenu.style.zIndex = "10000";
-
-      // 在移動設備上調整選單位置
-      if (window.innerWidth <= 767) {
-        // 獲取按鈕位置
-        const buttonRect = downloadButton.getBoundingClientRect();
-
-        // 設定選單為固定定位，並放置在按鈕正下方
-        optionsMenu.style.position = "fixed";
-        optionsMenu.style.top = buttonRect.bottom + 5 + "px";
-        optionsMenu.style.left = Math.max(5, buttonRect.left) + "px";
-        optionsMenu.style.right = "auto";
-
-        // 確保選單不會超出螢幕
-        const rightEdge = buttonRect.left + optionsMenu.offsetWidth;
-        if (rightEdge > window.innerWidth) {
-          optionsMenu.style.left = "auto";
-          optionsMenu.style.right = "5px";
-        }
+    @keyframes modalSlideIn {
+      to {
+        transform: translateY(0);
+        opacity: 1;
       }
     }
+
+    .modal-header {
+      background: var(--primary-color);
+      padding: 2rem 1rem;
+      text-align: center;
+      position: relative;
+    }
+
+    .icon-wrapper {
+      width: 56px;
+      height: 56px;
+      background: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .icon-wrapper i {
+      font-size: 28px;
+      color: var(--primary-color);
+    }
+
+    .modal-body {
+      padding: 1.5rem 1.25rem;
+    }
+
+    .modal-body h3 {
+      font-size: 1.25rem;
+      font-weight: bold;
+      color: #2d3748;
+      margin-bottom: 0.5rem;
+      text-align: center;
+    }
+
+    .modal-body p {
+      color: #718096;
+      margin-bottom: 1.25rem;
+      text-align: center;
+      font-size: 0.875rem;
+    }
+
+    .download-options-grid {
+      display: grid;
+      gap: 0.75rem;
+    }
+
+    .download-option-button {
+      display: flex;
+      align-items: center;
+      padding: 0.75rem 1rem;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      background: white;
+      width: 100%;
+      text-align: left;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+
+    .download-option-button:hover {
+      border-color: var(--primary-color);
+      background: #fff5f5;
+      transform: translateY(-1px);
+    }
+
+    .download-option-button i {
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      margin-right: 0.75rem;
+      font-size: 1.25rem;
+      background: #f7fafc;
+    }
+
+    .download-option-button[data-format="excel"] i {
+      color: #1f9d55;
+    }
+
+    .download-option-button[data-format="csv"] i {
+      color: #2b6cb0;
+    }
+
+    .download-option-button[data-format="pdf"] i {
+      color: #c53030;
+    }
+
+    .option-text {
+      flex: 1;
+    }
+
+    .option-title {
+      display: block;
+      font-weight: 600;
+      color: #2d3748;
+      margin-bottom: 0.25rem;
+      font-size: 0.9375rem;
+    }
+
+    .option-desc {
+      display: block;
+      font-size: 0.8125rem;
+      color: #718096;
+    }
+
+    .close-modal {
+      position: absolute;
+      top: 0.75rem;
+      right: 0.75rem;
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      color: white;
+      cursor: pointer;
+      padding: 0.25rem;
+      line-height: 1;
+      z-index: 1;
+      opacity: 0.8;
+      transition: opacity 0.2s;
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .close-modal:hover {
+      opacity: 1;
+    }
+
+    @media (max-width: 768px) {
+      .download-modal-content {
+        width: calc(100% - 2rem);
+        margin: 1rem;
+      }
+
+      .modal-header {
+        padding: 1.5rem 1rem;
+      }
+
+      .icon-wrapper {
+        width: 48px;
+        height: 48px;
+      }
+
+      .icon-wrapper i {
+        font-size: 24px;
+      }
+
+      .modal-body {
+        padding: 1.25rem 1rem;
+      }
+
+      .download-option-button {
+        padding: 0.625rem 0.875rem;
+      }
+
+      .download-option-button i {
+        width: 32px;
+        height: 32px;
+        font-size: 1.125rem;
+      }
+    }
+  `;
+  document.head.appendChild(modalStyle);
+
+  const modal = document.createElement("div");
+  modal.className = "download-modal";
+  modal.innerHTML = `
+    <div class="download-modal-content">
+      <div class="modal-header">
+        <div class="icon-wrapper">
+          <i class="fas fa-download"></i>
+        </div>
+        <button class="close-modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <h3>下載表格資料</h3>
+        <p>請選擇您想要的下載格式：</p>
+        <div class="download-options-grid">
+          <button class="download-option-button" data-format="excel">
+            <i class="fas fa-file-excel"></i>
+            <div class="option-text">
+              <span class="option-title">Excel 格式</span>
+              <span class="option-desc">適合用於 Microsoft Excel 開啟</span>
+            </div>
+          </button>
+          <button class="download-option-button" data-format="csv">
+            <i class="fas fa-file-csv"></i>
+            <div class="option-text">
+              <span class="option-title">CSV 格式</span>
+              <span class="option-desc">通用格式，支援各種表格軟體</span>
+            </div>
+          </button>
+          <button class="download-option-button" data-format="pdf">
+            <i class="fas fa-file-pdf"></i>
+            <div class="option-text">
+              <span class="option-title">PDF 格式</span>
+              <span class="option-desc">適合列印或分享閱讀</span>
+            </div>
+          </button>
+        </div>
+      </div>
+    </div>
+  `;
+
+  document.body.appendChild(modal);
+
+  // 關閉按鈕事件
+  const closeBtn = modal.querySelector(".close-modal");
+  closeBtn.addEventListener("click", () => {
+    modal.classList.remove("show");
   });
 
-  // 點擊文檔其他位置關閉選單
-  document.addEventListener("click", function (e) {
-    if (!downloadMenu.contains(e.target)) {
-      downloadMenu.classList.remove("show-options");
+  // 點擊模態窗外部關閉
+  modal.addEventListener("click", (e) => {
+    if (e.target === modal) {
+      modal.classList.remove("show");
     }
   });
 
-  // 點擊選項後關閉選單並執行下載
-  downloadOptions.forEach((option) => {
-    option.addEventListener("click", (e) => {
-      e.preventDefault(); // 防止預設行為
-      e.stopPropagation(); // 防止事件冒泡
-      const format = option.getAttribute("data-format");
+  // 下載按鈕事件
+  const downloadButtons = modal.querySelectorAll(".download-option-button");
+  downloadButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      const format = button.getAttribute("data-format");
       downloadTable(format);
-      downloadMenu.classList.remove("show-options");
+      modal.classList.remove("show");
     });
+  });
+
+  return modal;
+}
+
+// 修改設置下載選項函數
+function setupDownloadOptions() {
+  const downloadButton = document.querySelector(".download-button");
+  if (!downloadButton) return;
+
+  const modal = createDownloadModal();
+
+  downloadButton.addEventListener("click", function (e) {
+    e.preventDefault();
+    e.stopPropagation();
+    modal.classList.add("show");
   });
 }
 
 // 下載表格功能
 function downloadTable(format) {
-  // 不再基於當前視圖，始終以產品視圖格式下載
-  // const isProductView = document.getElementById("product-view-btn").classList.contains("active");
-  const isProductView = true; // 統一使用產品視圖格式
+  // 統一使用產品視圖格式下載
+  const isProductView = true;
 
-  // 使用window.csvData确保獲取完整數據
-  // 先處理完整數據，確保產品編號始終為字串
+  // 使用 window.csvData 確保獲取完整數據
   const fullData = (window.csvData || []).map((item) => {
     if (Array.isArray(item)) {
-      // 創建一個新的數組，保持原始數據不變
       return [
         item[0],
         String(item[1]), // 確保產品編號是字串格式
@@ -626,124 +872,21 @@ function downloadTable(format) {
 
 // 下載 CSV 格式
 function downloadCSV(data, isProductView) {
+  const BOM = "\uFEFF"; // 添加 BOM 以確保正確的中文編碼
+  const formatNumber = (num) => {
+    if (typeof num === "number") {
+      return num.toLocaleString("zh-TW");
+    }
+    return num;
+  };
+
   if (isProductView) {
     const productsData = {};
     data.forEach((item) => {
-      const productName = String(item[1]); // 確保使用字串格式
+      const productName = String(item[1]).padStart(5, "0"); // 確保產品編號為5位數字串
       if (!productsData[productName]) {
         productsData[productName] = {
-          name: productName, // 已確保是字串格式
-          period: item[3],
-          brokers: {},
-          totalAmount: 0,
-          brokerCount: 0,
-        };
-      }
-      productsData[productName].brokers[item[0]] = parseInt(item[2], 10);
-      productsData[productName].totalAmount += parseInt(item[2], 10);
-      productsData[productName].brokerCount++;
-    });
-
-    const sortedProducts = Object.values(productsData).sort((a, b) => {
-      const avgA = a.brokerCount > 0 ? a.totalAmount / a.brokerCount : 0;
-      const avgB = b.brokerCount > 0 ? b.totalAmount / b.brokerCount : 0;
-      return avgB - avgA;
-    });
-
-    const uniqueBrokers = [...new Set(data.map((item) => item[0]))].sort();
-    let csvContent =
-      "產品,募集期間," + uniqueBrokers.join(",") + ",平均責任額\n";
-
-    sortedProducts.forEach((product) => {
-      let row = [product.name, product.period]; // product.name已確保是字串
-      let productTotalAmount = 0;
-      let productBrokerCount = 0;
-      uniqueBrokers.forEach((broker) => {
-        const amount = product.brokers[broker];
-        if (amount !== undefined) {
-          row.push(amount);
-          productTotalAmount += amount;
-          productBrokerCount++;
-        } else {
-          row.push("-");
-        }
-      });
-      const average =
-        productBrokerCount > 0
-          ? Math.round(productTotalAmount / productBrokerCount)
-          : 0;
-      row.push(average);
-      csvContent +=
-        row.map((cell) => `"${String(cell).replace(/"/g, '""')}"`).join(",") +
-        "\n";
-    });
-
-    let totalRow = ["總責任額", ""];
-    uniqueBrokers.forEach((broker) => {
-      const brokerTotal = data
-        .filter((item) => item[0] === broker)
-        .reduce((sum, item) => sum + parseInt(item[2], 10), 0);
-      totalRow.push(brokerTotal);
-    });
-    const grandTotalAmount = data.reduce(
-      (sum, item) => sum + parseInt(item[2], 10),
-      0
-    );
-    const allProductEntriesCount = data.filter(
-      (row) => row[2] && !isNaN(parseInt(row[2]))
-    ).length;
-    const finalGrandAverage =
-      allProductEntriesCount > 0
-        ? Math.round(grandTotalAmount / allProductEntriesCount)
-        : 0;
-    totalRow.push(finalGrandAverage);
-    csvContent += totalRow
-      .map((cell) => `"${String(cell).replace(/"/g, '""')}"`)
-      .join(",");
-
-    // 網站連結信息
-    const websiteInfo =
-      "\n\n數據來源：終結IPO制度暴力調查網站 https://truth-wolf.github.io/taiwan-ipo-investigation/";
-
-    // 添加網站連結到CSV底部
-    csvContent += websiteInfo;
-
-    downloadFile(csvContent, "ETF責任額數據_產品視圖.csv", "text/csv");
-  } else {
-    let csvContent = "券商,產品,責任額,募集期間\n";
-    data.forEach((item) => {
-      if (Array.isArray(item)) {
-        csvContent +=
-          [
-            `"${item[0]}"`,
-            `"${String(item[1]).replace(/"/g, '""')}"`, // 確保產品編號為字串
-            item[2],
-            `"${item[3]}"`,
-          ].join(",") + "\n";
-      } else {
-        csvContent +=
-          [
-            `"${item.broker}"`,
-            `"${String(item.product).replace(/"/g, '""')}"`, // 確保產品編號為字串
-            item.amount,
-            `"${item.period}"`,
-          ].join(",") + "\n";
-      }
-    });
-    downloadFile(csvContent, "ETF責任額數據_經典視圖.csv", "text/csv");
-  }
-}
-
-// 下載 Excel 格式
-function downloadExcel(data, isProductView) {
-  const BOM = "\uFEFF";
-  if (isProductView) {
-    const productsData = {};
-    data.forEach((item) => {
-      const productName = String(item[1]); // 確保使用字串格式
-      if (!productsData[productName]) {
-        productsData[productName] = {
-          name: productName, // 已確保是字串格式
+          name: productName,
           period: item[3],
           brokers: {},
           totalAmount: 0,
@@ -766,24 +909,26 @@ function downloadExcel(data, isProductView) {
       BOM + "產品,募集期間," + uniqueBrokers.join(",") + ",平均責任額\n";
 
     sortedProducts.forEach((product) => {
-      let row = [product.name, product.period]; // product.name已確保是字串
+      let row = [product.name, product.period];
       let productTotalAmount = 0;
       let productBrokerCount = 0;
+
       uniqueBrokers.forEach((broker) => {
         const amount = product.brokers[broker];
         if (amount !== undefined) {
-          row.push(amount);
+          row.push(formatNumber(amount));
           productTotalAmount += amount;
           productBrokerCount++;
         } else {
           row.push("-");
         }
       });
+
       const average =
         productBrokerCount > 0
           ? Math.round(productTotalAmount / productBrokerCount)
           : 0;
-      row.push(average);
+      row.push(formatNumber(average));
       csvContent +=
         row.map((cell) => `"${String(cell).replace(/"/g, '""')}"`).join(",") +
         "\n";
@@ -794,8 +939,140 @@ function downloadExcel(data, isProductView) {
       const brokerTotal = data
         .filter((item) => item[0] === broker)
         .reduce((sum, item) => sum + parseInt(item[2], 10), 0);
+      totalRow.push(formatNumber(brokerTotal));
+    });
+
+    const grandTotalAmount = data.reduce(
+      (sum, item) => sum + parseInt(item[2], 10),
+      0
+    );
+    const allProductEntriesCount = data.filter(
+      (row) => row[2] && !isNaN(parseInt(row[2]))
+    ).length;
+    const finalGrandAverage =
+      allProductEntriesCount > 0
+        ? Math.round(grandTotalAmount / allProductEntriesCount)
+        : 0;
+    totalRow.push(formatNumber(finalGrandAverage));
+    csvContent += totalRow
+      .map((cell) => `"${String(cell).replace(/"/g, '""')}"`)
+      .join(",");
+
+    // 網站連結信息
+    csvContent +=
+      "\n\n數據來源：終結IPO制度暴力調查網站\nhttps://truth-wolf.github.io/taiwan-ipo-investigation/";
+
+    downloadFile(
+      csvContent,
+      "ETF責任額數據_產品視圖.csv",
+      "text/csv;charset=utf-8"
+    );
+  } else {
+    let csvContent = BOM + "券商,產品,責任額,募集期間\n";
+    data.forEach((item) => {
+      if (Array.isArray(item)) {
+        csvContent +=
+          [
+            `"${item[0]}"`,
+            `"${String(item[1]).padStart(5, "0")}"`,
+            `"${formatNumber(parseInt(item[2], 10))}"`,
+            `"${item[3]}"`,
+          ].join(",") + "\n";
+      } else {
+        csvContent +=
+          [
+            `"${item.broker}"`,
+            `"${String(item.product).padStart(5, "0")}"`,
+            `"${formatNumber(parseInt(item.amount, 10))}"`,
+            `"${item.period}"`,
+          ].join(",") + "\n";
+      }
+    });
+
+    // 網站連結信息
+    csvContent +=
+      "\n數據來源：終結IPO制度暴力調查網站\nhttps://truth-wolf.github.io/taiwan-ipo-investigation/";
+
+    downloadFile(
+      csvContent,
+      "ETF責任額數據_經典視圖.csv",
+      "text/csv;charset=utf-8"
+    );
+  }
+}
+
+// 下載 Excel 格式
+function downloadExcel(data, isProductView) {
+  // 使用 SheetJS 處理 Excel
+  const XLSX = window.XLSX;
+  if (!XLSX) {
+    alert("Excel 功能需要 SheetJS 庫，請檢查是否正確載入");
+    return;
+  }
+
+  if (isProductView) {
+    const productsData = {};
+    data.forEach((item) => {
+      const productName = String(item[1]); // 確保產品編號為字串
+      if (!productsData[productName]) {
+        productsData[productName] = {
+          name: productName,
+          period: item[3],
+          brokers: {},
+          totalAmount: 0,
+          brokerCount: 0,
+        };
+      }
+      productsData[productName].brokers[item[0]] = parseInt(item[2], 10);
+      productsData[productName].totalAmount += parseInt(item[2], 10);
+      productsData[productName].brokerCount++;
+    });
+
+    const sortedProducts = Object.values(productsData).sort((a, b) => {
+      const avgA = a.brokerCount > 0 ? a.totalAmount / a.brokerCount : 0;
+      const avgB = b.brokerCount > 0 ? b.totalAmount / b.brokerCount : 0;
+      return avgB - avgA;
+    });
+
+    const uniqueBrokers = [...new Set(data.map((item) => item[0]))].sort();
+    const headers = ["產品", "募集期間", ...uniqueBrokers, "平均責任額"];
+
+    const excelData = [headers];
+
+    // 添加產品數據
+    sortedProducts.forEach((product) => {
+      let row = [product.name, product.period];
+      let productTotalAmount = 0;
+      let productBrokerCount = 0;
+
+      uniqueBrokers.forEach((broker) => {
+        const amount = product.brokers[broker];
+        if (amount !== undefined) {
+          row.push(amount);
+          productTotalAmount += amount;
+          productBrokerCount++;
+        } else {
+          row.push("-");
+        }
+      });
+
+      const average =
+        productBrokerCount > 0
+          ? Math.round(productTotalAmount / productBrokerCount)
+          : 0;
+      row.push(average);
+      excelData.push(row);
+    });
+
+    // 添加總計行
+    let totalRow = ["總責任額", ""];
+    uniqueBrokers.forEach((broker) => {
+      const brokerTotal = data
+        .filter((item) => item[0] === broker)
+        .reduce((sum, item) => sum + parseInt(item[2], 10), 0);
       totalRow.push(brokerTotal);
     });
+
     const grandTotalAmount = data.reduce(
       (sum, item) => sum + parseInt(item[2], 10),
       0
@@ -808,48 +1085,66 @@ function downloadExcel(data, isProductView) {
         ? Math.round(grandTotalAmount / allProductEntriesCount)
         : 0;
     totalRow.push(finalGrandAverage);
-    csvContent += totalRow
-      .map((cell) => `"${String(cell).replace(/"/g, '""')}"`)
-      .join(",");
+    excelData.push(totalRow);
 
-    // 網站連結信息
-    const websiteInfo =
-      "\n\n數據來源：終結IPO制度暴力調查網站 https://truth-wolf.github.io/taiwan-ipo-investigation/";
+    // 添加網站資訊
+    excelData.push([]);
+    excelData.push(["數據來源：終結IPO制度暴力調查網站"]);
+    excelData.push(["https://truth-wolf.github.io/taiwan-ipo-investigation/"]);
 
-    // 添加網站連結到Excel底部
-    csvContent += websiteInfo;
+    // 創建工作表
+    const ws = XLSX.utils.aoa_to_sheet(excelData);
 
-    downloadFile(
-      csvContent,
-      "ETF責任額數據_產品視圖.xlsx",
-      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-    );
+    // 設置列寬
+    const colWidth = headers.map(() => ({ wch: 15 }));
+    ws["!cols"] = colWidth;
+
+    // 創建工作簿
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "ETF責任額數據");
+
+    // 下載文件
+    XLSX.writeFile(wb, "ETF責任額數據_產品視圖.xlsx");
   } else {
-    let csvContent = BOM + "券商,產品,責任額,募集期間\n";
+    const headers = ["券商", "產品", "責任額", "募集期間"];
+    const excelData = [headers];
+
     data.forEach((item) => {
       if (Array.isArray(item)) {
-        csvContent +=
-          [
-            `"${item[0]}"`,
-            `"${String(item[1]).replace(/"/g, '""')}"`, // 確保產品編號為字串
-            item[2],
-            `"${item[3]}"`,
-          ].join(",") + "\n";
+        excelData.push([
+          item[0],
+          String(item[1]),
+          parseInt(item[2], 10),
+          item[3],
+        ]);
       } else {
-        csvContent +=
-          [
-            `"${item.broker}"`,
-            `"${String(item.product).replace(/"/g, '""')}"`, // 確保產品編號為字串
-            item.amount,
-            `"${item.period}"`,
-          ].join(",") + "\n";
+        excelData.push([
+          item.broker,
+          String(item.product),
+          parseInt(item.amount, 10),
+          item.period,
+        ]);
       }
     });
-    downloadFile(
-      csvContent,
-      "ETF責任額數據_經典視圖.xlsx",
-      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-    );
+
+    // 添加網站資訊
+    excelData.push([]);
+    excelData.push(["數據來源：終結IPO制度暴力調查網站"]);
+    excelData.push(["https://truth-wolf.github.io/taiwan-ipo-investigation/"]);
+
+    // 創建工作表
+    const ws = XLSX.utils.aoa_to_sheet(excelData);
+
+    // 設置列寬
+    const colWidth = headers.map(() => ({ wch: 15 }));
+    ws["!cols"] = colWidth;
+
+    // 創建工作簿
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "ETF責任額數據");
+
+    // 下載文件
+    XLSX.writeFile(wb, "ETF責任額數據_經典視圖.xlsx");
   }
 }
 
@@ -996,12 +1291,17 @@ function downloadPDF(data, isProductView) {
 function downloadFile(content, fileName, mimeType) {
   const blob = new Blob([content], { type: mimeType });
   const link = document.createElement("a");
-  link.href = window.URL.createObjectURL(blob);
-  link.download = fileName;
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-  window.URL.revokeObjectURL(link.href);
+  if (window.navigator.msSaveOrOpenBlob) {
+    // 針對 IE 瀏覽器的特殊處理
+    window.navigator.msSaveOrOpenBlob(blob, fileName);
+  } else {
+    link.href = window.URL.createObjectURL(blob);
+    link.download = fileName;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(link.href);
+  }
 }
 
 // 計算募集期間天數（防呆版）
@@ -1027,3 +1327,366 @@ function days(period) {
 
 // 初始化增強型表格
 initEnhancedTable();
+
+function injectCSS() {
+  const style = document.createElement("style");
+  style.textContent = `
+    /* 下載按鈕基本樣式 */
+    .download-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      border-radius: 0.375rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-size: 0.875rem;
+    }
+
+    .download-button:hover {
+      background-color: var(--primary-dark);
+      transform: translateY(-1px);
+    }
+
+    .download-button:active {
+      transform: translateY(0);
+    }
+
+    .download-button i {
+      font-size: 1rem;
+    }
+
+    @media (max-width: 768px) {
+      .download-button {
+        padding: 0.375rem 0.75rem;
+      }
+    }
+
+    /* 表格基本樣式優化 */
+    #csv-table {
+      width: 100%;
+      font-size: 14px;
+      table-layout: fixed;
+    }
+
+    #csv-table th,
+    #csv-table td {
+      padding: 8px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* 欄位寬度控制 */
+    #csv-table td:nth-child(1),
+    #csv-table th:nth-child(1) {
+      width: 25%;
+    }
+
+    #csv-table td:nth-child(2),
+    #csv-table th:nth-child(2) {
+      width: 20%;
+    }
+
+    #csv-table td:nth-child(3),
+    #csv-table th:nth-child(3) {
+      width: 25%;
+      text-align: right;
+    }
+
+    #csv-table td:nth-child(4),
+    #csv-table th:nth-child(4) {
+      width: 30%;
+    }
+
+    /* 手機版特別優化 */
+    @media (max-width: 768px) {
+      #csv-table {
+        font-size: 12px;
+      }
+
+      #csv-table th,
+      #csv-table td {
+        padding: 6px 4px;
+      }
+
+      .dataTables_wrapper {
+        margin: 0;
+        padding: 0;
+      }
+    }
+
+    /* 超小螢幕優化 */
+    @media (max-width: 375px) {
+      #csv-table {
+        font-size: 11px;
+      }
+
+      #csv-table th,
+      #csv-table td {
+        padding: 4px 2px;
+      }
+    }
+
+    /* 下載選單樣式 */
+    .mobile-download-menu {
+      position: relative;
+      z-index: 1000;
+    }
+
+    .mobile-download-button {
+      padding: 8px 12px;
+      border-radius: 4px;
+      background-color: var(--primary-color);
+      color: white;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .mobile-download-button:active {
+      transform: translateY(1px);
+      box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    }
+
+    .mobile-download-options {
+      position: absolute;
+      right: 0;
+      top: 100%;
+      margin-top: 4px;
+      background: white;
+      border-radius: 4px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      padding: 8px 0;
+      min-width: 160px;
+      z-index: 1001;
+    }
+
+    .mobile-download-options .download-option {
+      padding: 12px 16px;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      white-space: nowrap;
+      color: #333;
+      transition: background-color 0.2s;
+    }
+
+    .mobile-download-options .download-option:hover {
+      background-color: #f5f5f5;
+    }
+
+    /* 分頁按鈕樣式 */
+    .dataTables_paginate {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 1rem;
+      gap: 0.5rem;
+    }
+
+    .dataTables_paginate .paginate_button {
+      padding: 0.5rem 0.75rem;
+      border-radius: 0.375rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: 1px solid #e2e8f0;
+      background: white !important;
+      color: #4a5568 !important;
+      min-width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.875rem;
+    }
+
+    .dataTables_paginate .paginate_button:hover {
+      background: #edf2f7 !important;
+      color: #2d3748 !important;
+      border-color: #cbd5e0;
+    }
+
+    .dataTables_paginate .paginate_button.current {
+      background: var(--primary-color) !important;
+      color: white !important;
+      border-color: var(--primary-color);
+    }
+
+    .dataTables_paginate .paginate_button.disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
+    .dataTables_paginate .paginate_button i {
+      font-size: 1rem;
+    }
+
+    @media (max-width: 768px) {
+      .dataTables_paginate {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0.375rem;
+      }
+
+      .dataTables_paginate .paginate_button {
+        padding: 0.375rem 0.5rem;
+        min-width: 32px;
+        height: 32px;
+        font-size: 0.75rem;
+      }
+
+      .dataTables_paginate .ellipsis {
+        display: none;
+      }
+    }
+
+    /* 產品視圖表格樣式優化 */
+    .product-based-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    .product-based-table th,
+    .product-based-table td {
+      padding: 8px;
+      border: 1px solid #e2e8f0;
+      text-align: right;
+    }
+
+    .product-based-table th:first-child,
+    .product-based-table td:first-child {
+      text-align: left;
+      position: sticky;
+      left: 0;
+      background: white;
+      z-index: 1;
+    }
+
+    .product-based-table th {
+      background-color: var(--primary-color);
+      color: white;
+      font-weight: bold;
+      white-space: nowrap;
+    }
+
+    .product-based-table .highlight-data {
+      font-family: monospace;
+    }
+
+    .product-based-table .total-cell {
+      font-weight: bold;
+      color: var(--primary-dark);
+    }
+
+    @media (max-width: 768px) {
+      .product-based-table {
+        font-size: 12px;
+      }
+
+      .product-based-table th,
+      .product-based-table td {
+        padding: 6px;
+      }
+    }
+  `;
+  document.head.appendChild(style);
+}
+
+function initClassicTable(data) {
+  console.log("初始化經典表格視圖");
+
+  // 檢查是否已存在表格
+  let csvTable = document.getElementById("csv-table");
+
+  // 如果表格不存在，創建新表格
+  if (!csvTable) {
+    csvTable = document.createElement("table");
+    csvTable.id = "csv-table";
+    csvTable.className = "display responsive nowrap";
+
+    // 創建表格容器
+    const tableContainer = document.createElement("div");
+    tableContainer.className = "classic-view-table";
+    tableContainer.appendChild(csvTable);
+
+    // 將表格容器添加到頁面
+    const dataSection = document.querySelector("#data .max-w-content");
+    if (dataSection) {
+      dataSection.appendChild(tableContainer);
+    } else {
+      document.body.appendChild(tableContainer);
+    }
+  }
+
+  const columns = [
+    {
+      title: "券商",
+      data: 0,
+      render: function (data) {
+        return `<span class="broker-name">${data}</span>`;
+      },
+    },
+    {
+      title: "產品",
+      data: 1,
+      render: function (data) {
+        return `<span class="product-code">${String(data).padStart(
+          5,
+          "0"
+        )}</span>`;
+      },
+    },
+    {
+      title: "責任額",
+      data: 2,
+      render: function (data) {
+        return parseInt(data).toLocaleString("zh-TW");
+      },
+    },
+    { title: "募集期間", data: 3 },
+  ];
+
+  // 使用 jQuery 初始化 DataTable
+  const dataTable = $(csvTable).DataTable({
+    data: data,
+    columns: columns,
+    order: [[2, "desc"]],
+    pageLength: 10,
+    responsive: true,
+    language: {
+      search: "搜尋",
+      lengthMenu: "每頁 _MENU_ 筆",
+      info: "顯示第 _START_ 至 _END_ 筆結果，共 _TOTAL_ 筆",
+      paginate: {
+        first: '<i class="fas fa-angle-double-left"></i>',
+        last: '<i class="fas fa-angle-double-right"></i>',
+        next: '<i class="fas fa-angle-right"></i>',
+        previous: '<i class="fas fa-angle-left"></i>',
+      },
+      zeroRecords: "沒有找到匹配的記錄",
+      infoEmpty: "沒有記錄",
+      infoFiltered: "(從 _MAX_ 筆記錄中過濾)",
+    },
+    dom: '<"top"<"filter-controls"fl><"view-buttons">>rtip',
+    initComplete: function () {
+      console.log("DataTable初始化完成");
+      if (data.length > 0) {
+        const firstRow = $("#csv-table tbody tr:first-child");
+        firstRow.addClass("bg-primary bg-opacity-10");
+      }
+      addTotalInformation(data);
+    },
+  });
+
+  return dataTable;
+}

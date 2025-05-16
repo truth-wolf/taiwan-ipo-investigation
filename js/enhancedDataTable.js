@@ -57,6 +57,11 @@ function initEnhancedDataTable() {
               if (window.innerWidth >= 768) {
                 prepareProductTableContainer();
                 initViewButtons();
+                // 初始化完成後自動切換到產品視圖
+                setTimeout(() => {
+                  initProductTable(csvData);
+                  toggleTableView("product");
+                }, 100);
               }
               initDataVisualizations(csvData);
               generateKeyInsights();
