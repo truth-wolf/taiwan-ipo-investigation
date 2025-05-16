@@ -1,5 +1,10 @@
-/* 分享模態窗樣式 */
-.share-modal-overlay {
+/* shareModal.css - 終結IPO制度暴力專案模態窗樣式
+ * 提供分享模態窗和歡迎模態窗的完整樣式定義
+ * 兼容行動裝置與桌面瀏覽器
+ */
+
+/* ----------------- 共用模態窗樣式 ----------------- */
+.modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -7,6 +12,7 @@
   bottom: 0;
   background-color: rgba(0, 0, 0, 0.75);
   backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
   z-index: 1000;
   display: flex;
   align-items: center;
@@ -16,43 +22,33 @@
   transition: opacity 0.4s ease, visibility 0.4s ease;
 }
 
-.share-modal-overlay.active {
+.modal-overlay.active {
   opacity: 1;
   visibility: visible;
 }
 
-.share-modal {
+.modal-container {
   width: 90%;
   max-width: 500px;
-  background: linear-gradient(135deg, #1a5d7a, #0e3341);
   border-radius: 16px;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35);
   overflow: hidden;
   transform: translateY(30px) scale(0.95);
   opacity: 0;
   transition: transform 0.5s cubic-bezier(0.19, 1, 0.22, 1),
     opacity 0.5s cubic-bezier(0.19, 1, 0.22, 1);
-  border: 1px solid rgba(255, 255, 255, 0.1);
   position: relative;
 }
 
-.share-modal-overlay.active .share-modal {
+.modal-overlay.active .modal-container {
   transform: translateY(0) scale(1);
   opacity: 1;
 }
 
-.share-modal-header {
-  padding: 20px 25px;
-  background-color: rgba(255, 255, 255, 0.1);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  position: relative;
-}
-
-.share-modal-close {
+.modal-close {
   position: absolute;
-  top: 20px;
-  right: 20px;
-  background: rgba(255, 255, 255, 0.15);
+  top: 15px;
+  right: 15px;
+  background: rgba(0, 0, 0, 0.15);
   border: none;
   width: 32px;
   height: 32px;
@@ -64,26 +60,40 @@
   color: white;
   font-size: 14px;
   transition: all 0.2s ease;
+  z-index: 10;
 }
 
-.share-modal-close:hover {
-  background: rgba(255, 255, 255, 0.25);
+.modal-close:hover {
+  background: rgba(0, 0, 0, 0.25);
   transform: rotate(90deg);
 }
 
-.share-modal-body {
-  padding: 25px;
+/* ----------------- 分享模態窗樣式 ----------------- */
+.share-modal {
+  background: linear-gradient(135deg, #1a5d7a, #0e3341);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   color: white;
 }
 
-.share-modal-title {
+.share-modal .modal-header {
+  padding: 20px 25px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  position: relative;
+}
+
+.share-modal .modal-body {
+  padding: 25px;
+}
+
+.share-modal .modal-title {
   font-size: 1.7rem;
   font-weight: 700;
   margin-bottom: 5px;
-  color: white;
 }
 
-.share-modal-subtitle {
+.share-modal .modal-subtitle {
   color: rgba(255, 255, 255, 0.7);
   font-size: 0.95rem;
 }
@@ -102,7 +112,7 @@
   padding: 20px;
   border-radius: 12px;
   background-color: rgba(255, 255, 255, 0.1);
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
   cursor: pointer;
   border: 1px solid rgba(255, 255, 255, 0.05);
   position: relative;
@@ -145,7 +155,6 @@
 
 .share-button span {
   font-weight: 600;
-  color: white;
 }
 
 .share-link-container {
@@ -153,7 +162,7 @@
   position: relative;
 }
 
-.share-link-container .share-link {
+.share-link {
   width: 100%;
   padding: 15px 20px;
   border-radius: 10px;
@@ -164,7 +173,7 @@
   padding-right: 50px;
 }
 
-.share-link-container .copy-button {
+.copy-button {
   position: absolute;
   right: 10px;
   top: 50%;
@@ -182,7 +191,7 @@
   transition: all 0.2s ease;
 }
 
-.share-link-container .copy-button:hover {
+.copy-button:hover {
   background-color: rgba(255, 255, 255, 0.1);
   color: white;
 }
@@ -206,42 +215,141 @@
   opacity: 1;
 }
 
-.share-description {
-  margin-top: 25px;
-  padding-top: 20px;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  text-align: center;
-  font-size: 0.9rem;
-  color: rgba(255, 255, 255, 0.7);
-  line-height: 1.6;
-}
-
 .share-message {
-  background-color: rgba(255, 255, 255, 0.08);
-  padding: 15px 20px;
+  margin-top: 25px;
+  padding: 15px;
   border-radius: 10px;
-  margin-top: 20px;
+  background-color: rgba(255, 255, 255, 0.08);
   position: relative;
 }
 
-.share-message::before {
+.share-message-text {
+  position: relative;
+  font-style: italic;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.9);
+  line-height: 1.6;
+}
+
+/* ----------------- 歡迎模態窗樣式 ----------------- */
+.welcome-modal {
+  background: white;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+.welcome-modal .modal-header {
+  padding: 0;
+  position: relative;
+  height: 150px;
+  overflow: hidden;
+}
+
+.welcome-header-bg {
+  background: linear-gradient(135deg, #e23e57, #ff6b6b);
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.welcome-header-pattern {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='rgba(255,255,255,0.1)' fill-rule='evenodd'/%3E%3C/svg%3E");
+}
+
+.welcome-icon {
+  position: absolute;
+  top: -35px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 70px;
+  height: 70px;
+  background: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  z-index: 2;
+}
+
+.welcome-icon i {
+  font-size: 28px;
+  background: linear-gradient(135deg, #e23e57, #ff6b6b);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.welcome-modal .modal-body {
+  padding: 30px;
+  position: relative;
+}
+
+.welcome-modal .modal-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #262626;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.welcome-modal .modal-content {
+  color: #525252;
+  line-height: 1.6;
+}
+
+.welcome-modal .action-button {
+  background: linear-gradient(135deg, #e23e57, #ff6b6b);
+  color: white;
+  padding: 14px 30px;
+  border-radius: 12px;
+  font-weight: 600;
+  margin-top: 25px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: block;
+  width: 100%;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.welcome-modal .action-button::after {
   content: "";
   position: absolute;
   top: 0;
-  left: 10px;
-  font-size: 3rem;
-  line-height: 1;
-  color: rgba(255, 255, 255, 0.15);
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
 
-.share-message p {
-  position: relative;
-  font-style: italic;
-  line-height: 1.6;
-  margin: 0;
+.welcome-modal .action-button:hover::after {
+  opacity: 1;
 }
 
-/* 導航欄分享按鈕 */
+.welcome-modal .action-button:active {
+  transform: scale(0.98);
+}
+
+.welcome-modal .modal-close {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.welcome-modal .modal-close:hover {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+/* 導航欄分享按鈕 (可選) */
 .nav-share-button {
   background: linear-gradient(135deg, #1a5d7a, #0e3341);
   color: white;
@@ -280,16 +388,30 @@
   transform: scale(1.1);
 }
 
-/* 動畫效果 */
+/* ----------------- 動畫效果 ----------------- */
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.float-animation {
+  animation: float 3s ease-in-out infinite;
+}
+
 @keyframes pulse {
   0% {
-    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.4);
+    box-shadow: 0 0 0 0 rgba(226, 62, 87, 0.4);
   }
   70% {
-    box-shadow: 0 0 0 10px rgba(255, 255, 255, 0);
+    box-shadow: 0 0 0 10px rgba(226, 62, 87, 0);
   }
   100% {
-    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+    box-shadow: 0 0 0 0 rgba(226, 62, 87, 0);
   }
 }
 
@@ -297,19 +419,78 @@
   animation: pulse 1.5s infinite;
 }
 
-/* 首次訪問提示動畫 */
-@keyframes float {
-  0% {
-    transform: translateY(0px);
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
   }
-  50% {
-    transform: translateY(-10px);
-  }
-  100% {
-    transform: translateY(0px);
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
-.float-animation {
-  animation: float 3s ease-in-out infinite;
+.animate-fadeInUp {
+  animation: fadeInUp 0.5s ease forwards;
+}
+
+@keyframes wiggle {
+  0%,
+  100% {
+    transform: rotate(-3deg);
+  }
+  50% {
+    transform: rotate(3deg);
+  }
+}
+
+.animate-wiggle {
+  animation: wiggle 0.5s ease-in-out;
+}
+
+/* 各選項動畫延遲 */
+.share-options .share-button:nth-child(1) {
+  animation-delay: 0.1s;
+}
+.share-options .share-button:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.share-options .share-button:nth-child(3) {
+  animation-delay: 0.3s;
+}
+.share-options .share-button:nth-child(4) {
+  animation-delay: 0.4s;
+}
+
+/* 響應式調整 */
+@media (max-width: 640px) {
+  .share-options {
+    grid-template-columns: 1fr;
+  }
+
+  .modal-container {
+    width: 95%;
+  }
+
+  .welcome-modal .modal-header {
+    height: 120px;
+  }
+
+  .welcome-icon {
+    width: 60px;
+    height: 60px;
+    top: -30px;
+  }
+
+  .welcome-icon i {
+    font-size: 24px;
+  }
+
+  .modal-body {
+    padding: 20px;
+  }
+
+  .welcome-modal .modal-title {
+    font-size: 1.5rem;
+  }
 }
