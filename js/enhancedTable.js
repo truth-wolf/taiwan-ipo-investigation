@@ -481,7 +481,7 @@ function createDataStats() {
         <p class="text-2xl font-bold">
           <span class="counter" data-target="${avgAmount}" data-threshold="${avgAmount}" data-decimals="0">0</span><span>萬</span>
         </p>
-        <span class="text-sm text-gray-500">平均責任額 (原始)</span>
+        <span class="text-sm text-gray-500">平均個人責任額 (原始)</span>
       </div>
     </div>
   `;
