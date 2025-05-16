@@ -264,9 +264,9 @@
 
 .welcome-icon {
   position: absolute;
-  top: -35px;
+  top: 50%;
   left: 50%;
-  transform: translateX(-50%);
+  transform: translate(-50%, -50%);
   width: 70px;
   height: 70px;
   background: white;
