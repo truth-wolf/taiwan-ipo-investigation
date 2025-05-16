@@ -353,8 +353,21 @@ function setupViewToggle() {
 
 // 創建數據統計
 function createDataStats() {
+  // 確保 csvData 和 branchCountsMap 都已載入
   if (!window.csvData || window.csvData.length === 0) {
     console.error("csvData 未初始化，無法生成統計數據");
+    return;
+  }
+  const currentBranchCountsMap = window.branchCountsMap || {};
+  if (Object.keys(currentBranchCountsMap).length === 0) {
+    console.error(
+      "branchCountsMap 未初始化，無法計算加權總責任額以生成統計數據"
+    );
+    // 可以選擇顯示錯誤或不生成統計數據
+    const statsContainer = document.querySelector(".stats-grid");
+    if (statsContainer)
+      statsContainer.innerHTML =
+        '<p class="text-red-500">無法計算統計數據，券商分點資料缺失。</p>';
     return;
   }
 
@@ -362,33 +375,92 @@ function createDataStats() {
     broker: row[0],
     product: row[1],
     amount: Number(row[2]) || 0,
+    period: row[3], // 保留 period 給後續可能使用
   }));
 
-  const rawTotal = parsed.reduce((sum, r) => sum + r.amount, 0);
+  let weightedTotalAmount = 0;
+  let formulaParts = [];
+  let missingBrokers = new Set();
+
+  parsed.forEach((item) => {
+    const brokerName = item.broker ? item.broker.trim() : "未知券商";
+    const responsibilityAmount = item.amount;
+
+    if (isNaN(responsibilityAmount)) return;
+
+    let branchCount = 0;
+    if (currentBranchCountsMap.hasOwnProperty(brokerName)) {
+      branchCount = currentBranchCountsMap[brokerName];
+    } else {
+      const simplifiedBrokerName = brokerName
+        .replace(new RegExp("證券$"), "")
+        .trim();
+      if (currentBranchCountsMap.hasOwnProperty(simplifiedBrokerName)) {
+        branchCount = currentBranchCountsMap[simplifiedBrokerName];
+      } else {
+        missingBrokers.add(brokerName);
+      }
+    }
+
+    const weightedAmount = responsibilityAmount * branchCount * 30;
+    weightedTotalAmount += weightedAmount;
+    if (branchCount > 0) {
+      formulaParts.push(
+        `${responsibilityAmount.toLocaleString()} (來自 ${brokerName}) * ${branchCount}分點 * 30人/分點`
+      );
+    }
+  });
+
+  if (missingBrokers.size > 0) {
+    console.error(
+      "統計數據計算：下列券商未在 branch_counts.csv 中找到對應的分點數，其責任額未被加權計入總額:",
+      Array.from(missingBrokers).join(", ")
+    );
+  }
+
+  const rawTotal = weightedTotalAmount; // 更新 rawTotal 為加權後的總額
+
   const brokerCount = new Set(parsed.map((r) => r.broker)).size;
   const productCount = new Set(parsed.map((r) => r.product)).size;
-  const avgAmount = brokerCount > 0 ? Math.round(rawTotal / brokerCount) : 0;
+  // 平均責任額的計算可能也需要思考是否要加權，目前保持原樣（基於券商數量）或按原始總額
+  // 若要基於原始總額的平均：
+  const originalTotalAmount = parsed.reduce((sum, r) => sum + r.amount, 0);
+  const avgAmount =
+    brokerCount > 0 ? Math.round(originalTotalAmount / brokerCount) : 0;
+  // 或者，如果要基於加權總額的某種平均，則需要重新定義分母
 
   let totalTarget, totalUnit;
   if (rawTotal >= 10000) {
-    totalTarget = (rawTotal / 10000).toFixed(2);
+    // rawTotal 現在是萬元為單位，所以億的門檻是 10000 萬
+    totalTarget = (rawTotal / 10000).toFixed(2); // 換算成億元
     totalUnit = "億";
   } else {
-    totalTarget = rawTotal;
+    totalTarget = rawTotal.toFixed(0); // 保持萬元，不需要小數
     totalUnit = "萬";
   }
   const threshold = totalUnit === "億" ? 1 : 10000;
+
+  let formulaString =
+    "計算公式: Σ (各券商個別責任額 * 對應券商分點數 * 30人/分點)\n";
+  formulaString += `加權總責任額 = ${formulaParts.join(" + ")}`;
+  if (missingBrokers.size > 0) {
+    formulaString += `\n\n注意：券商 (${Array.from(missingBrokers).join(
+      ", "
+    )}) 未找到分點數據，其責任額貢獻按0計算。`;
+  }
 
   const statsHTML = `
     <div class="stats-grid grid grid-cols-2 md:grid-cols-4 gap-4 text-center mt-6">
       <div class="p-4 bg-white rounded shadow">
         <i class="fas fa-hand-holding-usd fa-2x text-blue-600 mb-2"></i>
-        <p class="text-2xl font-bold">
+        <p class="text-2xl font-bold" title="${formulaString
+          .replace(/"/g, "&quot;")
+          .replace(/\n/g, "&#10;")}">
           <span class="counter" data-target="${totalTarget}" data-unit="${totalUnit}" data-threshold="${threshold}" data-decimals="${
     totalUnit === "億" ? 2 : 0
   }">0</span><span>${totalUnit}</span>
         </p>
-        <span class="text-sm text-gray-500">總責任額</span>
+        <span class="text-sm text-gray-500">加權總責任額</span>
       </div>
       <div class="p-4 bg-white rounded shadow">
         <i class="fas fa-building fa-2x text-green-600 mb-2"></i>
@@ -409,7 +481,7 @@ function createDataStats() {
         <p class="text-2xl font-bold">
           <span class="counter" data-target="${avgAmount}" data-threshold="${avgAmount}" data-decimals="0">0</span><span>萬</span>
         </p>
-        <span class="text-sm text-gray-500">平均責任額</span>
+        <span class="text-sm text-gray-500">平均責任額 (原始)</span>
       </div>
     </div>
   `;
@@ -593,14 +665,21 @@ function setupDownloadOptions() {
 // 下載表格功能
 function downloadTable(format) {
   // 不再基於當前視圖，始終以產品視圖格式下載
-  // const isProductView = document.getElementById("product-view-btn").classList.contains("active");
   const isProductView = true; // 統一使用產品視圖格式
+
+  const currentBranchCountsMap = window.branchCountsMap || {};
+  if (
+    Object.keys(currentBranchCountsMap).length === 0 &&
+    (format === "csv" || format === "excel" || format === "pdf")
+  ) {
+    console.warn("下載時 branchCountsMap 未就緒，總計可能不正確或無法計算。");
+    // 根據需求，這裡可以 alert 提示用戶，或者允許下載但不包含加權總計
+  }
 
   // 使用window.csvData确保獲取完整數據
   // 先處理完整數據，確保產品編號始終為字串
   const fullData = (window.csvData || []).map((item) => {
     if (Array.isArray(item)) {
-      // 創建一個新的數組，保持原始數據不變
       return [
         item[0],
         String(item[1]), // 確保產品編號是字串格式
@@ -608,31 +687,31 @@ function downloadTable(format) {
         item[3],
       ];
     }
-    return item;
+    return item; // 假設 item 已經是正確的格式或非陣列時不需要轉換
   });
 
   switch (format) {
     case "csv":
-      downloadCSV(fullData, isProductView);
+      downloadCSV(fullData, isProductView, currentBranchCountsMap);
       break;
     case "excel":
-      downloadExcel(fullData, isProductView);
+      downloadExcel(fullData, isProductView, currentBranchCountsMap);
       break;
     case "pdf":
-      downloadPDF(fullData, isProductView);
+      downloadPDF(fullData, isProductView, currentBranchCountsMap);
       break;
   }
 }
 
 // 下載 CSV 格式
-function downloadCSV(data, isProductView) {
+function downloadCSV(data, isProductView, branchCounts) {
   if (isProductView) {
     const productsData = {};
     data.forEach((item) => {
-      const productName = String(item[1]); // 確保使用字串格式
+      const productName = String(item[1]);
       if (!productsData[productName]) {
         productsData[productName] = {
-          name: productName, // 已確保是字串格式
+          name: productName,
           period: item[3],
           brokers: {},
           totalAmount: 0,
@@ -655,7 +734,7 @@ function downloadCSV(data, isProductView) {
       "產品,募集期間," + uniqueBrokers.join(",") + ",平均責任額\n";
 
     sortedProducts.forEach((product) => {
-      let row = [product.name, product.period]; // product.name已確保是字串
+      let row = [product.name, product.period];
       let productTotalAmount = 0;
       let productBrokerCount = 0;
       uniqueBrokers.forEach((broker) => {
@@ -678,72 +757,92 @@ function downloadCSV(data, isProductView) {
         "\n";
     });
 
-    let totalRow = ["總責任額", ""];
+    // 加權總責任額計算 (CSV)
+    let weightedGrandTotalAmount = 0;
+    let missingBrokersForCsvGrandTotal = new Set();
+    if (branchCounts && Object.keys(branchCounts).length > 0) {
+      data.forEach((item) => {
+        const brokerName = item[0] ? item[0].trim() : "未知券商";
+        const responsibilityAmount = parseInt(item[2], 10);
+        if (isNaN(responsibilityAmount)) return;
+
+        let count = 0;
+        if (branchCounts.hasOwnProperty(brokerName)) {
+          count = branchCounts[brokerName];
+        } else {
+          const simplified = brokerName.replace(new RegExp("證券$"), "").trim();
+          if (branchCounts.hasOwnProperty(simplified)) {
+            count = branchCounts[simplified];
+          } else {
+            missingBrokersForCsvGrandTotal.add(brokerName);
+          }
+        }
+        weightedGrandTotalAmount += responsibilityAmount * count * 30;
+      });
+    }
+    if (missingBrokersForCsvGrandTotal.size > 0) {
+      console.warn(
+        "CSV下載：總計中部分券商無分點數據",
+        Array.from(missingBrokersForCsvGrandTotal)
+      );
+    }
+
+    let totalRow = ["加權總責任額", ""]; // 更新標籤
     uniqueBrokers.forEach((broker) => {
+      // 券商各自的總額（非加權）
       const brokerTotal = data
         .filter((item) => item[0] === broker)
         .reduce((sum, item) => sum + parseInt(item[2], 10), 0);
       totalRow.push(brokerTotal);
     });
-    const grandTotalAmount = data.reduce(
-      (sum, item) => sum + parseInt(item[2], 10),
-      0
-    );
-    const allProductEntriesCount = data.filter(
-      (row) => row[2] && !isNaN(parseInt(row[2]))
-    ).length;
-    const finalGrandAverage =
-      allProductEntriesCount > 0
-        ? Math.round(grandTotalAmount / allProductEntriesCount)
-        : 0;
-    totalRow.push(finalGrandAverage);
+
+    totalRow.push(weightedGrandTotalAmount.toLocaleString()); // 推入計算好的加權總額
     csvContent += totalRow
       .map((cell) => `"${String(cell).replace(/"/g, '""')}"`)
       .join(",");
 
-    // 網站連結信息
     const websiteInfo =
       "\n\n數據來源：終結IPO制度暴力調查網站 https://truth-wolf.github.io/taiwan-ipo-investigation/";
-
-    // 添加網站連結到CSV底部
     csvContent += websiteInfo;
-
     downloadFile(csvContent, "ETF責任額數據_產品視圖.csv", "text/csv");
   } else {
+    // 經典視圖下載邏輯 (如果需要，也應更新總計，但目前請求是統一產品視圖)
     let csvContent = "券商,產品,責任額,募集期間\n";
     data.forEach((item) => {
       if (Array.isArray(item)) {
         csvContent +=
           [
             `"${item[0]}"`,
-            `"${String(item[1]).replace(/"/g, '""')}"`, // 確保產品編號為字串
+            `"${String(item[1]).replace(/"/g, '""')}"`,
             item[2],
             `"${item[3]}"`,
           ].join(",") + "\n";
       } else {
+        // 假設是物件格式
         csvContent +=
           [
             `"${item.broker}"`,
-            `"${String(item.product).replace(/"/g, '""')}"`, // 確保產品編號為字串
+            `"${String(item.product).replace(/"/g, '""')}"`,
             item.amount,
             `"${item.period}"`,
           ].join(",") + "\n";
       }
     });
+    // 此處經典視圖若有總計行，也需考慮是否加權或如何顯示
     downloadFile(csvContent, "ETF責任額數據_經典視圖.csv", "text/csv");
   }
 }
 
 // 下載 Excel 格式
-function downloadExcel(data, isProductView) {
+function downloadExcel(data, isProductView, branchCounts) {
   const BOM = "\uFEFF";
   if (isProductView) {
     const productsData = {};
     data.forEach((item) => {
-      const productName = String(item[1]); // 確保使用字串格式
+      const productName = String(item[1]);
       if (!productsData[productName]) {
         productsData[productName] = {
-          name: productName, // 已確保是字串格式
+          name: productName,
           period: item[3],
           brokers: {},
           totalAmount: 0,
@@ -766,7 +865,7 @@ function downloadExcel(data, isProductView) {
       BOM + "產品,募集期間," + uniqueBrokers.join(",") + ",平均責任額\n";
 
     sortedProducts.forEach((product) => {
-      let row = [product.name, product.period]; // product.name已確保是字串
+      let row = [product.name, product.period];
       let productTotalAmount = 0;
       let productBrokerCount = 0;
       uniqueBrokers.forEach((broker) => {
@@ -789,36 +888,51 @@ function downloadExcel(data, isProductView) {
         "\n";
     });
 
-    let totalRow = ["總責任額", ""];
+    // 加權總責任額計算 (Excel)
+    let weightedGrandTotalAmountExcel = 0;
+    let missingBrokersForExcelGrandTotal = new Set();
+    if (branchCounts && Object.keys(branchCounts).length > 0) {
+      data.forEach((item) => {
+        const brokerName = item[0] ? item[0].trim() : "未知券商";
+        const responsibilityAmount = parseInt(item[2], 10);
+        if (isNaN(responsibilityAmount)) return;
+
+        let count = 0;
+        if (branchCounts.hasOwnProperty(brokerName)) {
+          count = branchCounts[brokerName];
+        } else {
+          const simplified = brokerName.replace(new RegExp("證券$"), "").trim();
+          if (branchCounts.hasOwnProperty(simplified)) {
+            count = branchCounts[simplified];
+          } else {
+            missingBrokersForExcelGrandTotal.add(brokerName);
+          }
+        }
+        weightedGrandTotalAmountExcel += responsibilityAmount * count * 30;
+      });
+    }
+    if (missingBrokersForExcelGrandTotal.size > 0) {
+      console.warn(
+        "Excel下載：總計中部分券商無分點數據",
+        Array.from(missingBrokersForExcelGrandTotal)
+      );
+    }
+
+    let totalRow = ["加權總責任額", ""]; // 更新標籤
     uniqueBrokers.forEach((broker) => {
       const brokerTotal = data
         .filter((item) => item[0] === broker)
         .reduce((sum, item) => sum + parseInt(item[2], 10), 0);
       totalRow.push(brokerTotal);
     });
-    const grandTotalAmount = data.reduce(
-      (sum, item) => sum + parseInt(item[2], 10),
-      0
-    );
-    const allProductEntriesCount = data.filter(
-      (row) => row[2] && !isNaN(parseInt(row[2]))
-    ).length;
-    const finalGrandAverage =
-      allProductEntriesCount > 0
-        ? Math.round(grandTotalAmount / allProductEntriesCount)
-        : 0;
-    totalRow.push(finalGrandAverage);
+    totalRow.push(weightedGrandTotalAmountExcel.toLocaleString()); // 推入計算好的加權總額
     csvContent += totalRow
       .map((cell) => `"${String(cell).replace(/"/g, '""')}"`)
       .join(",");
 
-    // 網站連結信息
     const websiteInfo =
       "\n\n數據來源：終結IPO制度暴力調查網站 https://truth-wolf.github.io/taiwan-ipo-investigation/";
-
-    // 添加網站連結到Excel底部
     csvContent += websiteInfo;
-
     downloadFile(
       csvContent,
       "ETF責任額數據_產品視圖.xlsx",
@@ -831,7 +945,7 @@ function downloadExcel(data, isProductView) {
         csvContent +=
           [
             `"${item[0]}"`,
-            `"${String(item[1]).replace(/"/g, '""')}"`, // 確保產品編號為字串
+            `"${String(item[1]).replace(/"/g, '""')}"`,
             item[2],
             `"${item[3]}"`,
           ].join(",") + "\n";
@@ -839,7 +953,7 @@ function downloadExcel(data, isProductView) {
         csvContent +=
           [
             `"${item.broker}"`,
-            `"${String(item.product).replace(/"/g, '""')}"`, // 確保產品編號為字串
+            `"${String(item.product).replace(/"/g, '""')}"`,
             item.amount,
             `"${item.period}"`,
           ].join(",") + "\n";
@@ -854,7 +968,7 @@ function downloadExcel(data, isProductView) {
 }
 
 // 下載 PDF 格式
-function downloadPDF(data, isProductView) {
+function downloadPDF(data, isProductView, branchCounts) {
   const { jsPDF } = window.jspdf;
   if (!jsPDF) {
     alert("PDF 功能需要 jsPDF 庫，請檢查是否正確載入");
@@ -868,10 +982,10 @@ function downloadPDF(data, isProductView) {
   if (isProductView) {
     const productsData = {};
     data.forEach((item) => {
-      const productName = String(item[1]); // 確保使用字串格式
+      const productName = String(item[1]);
       if (!productsData[productName]) {
         productsData[productName] = {
-          name: productName, // 已確保是字串格式
+          name: productName,
           period: item[3],
           brokers: {},
           totalAmount: 0,
@@ -892,7 +1006,7 @@ function downloadPDF(data, isProductView) {
     const uniqueBrokers = [...new Set(data.map((item) => item[0]))].sort();
     const head = [["產品", "募集期間", ...uniqueBrokers, "平均責任額"]];
     const body = sortedProducts.map((product) => {
-      let row = [product.name, product.period]; // product.name已確保是字串
+      let row = [product.name, product.period];
       let productTotalAmount = 0;
       let productBrokerCount = 0;
       uniqueBrokers.forEach((broker) => {
@@ -913,25 +1027,44 @@ function downloadPDF(data, isProductView) {
       return row;
     });
 
-    let totalRowData = ["總責任額", ""];
+    // 加權總責任額計算 (PDF)
+    let weightedGrandTotalAmountPdf = 0;
+    let missingBrokersForPdfGrandTotal = new Set();
+    if (branchCounts && Object.keys(branchCounts).length > 0) {
+      data.forEach((item) => {
+        const brokerName = item[0] ? item[0].trim() : "未知券商";
+        const responsibilityAmount = parseInt(item[2], 10);
+        if (isNaN(responsibilityAmount)) return;
+
+        let count = 0;
+        if (branchCounts.hasOwnProperty(brokerName)) {
+          count = branchCounts[brokerName];
+        } else {
+          const simplified = brokerName.replace(new RegExp("證券$"), "").trim();
+          if (branchCounts.hasOwnProperty(simplified)) {
+            count = branchCounts[simplified];
+          } else {
+            missingBrokersForPdfGrandTotal.add(brokerName);
+          }
+        }
+        weightedGrandTotalAmountPdf += responsibilityAmount * count * 30;
+      });
+    }
+    if (missingBrokersForPdfGrandTotal.size > 0) {
+      console.warn(
+        "PDF下載：總計中部分券商無分點數據",
+        Array.from(missingBrokersForPdfGrandTotal)
+      );
+    }
+
+    let totalRowData = ["加權總責任額", ""]; // 更新標籤
     uniqueBrokers.forEach((broker) => {
       const brokerTotal = data
         .filter((item) => item[0] === broker)
         .reduce((sum, item) => sum + parseInt(item[2], 10), 0);
       totalRowData.push(brokerTotal.toLocaleString());
     });
-    const grandTotalAmount = data.reduce(
-      (sum, item) => sum + parseInt(item[2], 10),
-      0
-    );
-    const allProductEntriesCount = data.filter(
-      (row) => row[2] && !isNaN(parseInt(row[2]))
-    ).length;
-    const finalGrandAverage =
-      allProductEntriesCount > 0
-        ? Math.round(grandTotalAmount / allProductEntriesCount)
-        : 0;
-    totalRowData.push(finalGrandAverage.toLocaleString());
+    totalRowData.push(weightedGrandTotalAmountPdf.toLocaleString()); // 推入計算好的加權總額
     body.push(totalRowData);
 
     doc.autoTable({
@@ -942,7 +1075,6 @@ function downloadPDF(data, isProductView) {
       headStyles: { fillColor: [26, 93, 122], fontSize: 7, cellPadding: 1.5 },
     });
 
-    // 添加網站連結到PDF底部
     const pageHeight = doc.internal.pageSize.height;
     doc.setFontSize(8);
     doc.setTextColor(100, 100, 100);
@@ -951,21 +1083,20 @@ function downloadPDF(data, isProductView) {
       14,
       pageHeight - 10
     );
-
     doc.save(`ETF責任額數據_產品視圖.pdf`);
   } else {
     const tableData = data.map((item) => {
       if (Array.isArray(item)) {
         return [
           item[0],
-          String(item[1]), // 確保產品編號為字串
+          String(item[1]),
           parseInt(item[2], 10).toLocaleString(),
           item[3],
         ];
       }
       return [
         item.broker,
-        String(item.product), // 確保產品編號為字串
+        String(item.product),
         parseInt(item.amount, 10).toLocaleString(),
         item.period,
       ];
@@ -978,7 +1109,6 @@ function downloadPDF(data, isProductView) {
       headStyles: { fillColor: [26, 93, 122], fontSize: 8, cellPadding: 2 },
     });
 
-    // 添加網站連結到PDF底部
     const pageHeight = doc.internal.pageSize.height;
     doc.setFontSize(8);
     doc.setTextColor(100, 100, 100);
@@ -987,7 +1117,6 @@ function downloadPDF(data, isProductView) {
       14,
       pageHeight - 10
     );
-
     doc.save(`ETF責任額數據_經典視圖.pdf`);
   }
 }
