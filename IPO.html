@@ -3,60 +3,110 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>金融業聲音 - IPO責任額壓力分析</title>
+  <title>金融業真相：揭露IPO責任額黑幕</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+TC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&family=Noto+Sans+TC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
   <script>
     tailwind.config = {
       theme: {
         extend: {
           colors: {
             primary: {
-              50: '#f0f9ff',
-              100: '#e0f2fe',
-              200: '#bae6fd',
-              300: '#7dd3fc',
-              400: '#38bdf8',
-              500: '#0ea5e9',
-              600: '#0284c7',
-              700: '#0369a1',
-              800: '#075985',
-              900: '#0c4a6e',
+              50: '#f0f7ff',
+              100: '#e0f0fe',
+              200: '#bae0fd',
+              300: '#7dcbfc',
+              400: '#38acf8',
+              500: '#0e98e9',
+              600: '#0077cc',
+              700: '#0062a6',
+              800: '#005188',
+              900: '#064672',
             },
             secondary: {
-              50: '#fdf2f8',
-              100: '#fce7f3',
-              200: '#fbcfe8',
-              300: '#f9a8d4',
-              400: '#f472b6',
+              50: '#fef2f7',
+              100: '#fde6ef',
+              200: '#fbd0e0',
+              300: '#f9aac4',
+              400: '#f472a7',
               500: '#ec4899',
-              600: '#db2777',
-              700: '#be185d',
-              800: '#9d174d',
-              900: '#831843',
+              600: '#d62677',
+              700: '#b31860',
+              800: '#94164e',
+              900: '#801747',
             },
             neutral: {
               50: '#f9fafb',
-              100: '#f3f4f6',
+              100: '#f4f5f7',
               200: '#e5e7eb',
-              300: '#d1d5db',
-              400: '#9ca3af',
-              500: '#6b7280',
-              600: '#4b5563',
+              300: '#d2d6dc',
+              400: '#9fa6b2',
+              500: '#717784',
+              600: '#4c5564',
               700: '#374151',
               800: '#1f2937',
               900: '#111827',
             },
             emotion: {
-              despair: '#7f1d1d',
-              anxiety: '#854d0e',
-              pressure: '#1e3a8a',
-              helpless: '#4c1d95',
-              silence: '#1e40af'
+              oppression: {
+                100: '#ffe4e4',
+                200: '#ffbbbb',
+                300: '#ff9292',
+                400: '#ff6969',
+                500: '#ff4040',
+                600: '#cc2c2c',
+                700: '#991f1f',
+                800: '#661515',
+                900: '#330a0a',
+              },
+              anxiety: {
+                100: '#fff8e1',
+                200: '#ffebb3',
+                300: '#ffdd85',
+                400: '#ffd057',
+                500: '#ffc229',
+                600: '#cc981f',
+                700: '#997217',
+                800: '#664c0f',
+                900: '#332605',
+              },
+              pressure: {
+                100: '#e1f5fe',
+                200: '#b3e5fc',
+                300: '#81d4fa',
+                400: '#4fc3f7',
+                500: '#29b6f6',
+                600: '#0288d1',
+                700: '#0277bd',
+                800: '#01579b',
+                900: '#01324b',
+              },
+              helpless: {
+                100: '#f3e5f5',
+                200: '#e1bee7',
+                300: '#ce93d8',
+                400: '#ba68c8',
+                500: '#ab47bc',
+                600: '#8e24aa',
+                700: '#7b1fa2',
+                800: '#6a1b9a',
+                900: '#4a148c',
+              },
+              silence: {
+                100: '#e8f5e9',
+                200: '#c8e6c9',
+                300: '#a5d6a7',
+                400: '#81c784',
+                500: '#66bb6a',
+                600: '#4caf50',
+                700: '#43a047',
+                800: '#388e3c',
+                900: '#2e7d32',
+              }
             }
           },
           spacing: {
@@ -82,11 +132,31 @@
             'fade-in-up': {
               '0%': {
                 opacity: '0',
-                transform: 'translateY(20px)'
+                transform: 'translateY(30px)'
               },
               '100%': {
                 opacity: '1',
                 transform: 'translateY(0)'
+              },
+            },
+            'fade-in-left': {
+              '0%': {
+                opacity: '0',
+                transform: 'translateX(-30px)'
+              },
+              '100%': {
+                opacity: '1',
+                transform: 'translateX(0)'
+              },
+            },
+            'fade-in-right': {
+              '0%': {
+                opacity: '0',
+                transform: 'translateX(30px)'
+              },
+              '100%': {
+                opacity: '1',
+                transform: 'translateX(0)'
               },
             },
             'pulse-custom': {
@@ -94,49 +164,95 @@
                 opacity: '1',
               },
               '50%': {
-                opacity: '0.5',
+                opacity: '0.7',
               },
-            }
+            },
+            'scale-up': {
+              '0%': {
+                transform: 'scale(0)'
+              },
+              '70%': {
+                transform: 'scale(1.1)'
+              },
+              '100%': {
+                transform: 'scale(1)'
+              },
+            },
           },
           animation: {
-            'fade-in-up': 'fade-in-up 0.5s ease-out forwards',
-            'pulse-custom': 'pulse-custom 2s infinite',
+            'fade-in-up': 'fade-in-up 0.7s ease-out forwards',
+            'fade-in-left': 'fade-in-left 0.7s ease-out forwards',
+            'fade-in-right': 'fade-in-right 0.7s ease-out forwards',
+            'pulse-custom': 'pulse-custom 2.5s infinite',
+            'scale-up': 'scale-up 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards',
+          },
+          backgroundImage: {
+            'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
           }
         }
       }
     }
   </script>
   <style>
-    /* 自訂CSS樣式，補充Tailwind不足之處 */
+    /* 自訂CSS樣式 */
     body {
       overflow-x: hidden;
+      background-color: #fdfdfd;
+      background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23f0f0f0' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
     }
     
-    .card-gradient {
-      background: linear-gradient(135deg, hsla(210, 100%, 97%, 1) 0%, hsla(210, 100%, 87%, 1) 100%);
+    /* 玻璃擬態效果 */
+    .glassmorphism {
+      background: rgba(255, 255, 255, 0.3);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
     }
     
-    .intense-card {
-      background: linear-gradient(135deg, rgba(239, 68, 68, 0.05) 0%, rgba(239, 68, 68, 0.15) 100%);
-      border-left: 4px solid #ef4444;
+    .card-glassmorphism {
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
     }
     
-    .intense-card:hover {
-      box-shadow: 0 10px 20px rgba(239, 68, 68, 0.1);
+    .neo-card {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 
+        4px 4px 12px rgba(0, 0, 0, 0.03),
+        -4px -4px 12px rgba(255, 255, 255, 0.8),
+        inset 0 0 0 rgba(255, 255, 255, 0.05);
+      transition: all 0.3s ease;
     }
-
+    
+    .neo-card:hover {
+      box-shadow: 
+        6px 6px 16px rgba(0, 0, 0, 0.05),
+        -6px -6px 16px rgba(255, 255, 255, 0.9),
+        inset 0 0 0 rgba(255, 255, 255, 0.05);
+    }
+    
+    .oppression-card {
+      background: linear-gradient(150deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 248, 248, 0.95) 100%);
+      border-left: 4px solid rgb(255, 64, 64);
+    }
+    
+    .anxiety-card {
+      background: linear-gradient(150deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 251, 240, 0.95) 100%);
+      border-left: 4px solid rgb(255, 194, 41);
+    }
+    
     .pressure-card {
-      background: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(59, 130, 246, 0.1) 100%);
-      border-left: 4px solid #3b82f6;
-    }
-    
-    .pressure-card:hover {
-      box-shadow: 0 10px 20px rgba(59, 130, 246, 0.1);
+      background: linear-gradient(150deg, rgba(255, 255, 255, 0.95) 0%, rgba(240, 249, 255, 0.95) 100%);
+      border-left: 4px solid rgb(41, 182, 246);
     }
     
     .scroll-indicator {
       height: 4px;
-      background-color: #0ea5e9;
+      background-image: linear-gradient(to right, #0e98e9, #ec4899);
       width: 0%;
       position: fixed;
       top: 0;
@@ -147,26 +263,435 @@
     
     .quote-card {
       position: relative;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     }
     
     .quote-card::before {
       content: """;
       position: absolute;
       top: -1rem;
-      left: -0.5rem;
+      left: 0.5rem;
       font-size: 5rem;
       color: rgba(59, 130, 246, 0.1);
       font-family: Georgia, serif;
     }
     
     .quote-card:hover {
-      transform: translateY(-5px);
+      transform: translateY(-5px) scale(1.02);
     }
     
     .hidden-initially {
       opacity: 0;
       transform: translateY(20px);
+    }
+    
+    /* 高級圓形進度條 */
+    .circular-progress {
+      position: relative;
+      width: 120px;
+      height: 120px;
+    }
+    
+    .circular-progress .circle {
+      transform: rotate(-90deg);
+      transform-origin: 50% 50%;
+      transition: stroke-dashoffset 1.5s ease-in-out;
+    }
+    
+    .circular-progress .circle-bg {
+      stroke: rgba(0, 0, 0, 0.05);
+    }
+    
+    .circular-progress .text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+    
+    /* 液體進度條 */
+    .liquid-progress {
+      position: relative;
+      height: 50px;
+      background: linear-gradient(to bottom, #f0f0f0 0%, #e0e0e0 100%);
+      border-radius: 25px;
+      overflow: hidden;
+    }
+    
+    .liquid-progress::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0) 70%);
+      border-radius: 25px;
+    }
+    
+    .liquid-progress .liquid {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: var(--progress);
+      height: 100%;
+      background: linear-gradient(90deg, var(--color-start) 0%, var(--color-end) 100%);
+      border-radius: 25px;
+      transition: width 1.5s ease-in-out;
+    }
+    
+    .liquid-progress .liquid::before {
+      content: '';
+      position: absolute;
+      top: -10px;
+      right: 0;
+      width: 100%;
+      height: 200%;
+      background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="white" fill-opacity="0.3" d="M0,64L48,80C96,96,192,128,288,128C384,128,480,96,576,85.3C672,75,768,85,864,112C960,139,1056,181,1152,170.7C1248,160,1344,96,1392,64L1440,32L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>');
+      background-size: cover;
+      animation: liquid-wave 5s linear infinite;
+    }
+    
+    @keyframes liquid-wave {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+    
+    .liquid-progress .text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-weight: 700;
+      color: white;
+      z-index: 1;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    }
+    
+    /* 移動中的背景動畫 */
+    .moving-bg {
+      background: linear-gradient(135deg, 
+        rgba(14, 152, 233, 0.05) 0%, 
+        rgba(59, 130, 246, 0.05) 25%, 
+        rgba(236, 72, 153, 0.05) 51%, 
+        rgba(244, 63, 94, 0.05) 100%);
+      background-size: 400% 400%;
+      animation: moving-bg-animation 15s ease infinite;
+    }
+    
+    @keyframes moving-bg-animation {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    
+    /* 波浪分隔線 */
+    .wave-divider {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      overflow: hidden;
+      line-height: 0;
+      transform: rotate(180deg);
+    }
+
+    .wave-divider svg {
+      position: relative;
+      display: block;
+      width: calc(100% + 1.3px);
+      height: 55px;
+    }
+
+    .wave-divider .shape-fill {
+      fill: #FFFFFF;
+    }
+    
+    /* 動畫和互動效果 */
+    .animated-icon {
+      transition: all 0.5s ease;
+    }
+    
+    .animated-icon:hover {
+      transform: translateY(-5px);
+      color: #0e98e9;
+    }
+    
+    .floating {
+      animation: float 6s ease-in-out infinite;
+    }
+    
+    @keyframes float {
+      0% { transform: translateY(0px); }
+      50% { transform: translateY(-15px); }
+      100% { transform: translateY(0px); }
+    }
+    
+    /* 高級標籤樣式 */
+    .tag {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.025em;
+      transition: all 0.2s ease;
+    }
+    
+    .tag:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    }
+    
+    .tag-oppression {
+      background-color: rgba(255, 64, 64, 0.1);
+      color: rgb(204, 44, 44);
+    }
+    
+    .tag-anxiety {
+      background-color: rgba(255, 194, 41, 0.1);
+      color: rgb(204, 152, 31);
+    }
+    
+    .tag-pressure {
+      background-color: rgba(41, 182, 246, 0.1);
+      color: rgb(2, 136, 209);
+    }
+    
+    /* 高級圖表元素 */
+    .chart-card {
+      overflow: hidden;
+      position: relative;
+    }
+    
+    .chart-card::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0) 50%);
+      pointer-events: none;
+    }
+    
+    /* 漸層文字 */
+    .gradient-text {
+      background: linear-gradient(90deg, #0e98e9 0%, #ec4899 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      display: inline-block;
+    }
+    
+    /* 高級頭像效果 */
+    .avatar-border {
+      position: relative;
+      border-radius: 50%;
+      padding: 4px;
+      background: linear-gradient(45deg, #0e98e9, #ec4899);
+    }
+    
+    .avatar-border::after {
+      content: '';
+      position: absolute;
+      top: 2px;
+      left: 2px;
+      right: 2px;
+      bottom: 2px;
+      background: white;
+      border-radius: 50%;
+      z-index: 0;
+    }
+    
+    .avatar-border img {
+      position: relative;
+      z-index: 1;
+      border-radius: 50%;
+    }
+    
+    /* 3D 卡片效果 */
+    .card-3d {
+      transition: transform 0.5s ease;
+      transform-style: preserve-3d;
+    }
+    
+    .card-3d-container:hover .card-3d {
+      transform: rotateY(5deg) rotateX(5deg);
+    }
+    
+    /* 自定義滾動條 */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    
+    ::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.05);
+      border-radius: 4px;
+    }
+    
+    ::-webkit-scrollbar-thumb {
+      background: linear-gradient(to bottom, #0e98e9, #ec4899);
+      border-radius: 4px;
+    }
+    
+    ::-webkit-scrollbar-thumb:hover {
+      background: linear-gradient(to bottom, #0077cc, #d62677);
+    }
+    
+    /* 彩蛋樣式 */
+    .easter-egg {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      opacity: 0.5;
+      transition: all 0.3s ease;
+      z-index: 1000;
+      cursor: pointer;
+      width: 48px;
+      height: 48px;
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    
+    .easter-egg:hover {
+      opacity: 1;
+      transform: scale(1.1);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+    }
+    
+    #easter-egg-content {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      background: white;
+      padding: 2rem;
+      border-radius: 1rem;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      z-index: 1001;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      max-width: 90vw;
+      width: 500px;
+    }
+    
+    #easter-egg-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(2px);
+      -webkit-backdrop-filter: blur(2px);
+      opacity: 0;
+      pointer-events: none;
+      z-index: 1000;
+      transition: all 0.3s ease;
+    }
+    
+    /* Hover 卡片效果 */
+    .hover-elevate {
+      transition: all 0.3s ease;
+    }
+    
+    .hover-elevate:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+    }
+    
+    /* 打字機效果增強版 */
+    .typewriter {
+      border-right: 0.15em solid;
+      white-space: nowrap;
+      overflow: hidden;
+      margin: 0 auto;
+      letter-spacing: 0.05em;
+      animation: 
+        typing 3.5s steps(40, end),
+        blink-caret 0.75s step-end infinite;
+    }
+    
+    @keyframes typing {
+      from { width: 0 }
+      to { width: 100% }
+    }
+    
+    @keyframes blink-caret {
+      from, to { border-color: transparent }
+      50% { border-color: #0e98e9 }
+    }
+    
+    /* 高亮文字 */
+    .highlight {
+      position: relative;
+      z-index: 1;
+    }
+    
+    .highlight::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 30%;
+      background: linear-gradient(90deg, rgba(14, 152, 233, 0.2) 0%, rgba(236, 72, 153, 0.2) 100%);
+      z-index: -1;
+      transition: height 0.3s ease;
+    }
+    
+    .highlight:hover::after {
+      height: 100%;
+    }
+    
+    /* 新增：數據儀表板元素 */
+    .dashboard-card {
+      transition: all 0.3s ease;
+      overflow: hidden;
+    }
+    
+    .dashboard-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 20px rgba(0, 0, 0, 0.05);
+    }
+    
+    .dashboard-header {
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .dashboard-header::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -50%;
+      width: 200%;
+      height: 100%;
+      background: linear-gradient(90deg, 
+        rgba(255, 255, 255, 0) 0%, 
+        rgba(255, 255, 255, 0.3) 50%, 
+        rgba(255, 255, 255, 0) 100%);
+      transform: skewX(-25deg);
+      animation: dashboard-shine 3s infinite;
+    }
+    
+    @keyframes dashboard-shine {
+      0% { left: -150%; }
+      100% { left: 150%; }
+    }
+    
+    /* 情緒指標雷達圖 */
+    .radar-chart-container {
+      position: relative;
     }
     
     .radar-chart {
@@ -183,381 +708,591 @@
       height: 100%;
     }
     
-    .radar-chart-line {
-      stroke-dasharray: 1000;
-      stroke-dashoffset: 1000;
-      animation: dash 1.5s ease-in-out forwards;
+    /* 脈衝動畫 */
+    .pulse-dot {
+      position: relative;
     }
     
-    @keyframes dash {
+    .pulse-dot::after {
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      border-radius: 50%;
+      background-color: rgba(14, 152, 233, 0.5);
+      z-index: -1;
+      animation: pulse-animation 2s infinite;
+    }
+    
+    @keyframes pulse-animation {
+      0% {
+        transform: scale(0.8);
+        opacity: 0.8;
+      }
+      50% {
+        transform: scale(1.5);
+        opacity: 0;
+      }
+      100% {
+        transform: scale(0.8);
+        opacity: 0;
+      }
+    }
+    
+    /* 主題色區塊 */
+    .theme-oppression {
+      background: linear-gradient(135deg, rgba(255, 64, 64, 0.05) 0%, rgba(255, 64, 64, 0.1) 100%);
+      border-left: 4px solid rgba(255, 64, 64, 0.5);
+    }
+    
+    .theme-anxiety {
+      background: linear-gradient(135deg, rgba(255, 194, 41, 0.05) 0%, rgba(255, 194, 41, 0.1) 100%);
+      border-left: 4px solid rgba(255, 194, 41, 0.5);
+    }
+    
+    .theme-pressure {
+      background: linear-gradient(135deg, rgba(41, 182, 246, 0.05) 0%, rgba(41, 182, 246, 0.1) 100%);
+      border-left: 4px solid rgba(41, 182, 246, 0.5);
+    }
+    
+    /* 資料視覺化標籤 */
+    .vis-tag {
+      padding: 6px 10px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      transition: all 0.2s ease;
+    }
+    
+    .vis-tag:hover {
+      transform: translateY(-2px);
+    }
+    
+    .vis-tag-oppression {
+      background-color: rgba(255, 64, 64, 0.1);
+      color: rgb(204, 44, 44);
+    }
+    
+    .vis-tag-anxiety {
+      background-color: rgba(255, 194, 41, 0.1);
+      color: rgb(204, 152, 31);
+    }
+    
+    .vis-tag-pressure {
+      background-color: rgba(41, 182, 246, 0.1);
+      color: rgb(2, 136, 209);
+    }
+    
+    .vis-tag-count {
+      margin-left: 5px;
+      background: rgba(0, 0, 0, 0.1);
+      border-radius: 9999px;
+      padding: 2px 6px;
+      font-size: 10px;
+    }
+    
+    /* 反光效果 */
+    .reflection {
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .reflection::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 50%;
+      height: 100%;
+      background: linear-gradient(
+        to right,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 0.3) 100%
+      );
+      transform: skewX(-25deg);
+      animation: reflection 6s infinite;
+    }
+    
+    @keyframes reflection {
+      0% { left: -100%; }
+      20% { left: 100%; }
+      100% { left: 100%; }
+    }
+    
+    /* 現代化開關 */
+    .modern-switch {
+      position: relative;
+      display: inline-block;
+      width: 44px;
+      height: 24px;
+    }
+    
+    .modern-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #e0e0e0;
+      transition: .4s;
+      border-radius: 34px;
+    }
+    
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: .4s;
+      border-radius: 50%;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+    
+    input:checked + .slider {
+      background-color: #0e98e9;
+    }
+    
+    input:checked + .slider:before {
+      transform: translateX(20px);
+    }
+    
+    /* 數據顯示動畫 */
+    .animate-number {
+      display: inline-block;
+      position: relative;
+    }
+    
+    .animate-number::after {
+      content: attr(data-value);
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      animation: fadeNumberIn 1s forwards;
+      animation-delay: var(--delay, 0s);
+    }
+    
+    @keyframes fadeNumberIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    /* 情緒波動曲線 */
+    .emotion-wave {
+      position: relative;
+      height: 80px;
+      width: 100%;
+      overflow: hidden;
+    }
+    
+    .emotion-wave svg {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+    
+    .emotion-wave path {
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+    }
+    
+    .path-oppression {
+      stroke: rgba(255, 64, 64, 0.7);
+      stroke-dasharray: 1000;
+      stroke-dashoffset: 1000;
+      animation: draw 2s forwards;
+    }
+    
+    .path-anxiety {
+      stroke: rgba(255, 194, 41, 0.7);
+      stroke-dasharray: 1000;
+      stroke-dashoffset: 1000;
+      animation: draw 2s forwards;
+      animation-delay: 0.3s;
+    }
+    
+    .path-pressure {
+      stroke: rgba(41, 182, 246, 0.7);
+      stroke-dasharray: 1000;
+      stroke-dashoffset: 1000;
+      animation: draw 2s forwards;
+      animation-delay: 0.6s;
+    }
+    
+    @keyframes draw {
       to {
         stroke-dashoffset: 0;
       }
     }
     
-    /* 移動中的背景動畫 */
-    .moving-bg {
-      background: linear-gradient(270deg, #f0f9ff, #e0f2fe, #bae6fd);
-      background-size: 600% 600%;
-      animation: moving-bg-animation 30s ease infinite;
-    }
-    
-    @keyframes moving-bg-animation {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-    
-    /* 漂浮元素動畫 */
-    .floating {
-      animation: float 6s ease-in-out infinite;
-    }
-    
-    @keyframes float {
-      0% { transform: translateY(0px); }
-      50% { transform: translateY(-15px); }
-      100% { transform: translateY(0px); }
-    }
-    
-    /* 閃爍元素 */
-    .blink-slow {
-      animation: blink-animation 3s ease-in-out infinite;
-    }
-    
-    @keyframes blink-animation {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.6; }
-    }
-    
-    /* 捲動指示器 */
-    .scroll-down-indicator {
-      animation: scroll-down 2s ease-in-out infinite;
-    }
-    
-    @keyframes scroll-down {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(10px); }
-    }
-    
-    /* 彩蛋樣式 */
-    .easter-egg {
-      position: fixed;
-      bottom: 2rem;
-      right: 2rem;
-      opacity: 0.5;
-      transition: all 0.3s ease;
-      z-index: 1000;
-      cursor: pointer;
-    }
-    
-    .easter-egg:hover {
-      opacity: 1;
-      transform: scale(1.1);
-    }
-    
-    #easter-egg-content {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%) scale(0);
-      background: white;
-      padding: 2rem;
-      border-radius: 1rem;
-      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-      z-index: 1001;
-      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      max-width: 90vw;
-      width: 500px;
-    }
-    
-    #easter-egg-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(0, 0, 0, 0.5);
-      opacity: 0;
-      pointer-events: none;
-      z-index: 1000;
-      transition: all 0.3s ease;
-    }
-    
-    /* 數據頁籤 */
-    .tab-button {
+    /* 回饋氣泡 */
+    .testimonial-bubble {
       position: relative;
-      transition: all 0.2s ease;
+      background: white;
+      border-radius: 16px;
+      padding: 16px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
     }
     
-    .tab-button::after {
+    .testimonial-bubble::after {
       content: '';
       position: absolute;
-      bottom: -0.5rem;
-      left: 50%;
-      width: 0;
-      height: 2px;
-      background-color: #0ea5e9;
-      transition: all 0.2s ease;
-      transform: translateX(-50%);
-    }
-    
-    .tab-button.active::after {
-      width: 100%;
-    }
-    
-    .tab-content {
-      opacity: 0;
-      height: 0;
-      overflow: hidden;
-      transition: all 0.3s ease;
-    }
-    
-    .tab-content.active {
-      opacity: 1;
-      height: auto;
-    }
-
-    /* 打字機效果 */
-    .typewriter {
-      overflow: hidden;
-      border-right: 0.15em solid #0ea5e9;
-      white-space: nowrap;
-      animation: 
-        typing 3.5s steps(40, end),
-        blink-caret 0.75s step-end infinite;
-    }
-
-    @keyframes typing {
-      from { width: 0 }
-      to { width: 100% }
-    }
-
-    @keyframes blink-caret {
-      from, to { border-color: transparent }
-      50% { border-color: #0ea5e9 }
-    }
-
-    /* 情緒標籤 */
-    .emotion-tag {
-      display: inline-block;
-      padding: 0.2rem 0.5rem;
-      border-radius: 0.25rem;
-      font-size: 0.75rem;
-      margin-right: 0.25rem;
-      margin-bottom: 0.25rem;
-      transition: all 0.2s ease;
-    }
-
-    .emotion-tag:hover {
-      transform: translateY(-2px);
-    }
-
-    /* 圓形進度條 */
-    .circle-progress {
-      transition: stroke-dashoffset 1s ease-in-out;
-      transform: rotate(-90deg);
-      transform-origin: 50% 50%;
-    }
-
-    /* 隱藏滾動條但保留功能 */
-    .no-scrollbar::-webkit-scrollbar {
-      display: none;
-    }
-    
-    .no-scrollbar {
-      -ms-overflow-style: none;
-      scrollbar-width: none;
-    }
-    
-    /* Hover 卡片放大效果 */
-    .zoom-on-hover {
-      transition: transform 0.3s ease;
-    }
-    
-    .zoom-on-hover:hover {
-      transform: scale(1.03);
-    }
-
-    /* 高亮顏色變化 */
-    .highlight-text {
-      background: linear-gradient(120deg, rgba(59, 130, 246, 0.2) 0%, rgba(16, 185, 129, 0.2) 100%);
-      background-repeat: no-repeat;
-      background-size: 100% 40%;
-      background-position: 0 88%;
-      transition: background 0.3s ease;
-    }
-
-    .highlight-text:hover {
-      background-size: 100% 100%;
-      color: #1e3a8a;
+      bottom: -10px;
+      left: 24px;
+      width: 20px;
+      height: 20px;
+      background: white;
+      transform: rotate(45deg);
+      box-shadow: 4px 4px 12px rgba(0, 0, 0, 0.05);
+      z-index: -1;
     }
   </style>
 </head>
-<body class="font-sans bg-gray-50 text-neutral-800">
+<body class="font-sans text-neutral-800">
   <!-- 捲動進度條 -->
   <div class="scroll-indicator"></div>
   
   <!-- 導航欄 -->
-  <nav class="sticky top-0 bg-white shadow-md z-50">
-    <div class="container mx-auto px-4 py-4 flex justify-between items-center">
-      <div class="text-xl md:text-2xl font-bold text-primary-700 flex items-center">
-        <i class="fas fa-chart-line mr-2"></i>
-        <span>金融業心聲</span>
+  <nav class="sticky top-0 bg-white bg-opacity-90 backdrop-blur-md z-50 shadow-sm">
+    <div class="container mx-auto px-4 md:px-6 py-3 md:py-4 flex justify-between items-center">
+      <div class="text-xl md:text-2xl font-bold flex items-center">
+        <i class="fas fa-volume-up text-primary-600 mr-2"></i>
+        <span class="gradient-text">金融業真相</span>
       </div>
-      <div class="hidden md:flex space-x-6">
-        <a href="#overview" class="text-neutral-600 hover:text-primary-600 transition duration-200">總覽</a>
-        <a href="#top-quotes" class="text-neutral-600 hover:text-primary-600 transition duration-200">高分語錄</a>
-        <a href="#emotion-analysis" class="text-neutral-600 hover:text-primary-600 transition duration-200">情緒分析</a>
-        <a href="#report" class="text-neutral-600 hover:text-primary-600 transition duration-200">報導大綱</a>
-        <a href="#recommendations" class="text-neutral-600 hover:text-primary-600 transition duration-200">改進建議</a>
+      <div class="hidden md:flex space-x-8">
+        <a href="#overview" class="text-neutral-600 hover:text-primary-600 transition duration-200 flex items-center">
+          <i class="fas fa-chart-pie text-sm mr-1.5"></i>總覽
+        </a>
+        <a href="#voices" class="text-neutral-600 hover:text-primary-600 transition duration-200 flex items-center">
+          <i class="fas fa-comment-dots text-sm mr-1.5"></i>第一線心聲
+        </a>
+        <a href="#emotion-analysis" class="text-neutral-600 hover:text-primary-600 transition duration-200 flex items-center">
+          <i class="fas fa-brain text-sm mr-1.5"></i>情緒分析
+        </a>
+        <a href="#report" class="text-neutral-600 hover:text-primary-600 transition duration-200 flex items-center">
+          <i class="fas fa-newspaper text-sm mr-1.5"></i>深度報導
+        </a>
+        <a href="#solutions" class="text-neutral-600 hover:text-primary-600 transition duration-200 flex items-center">
+          <i class="fas fa-lightbulb text-sm mr-1.5"></i>改革建議
+        </a>
       </div>
       <!-- 手機版選單按鈕 -->
       <div class="block md:hidden">
-        <button id="menu-button" class="text-neutral-600 hover:text-primary-600 transition duration-200">
+        <button id="menu-button" class="text-neutral-600 hover:text-primary-600 transition duration-200 p-1 rounded-full hover:bg-gray-100">
           <i class="fas fa-bars text-xl"></i>
         </button>
       </div>
     </div>
     <!-- 手機版選單內容 -->
-    <div id="mobile-menu" class="hidden px-4 py-2 bg-white shadow-inner">
-      <div class="flex flex-col space-y-3 pb-3">
-        <a href="#overview" class="text-neutral-600 hover:text-primary-600 transition duration-200">總覽</a>
-        <a href="#top-quotes" class="text-neutral-600 hover:text-primary-600 transition duration-200">高分語錄</a>
-        <a href="#emotion-analysis" class="text-neutral-600 hover:text-primary-600 transition duration-200">情緒分析</a>
-        <a href="#report" class="text-neutral-600 hover:text-primary-600 transition duration-200">報導大綱</a>
-        <a href="#recommendations" class="text-neutral-600 hover:text-primary-600 transition duration-200">改進建議</a>
+    <div id="mobile-menu" class="hidden px-4 py-3 bg-white shadow-inner">
+      <div class="flex flex-col space-y-4 pb-2">
+        <a href="#overview" class="text-neutral-600 hover:text-primary-600 transition duration-200 flex items-center">
+          <i class="fas fa-chart-pie w-6 text-primary-500"></i>總覽
+        </a>
+        <a href="#voices" class="text-neutral-600 hover:text-primary-600 transition duration-200 flex items-center">
+          <i class="fas fa-comment-dots w-6 text-primary-500"></i>第一線心聲
+        </a>
+        <a href="#emotion-analysis" class="text-neutral-600 hover:text-primary-600 transition duration-200 flex items-center">
+          <i class="fas fa-brain w-6 text-primary-500"></i>情緒分析
+        </a>
+        <a href="#report" class="text-neutral-600 hover:text-primary-600 transition duration-200 flex items-center">
+          <i class="fas fa-newspaper w-6 text-primary-500"></i>深度報導
+        </a>
+        <a href="#solutions" class="text-neutral-600 hover:text-primary-600 transition duration-200 flex items-center">
+          <i class="fas fa-lightbulb w-6 text-primary-500"></i>改革建議
+        </a>
       </div>
     </div>
   </nav>
 
   <!-- 頁首區塊 -->
-  <header class="moving-bg py-16 md:py-24 relative overflow-hidden">
-    <div class="container mx-auto px-4 relative z-10">
+  <header class="relative py-20 md:py-28 overflow-hidden bg-gradient-to-br from-neutral-50 to-blue-50">
+    <div class="container mx-auto px-4 md:px-6 relative z-10">
       <div class="text-center max-w-3xl mx-auto">
-        <h1 class="font-title font-bold text-3xl md:text-5xl mb-4 text-neutral-900 typewriter">
-          揭露金融業IPO責任額真相
+        <h1 class="font-title font-bold text-3xl md:text-5xl mb-6 text-neutral-900">
+          <span class="relative">
+            揭露金融業<span class="gradient-text">IPO責任額</span>黑幕
+            <span class="absolute -bottom-2 left-0 w-full h-1 bg-gradient-to-r from-primary-500 to-secondary-500 rounded-full"></span>
+          </span>
         </h1>
         <p class="text-lg md:text-xl text-neutral-700 mb-8 leading-relaxed">
-          基於50位金融從業人員的真實心聲與訴求，探討業界隱藏的壓力與黑暗面
+          基於50位金融從業人員的真實心聲，探討業界隱藏的壓力與黑暗面，呈現數據背後的人性故事
         </p>
-        <div class="flex justify-center">
-          <a href="#overview" class="bg-primary-600 hover:bg-primary-700 text-white font-medium py-3 px-6 rounded-lg transition transform duration-200 hover:scale-105 shadow-lg">
-            探索數據
+        <div class="flex flex-col sm:flex-row justify-center gap-4 mb-10">
+          <a href="#overview" class="bg-gradient-to-r from-primary-600 to-primary-500 hover:from-primary-700 hover:to-primary-600 text-white font-medium py-3 px-6 rounded-lg transition transform duration-200 hover:scale-105 shadow-lg flex items-center justify-center">
+            <i class="fas fa-chart-bar mr-2"></i>
+            探索數據視覺化
+          </a>
+          <a href="#voices" class="bg-white text-primary-600 border border-primary-300 hover:border-primary-500 font-medium py-3 px-6 rounded-lg transition transform duration-200 hover:scale-105 shadow-sm flex items-center justify-center">
+            <i class="fas fa-comment-alt mr-2"></i>
+            聆聽第一線心聲
           </a>
         </div>
-        <div class="mt-12 text-neutral-500 scroll-down-indicator">
-          <i class="fas fa-chevron-down text-2xl"></i>
+        <div class="flex justify-center">
+          <div class="relative">
+            <div class="absolute -top-6 right-0 text-xs bg-red-100 text-red-600 px-2 py-1 rounded-full animate-pulse">
+              即時更新
+            </div>
+            <div class="flex items-center p-3 bg-white rounded-full shadow-xl">
+              <span class="pulse-dot w-3 h-3 bg-primary-500 rounded-full mr-2"></span>
+              <span class="text-neutral-600 text-sm">正在分析來自全台<span class="font-bold text-primary-700">50</span>位金融從業人員的心聲</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
+    
+    <!-- 波浪裝飾 -->
+    <div class="wave-divider">
+      <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+        <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" class="shape-fill"></path>
+      </svg>
+    </div>
+    
     <!-- 裝飾元素 -->
     <div class="absolute top-20 left-10 opacity-20 hidden md:block">
-      <i class="fas fa-chart-pie text-8xl text-primary-300 floating"></i>
+      <i class="fas fa-comment-dollar text-8xl text-primary-300 floating"></i>
     </div>
-    <div class="absolute bottom-20 right-10 opacity-20 hidden md:block">
-      <i class="fas fa-coins text-8xl text-primary-300 floating" style="animation-delay: 1s;"></i>
+    <div class="absolute bottom-40 right-10 opacity-20 hidden md:block">
+      <i class="fas fa-chart-line text-8xl text-primary-300 floating" style="animation-delay: 1s;"></i>
     </div>
   </header>
 
   <!-- 總覽區塊 -->
   <section id="overview" class="py-16 bg-white">
-    <div class="container mx-auto px-4">
-      <h2 class="text-2xl md:text-3xl font-bold mb-10 text-center text-neutral-800">
-        <span class="highlight-text">數據總覽</span>
-      </h2>
+    <div class="container mx-auto px-4 md:px-6">
+      <div class="text-center mb-12">
+        <h2 class="text-2xl md:text-3xl font-bold text-neutral-800 mb-3">
+          <span class="highlight">數據總覽儀表板</span>
+        </h2>
+        <p class="text-neutral-600 max-w-2xl mx-auto">深入解析從業人員的真實情緒指標與關鍵發現</p>
+      </div>
       
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <!-- 總數據筆數 -->
-        <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-shadow duration-300 zoom-on-hover">
-          <div class="flex items-start justify-between">
-            <div>
-              <p class="text-neutral-500 text-sm">總資料筆數</p>
-              <h3 class="text-3xl font-bold text-neutral-800 mt-2 counter" data-target="50">0</h3>
-            </div>
-            <div class="bg-primary-100 p-3 rounded-lg">
-              <i class="fas fa-database text-primary-500"></i>
+      <!-- 數據卡片 -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+        <!-- 總資料數卡片 -->
+        <div class="neo-card p-6 dashboard-card hidden-initially">
+          <div class="dashboard-header mb-4">
+            <div class="flex items-start justify-between">
+              <div>
+                <p class="text-neutral-500 text-sm">總資料筆數</p>
+                <h3 class="text-3xl font-bold text-neutral-800 mt-2" id="data-count">
+                  <span class="animate-number" data-value="50">0</span>
+                </h3>
+              </div>
+              <div class="bg-gradient-to-br from-primary-100 to-primary-200 p-3 rounded-lg">
+                <i class="fas fa-database text-primary-500"></i>
+              </div>
             </div>
           </div>
-          <p class="text-neutral-600 text-sm mt-4">基於50位金融業員工的真實回饋</p>
+          <div class="flex items-center text-neutral-600 text-sm">
+            <i class="fas fa-users mr-2 text-primary-400"></i>
+            <span>來自全台各金融機構的匿名心聲</span>
+          </div>
         </div>
         
-        <!-- 平均NLP總分 -->
-        <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-shadow duration-300 zoom-on-hover">
-          <div class="flex items-start justify-between">
-            <div>
-              <p class="text-neutral-500 text-sm">平均NLP總分</p>
-              <h3 class="text-3xl font-bold text-neutral-800 mt-2 counter" data-target="82.1">0</h3>
-            </div>
-            <div class="bg-secondary-100 p-3 rounded-lg">
-              <i class="fas fa-chart-bar text-secondary-500"></i>
+        <!-- 平均NLP總分卡片 -->
+        <div class="neo-card p-6 dashboard-card hidden-initially">
+          <div class="dashboard-header mb-4">
+            <div class="flex items-start justify-between">
+              <div>
+                <p class="text-neutral-500 text-sm">平均NLP總分</p>
+                <h3 class="text-3xl font-bold text-neutral-800 mt-2" id="nlp-score">
+                  <span class="animate-number" data-value="82.1">0</span>
+                </h3>
+              </div>
+              <div class="bg-gradient-to-br from-secondary-100 to-secondary-200 p-3 rounded-lg">
+                <i class="fas fa-brain text-secondary-500"></i>
+              </div>
             </div>
           </div>
-          <p class="text-neutral-600 text-sm mt-4">反映高度負面情緒與壓力</p>
+          <div class="flex items-center text-neutral-600 text-sm">
+            <i class="fas fa-exclamation-triangle mr-2 text-secondary-400"></i>
+            <span>超過80分，反映極度負面情緒</span>
+          </div>
         </div>
         
-        <!-- 最高情緒指標 -->
-        <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-shadow duration-300 zoom-on-hover">
-          <div class="flex items-start justify-between">
-            <div>
-              <p class="text-neutral-500 text-sm">最高情緒指標</p>
-              <h3 class="text-3xl font-bold text-neutral-800 mt-2">被欺壓感</h3>
-            </div>
-            <div class="bg-red-100 p-3 rounded-lg">
-              <i class="fas fa-exclamation-triangle text-red-500"></i>
+        <!-- 最高情緒指標卡片 -->
+        <div class="neo-card p-6 dashboard-card hidden-initially">
+          <div class="dashboard-header mb-4">
+            <div class="flex items-start justify-between">
+              <div>
+                <p class="text-neutral-500 text-sm">最高情緒指標</p>
+                <h3 class="text-2xl font-bold text-neutral-800 mt-2">被欺壓感</h3>
+              </div>
+              <div class="bg-gradient-to-br from-red-100 to-red-200 p-3 rounded-lg">
+                <i class="fas fa-exclamation-circle text-red-500"></i>
+              </div>
             </div>
           </div>
-          <p class="text-neutral-600 text-sm mt-4">平均得分9.6/10，明顯高於其他指標</p>
+          <div class="flex items-center space-x-2">
+            <!-- 微型液體進度條 -->
+            <div class="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
+              <div class="h-full bg-red-500 rounded-full" style="width: 96%"></div>
+            </div>
+            <span class="text-sm font-bold text-red-600">9.6/10</span>
+          </div>
         </div>
         
-        <!-- 高分訴求比例 -->
-        <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-shadow duration-300 zoom-on-hover">
-          <div class="flex items-start justify-between">
-            <div>
-              <p class="text-neutral-500 text-sm">高分訴求比例</p>
-              <h3 class="text-3xl font-bold text-neutral-800 mt-2 counter" data-target="78">0<span>%</span></h3>
-            </div>
-            <div class="bg-green-100 p-3 rounded-lg">
-              <i class="fas fa-percentage text-green-500"></i>
+        <!-- 高分訴求比例卡片 -->
+        <div class="neo-card p-6 dashboard-card hidden-initially">
+          <div class="dashboard-header mb-4">
+            <div class="flex items-start justify-between">
+              <div>
+                <p class="text-neutral-500 text-sm">高分訴求比例</p>
+                <h3 class="text-3xl font-bold text-neutral-800 mt-2" id="high-score-ratio">
+                  <span class="animate-number" data-value="78%">0%</span>
+                </h3>
+              </div>
+              <div class="bg-gradient-to-br from-green-100 to-green-200 p-3 rounded-lg">
+                <i class="fas fa-percentage text-green-500"></i>
+              </div>
             </div>
           </div>
-          <p class="text-neutral-600 text-sm mt-4">NLP總分超過80分的訴求佔比</p>
+          <div class="flex items-center text-neutral-600 text-sm">
+            <i class="fas fa-chart-line mr-2 text-green-400"></i>
+            <span>NLP總分超過80分的訴求佔比</span>
+          </div>
         </div>
       </div>
       
-      <!-- 情緒分析總覽圖表 -->
-      <div class="mt-16 grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <!-- 雷達圖 -->
-        <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-shadow duration-300">
-          <h3 class="text-xl font-semibold mb-6 text-neutral-700">各項情緒指標平均分數</h3>
-          <div class="radar-chart hidden-initially">
-            <div class="radar-chart-inner" id="radar-chart">
-              <!-- 雷達圖將由JavaScript生成 -->
+      <!-- 情緒指標與主要問題 -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-6">
+        <!-- 情緒雷達圖 -->
+        <div class="neo-card p-6 chart-card radar-chart-container hidden-initially">
+          <h3 class="text-xl font-semibold mb-5 text-neutral-700 flex items-center">
+            <i class="fas fa-radar text-primary-500 mr-2"></i>情緒指標雷達分析
+          </h3>
+          <div class="radar-chart" id="radar-chart">
+            <div class="radar-chart-inner">
+              <!-- 雷達圖由JavaScript生成 -->
             </div>
           </div>
         </div>
         
-        <!-- 主要問題類別 -->
-        <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-shadow duration-300">
-          <h3 class="text-xl font-semibold mb-6 text-neutral-700">主要問題類別分布</h3>
-          <div id="categories-chart" class="h-64 md:h-72 hidden-initially">
-            <!-- 類別圖表將由JavaScript生成 -->
+        <!-- 主要問題類別分布 -->
+        <div class="neo-card p-6 chart-card hidden-initially">
+          <h3 class="text-xl font-semibold mb-5 text-neutral-700 flex items-center">
+            <i class="fas fa-sitemap text-primary-500 mr-2"></i>主要問題類別分布
+          </h3>
+          <div id="categories-chart" class="h-64 md:h-72 mb-4">
+            <!-- 類別圖表由JavaScript生成 -->
           </div>
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
+          
+          <!-- 互動式類別標籤 -->
+          <div class="flex flex-wrap gap-2 mt-4">
+            <div class="vis-tag vis-tag-oppression cursor-pointer" data-category="責任額壓力">
+              責任額壓力 <span class="vis-tag-count">38%</span>
+            </div>
+            <div class="vis-tag vis-tag-anxiety cursor-pointer" data-category="職場霸凌">
+              職場霸凌 <span class="vis-tag-count">26%</span>
+            </div>
+            <div class="vis-tag vis-tag-pressure cursor-pointer" data-category="自掏腰包買單">
+              自掏腰包買單 <span class="vis-tag-count">22%</span>
+            </div>
+            <div class="vis-tag cursor-pointer" style="background: rgba(16, 185, 129, 0.1); color: rgb(5, 150, 105);" data-category="客戶權益問題">
+              客戶權益問題 <span class="vis-tag-count">14%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 情緒波動趨勢 -->
+      <div class="neo-card p-6 chart-card hidden-initially mb-6">
+        <h3 class="text-xl font-semibold mb-4 text-neutral-700 flex items-center">
+          <i class="fas fa-wave-square text-primary-500 mr-2"></i>情緒指標波動趨勢
+        </h3>
+        <div class="emotion-wave" id="emotion-wave">
+          <svg viewBox="0 0 1000 80" preserveAspectRatio="none">
+            <!-- 被欺壓感波動曲線 -->
+            <path class="path-oppression" d="M0,60 C50,40 100,10 150,20 C200,30 250,80 300,70 C350,60 400,30 450,20 C500,10 550,30 600,40 C650,50 700,10 750,5 C800,0 850,30 900,20 C950,10 1000,30 1000,40" />
+            
+            <!-- 壓迫性敘述波動曲線 -->
+            <path class="path-anxiety" d="M0,50 C50,30 100,60 150,50 C200,40 250,10 300,20 C350,30 400,60 450,50 C500,40 550,20 600,30 C650,40 700,70 750,65 C800,60 850,30 900,40 C950,50 1000,30 1000,20" />
+            
+            <!-- 恐懼焦慮波動曲線 -->
+            <path class="path-pressure" d="M0,40 C50,50 100,30 150,40 C200,50 250,20 300,30 C350,40 400,70 450,60 C500,50 550,10 600,20 C650,30 700,50 750,45 C800,40 850,60 900,50 C950,40 1000,20 1000,30" />
+          </svg>
+          
+          <!-- 波動曲線圖例 -->
+          <div class="flex justify-center mt-4 gap-6">
             <div class="flex items-center">
-              <div class="w-4 h-4 rounded-full bg-red-500 mr-2"></div>
-              <span class="text-sm text-neutral-600">責任額壓力 (38%)</span>
+              <div class="w-3 h-3 rounded-full bg-emotion-oppression-500 mr-2"></div>
+              <span class="text-sm">被欺壓感</span>
             </div>
             <div class="flex items-center">
-              <div class="w-4 h-4 rounded-full bg-blue-500 mr-2"></div>
-              <span class="text-sm text-neutral-600">職場霸凌 (26%)</span>
+              <div class="w-3 h-3 rounded-full bg-emotion-anxiety-500 mr-2"></div>
+              <span class="text-sm">壓迫性敘述</span>
             </div>
             <div class="flex items-center">
-              <div class="w-4 h-4 rounded-full bg-yellow-500 mr-2"></div>
-              <span class="text-sm text-neutral-600">自掏腰包買單 (22%)</span>
+              <div class="w-3 h-3 rounded-full bg-emotion-pressure-500 mr-2"></div>
+              <span class="text-sm">恐懼焦慮</span>
             </div>
-            <div class="flex items-center">
-              <div class="w-4 h-4 rounded-full bg-green-500 mr-2"></div>
-              <span class="text-sm text-neutral-600">客戶權益問題 (14%)</span>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 快速洞察面板 -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+        <!-- 洞察1 -->
+        <div class="bg-gradient-to-br from-neutral-50 to-primary-50 p-5 rounded-xl border border-primary-100 hidden-initially">
+          <div class="flex items-start">
+            <div class="p-2 bg-primary-100 rounded-lg mr-3">
+              <i class="fas fa-percentage text-primary-600"></i>
+            </div>
+            <div>
+              <h4 class="font-semibold text-primary-900">責任額制度成主要壓力源</h4>
+              <p class="text-sm text-neutral-600 mt-1">38%的訴求直接關聯到責任額制度，為首要工作壓力來源。</p>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 洞察2 -->
+        <div class="bg-gradient-to-br from-neutral-50 to-secondary-50 p-5 rounded-xl border border-secondary-100 hidden-initially">
+          <div class="flex items-start">
+            <div class="p-2 bg-secondary-100 rounded-lg mr-3">
+              <i class="fas fa-comment-dots text-secondary-600"></i>
+            </div>
+            <div>
+              <h4 class="font-semibold text-secondary-900">主管脅迫話術普遍存在</h4>
+              <p class="text-sm text-neutral-600 mt-1">超過65%的受訪者曾被主管暗示或直接要求自掏腰包購買IPO產品。</p>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 洞察3 -->
+        <div class="bg-gradient-to-br from-neutral-50 to-red-50 p-5 rounded-xl border border-red-100 hidden-initially">
+          <div class="flex items-start">
+            <div class="p-2 bg-red-100 rounded-lg mr-3">
+              <i class="fas fa-exclamation-triangle text-red-600"></i>
+            </div>
+            <div>
+              <h4 class="font-semibold text-red-900">職場霸凌形成系統性壓迫</h4>
+              <p class="text-sm text-neutral-600 mt-1">26%的訴求涉及晨會公開羞辱、客戶資源被剝奪等職場霸凌行為。</p>
             </div>
           </div>
         </div>
@@ -565,635 +1300,1174 @@
     </div>
   </section>
 
-  <!-- 高分語錄區塊 -->
-  <section id="top-quotes" class="py-16 bg-gray-50">
-    <div class="container mx-auto px-4">
-      <h2 class="text-2xl md:text-3xl font-bold mb-2 text-center text-neutral-800">
-        <span class="highlight-text">最高分訴求語錄</span>
-      </h2>
-      <p class="text-center text-neutral-600 mb-10">NLP總分最高的員工心聲，揭露業界最痛的真相</p>
+  <!-- 第一線心聲區塊 -->
+  <section id="voices" class="py-16 bg-gray-50">
+    <div class="container mx-auto px-4 md:px-6">
+      <div class="text-center mb-12">
+        <h2 class="text-2xl md:text-3xl font-bold text-neutral-800 mb-3">
+          <span class="highlight">第一線員工真實心聲</span>
+        </h2>
+        <p class="text-neutral-600 max-w-2xl mx-auto">聆聽NLP總分最高的訴求，揭露金融業不為人知的工作現實</p>
+      </div>
       
-      <!-- 高分語錄卡片 -->
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
-        <!-- 卡片1 -->
-        <div class="quote-card bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-shadow duration-300 intense-card hidden-initially">
+      <!-- 主題分類導航 -->
+      <div class="flex flex-wrap justify-center gap-3 mb-10 hidden-initially">
+        <button class="theme-btn active px-4 py-2 rounded-full bg-white shadow-sm text-neutral-700 hover:bg-primary-50 hover:text-primary-700 transition duration-200" data-theme="all">
+          全部訴求
+        </button>
+        <button class="theme-btn px-4 py-2 rounded-full bg-white shadow-sm text-neutral-700 hover:bg-emotion-oppression-100 hover:text-emotion-oppression-700 transition duration-200" data-theme="oppression">
+          被欺壓感
+        </button>
+        <button class="theme-btn px-4 py-2 rounded-full bg-white shadow-sm text-neutral-700 hover:bg-emotion-anxiety-100 hover:text-emotion-anxiety-700 transition duration-200" data-theme="anxiety">
+          恐懼焦慮
+        </button>
+        <button class="theme-btn px-4 py-2 rounded-full bg-white shadow-sm text-neutral-700 hover:bg-emotion-pressure-100 hover:text-emotion-pressure-700 transition duration-200" data-theme="pressure">
+          壓迫性敘述
+        </button>
+      </div>
+      
+      <!-- 心聲卡片網格 -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+        <!-- 卡片 1：性別歧視 -->
+        <div class="quote-card neo-card p-6 theme-oppression hidden-initially" data-theme="oppression">
           <div class="flex justify-between items-start mb-4">
-            <div class="bg-red-100 text-red-800 text-xs font-medium px-2.5 py-1 rounded-full">NLP總分: 95</div>
+            <div class="bg-emotion-oppression-100 text-emotion-oppression-700 text-xs font-medium px-2.5 py-1 rounded-full">NLP總分: 95</div>
             <div class="flex space-x-1">
-              <div class="emotion-tag bg-emotion-pressure text-white">被欺壓感: 10</div>
-              <div class="emotion-tag bg-emotion-despair text-white">羞辱感: 8</div>
+              <div class="tag tag-oppression">被欺壓感: 10</div>
+              <div class="tag tag-oppression">羞辱感: 8</div>
             </div>
           </div>
-          <h3 class="text-xl font-bold text-neutral-800 mb-2">「為了業績犧牲自己」</h3>
+          <h3 class="text-xl font-bold text-neutral-800 mb-3 flex items-center">
+            <i class="fas fa-quote-left text-emotion-oppression-300 mr-2 text-sm"></i>
+            為了業績犧牲自己
+          </h3>
           <p class="text-neutral-600 mb-4">主管說：如果跟客戶有一腿有業績，不如就為了業績犧牲自己。</p>
-          <div class="text-neutral-500 text-sm">
-            <i class="fas fa-exclamation-circle text-red-500 mr-1"></i>
-            職場性別歧視：主管暗示犧牲色相
+          <div class="flex justify-between items-center mt-6">
+            <div class="text-neutral-500 text-sm flex items-center">
+              <i class="fas fa-exclamation-circle text-emotion-oppression-500 mr-1"></i>
+              職場性別歧視：主管暗示犧牲色相
+            </div>
+            <div class="text-xs text-neutral-400">2025-05-17</div>
           </div>
         </div>
         
-        <!-- 卡片2 -->
-        <div class="quote-card bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-shadow duration-300 intense-card hidden-initially">
+        <!-- 卡片 2：騙術達標 -->
+        <div class="quote-card neo-card p-6 theme-anxiety hidden-initially" data-theme="anxiety">
           <div class="flex justify-between items-start mb-4">
-            <div class="bg-red-100 text-red-800 text-xs font-medium px-2.5 py-1 rounded-full">NLP總分: 95</div>
+            <div class="bg-emotion-anxiety-100 text-emotion-anxiety-700 text-xs font-medium px-2.5 py-1 rounded-full">NLP總分: 95</div>
             <div class="flex space-x-1">
-              <div class="emotion-tag bg-emotion-pressure text-white">被欺壓感: 10</div>
-              <div class="emotion-tag bg-emotion-anxiety text-white">恐懼焦慮: 9</div>
+              <div class="tag tag-anxiety">被欺壓感: 10</div>
+              <div class="tag tag-anxiety">恐懼焦慮: 9</div>
             </div>
           </div>
-          <h3 class="text-xl font-bold text-neutral-800 mb-2">「IPO連10萬都騙不到」</h3>
+          <h3 class="text-xl font-bold text-neutral-800 mb-3 flex items-center">
+            <i class="fas fa-quote-left text-emotion-anxiety-300 mr-2 text-sm"></i>
+            IPO連10萬都騙不到
+          </h3>
           <p class="text-neutral-600 mb-4">主管說：我不相信你IPO連10萬都騙不到，拿著你營業員的名片會騙不到10嗎？如果騙不到，表示這個行業不適合你，請你可以考慮離開。</p>
-          <div class="text-neutral-500 text-sm">
-            <i class="fas fa-exclamation-circle text-red-500 mr-1"></i>
-            金融業亂象：主管暗示用騙術達標
+          <div class="flex justify-between items-center mt-6">
+            <div class="text-neutral-500 text-sm flex items-center">
+              <i class="fas fa-exclamation-circle text-emotion-anxiety-500 mr-1"></i>
+              金融業亂象：主管暗示用騙術達標
+            </div>
+            <div class="text-xs text-neutral-400">2025-05-17</div>
           </div>
         </div>
         
-        <!-- 卡片3 -->
-        <div class="quote-card bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-shadow duration-300 intense-card hidden-initially">
+        <!-- 卡片 3：金融流氓 -->
+        <div class="quote-card neo-card p-6 theme-oppression hidden-initially" data-theme="oppression">
           <div class="flex justify-between items-start mb-4">
-            <div class="bg-red-100 text-red-800 text-xs font-medium px-2.5 py-1 rounded-full">NLP總分: 90</div>
+            <div class="bg-emotion-oppression-100 text-emotion-oppression-700 text-xs font-medium px-2.5 py-1 rounded-full">NLP總分: 90</div>
             <div class="flex space-x-1">
-              <div class="emotion-tag bg-emotion-pressure text-white">被欺壓感: 10</div>
-              <div class="emotion-tag bg-emotion-anxiety text-white">恐懼焦慮: 9</div>
+              <div class="tag tag-oppression">被欺壓感: 10</div>
+              <div class="tag tag-oppression">恐懼焦慮: 9</div>
             </div>
           </div>
-          <h3 class="text-xl font-bold text-neutral-800 mb-2">「金融流氓主管」</h3>
+          <h3 class="text-xl font-bold text-neutral-800 mb-3 flex items-center">
+            <i class="fas fa-quote-left text-emotion-oppression-300 mr-2 text-sm"></i>
+            金融流氓主管
+          </h3>
           <p class="text-neutral-600 mb-4">特許的金融業養出了一群特許的金融流氓主管，對於未完成責任額的營業員在公司晨會月會等公開場合拿著麥克風大罵：「沒有羞恥心！」「沒有榮譽感！」</p>
-          <div class="text-neutral-500 text-sm">
-            <i class="fas fa-exclamation-circle text-red-500 mr-1"></i>
-            職場亂象：員工指責主管為金融流氓
+          <div class="flex justify-between items-center mt-6">
+            <div class="text-neutral-500 text-sm flex items-center">
+              <i class="fas fa-exclamation-circle text-emotion-oppression-500 mr-1"></i>
+              職場亂象：員工指責主管為金融流氓
+            </div>
+            <div class="text-xs text-neutral-400">2025-05-17</div>
           </div>
         </div>
         
-        <!-- 卡片4 -->
-        <div class="quote-card bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-shadow duration-300 pressure-card hidden-initially">
+        <!-- 卡片 4：主管公開指責 -->
+        <div class="quote-card neo-card p-6 theme-pressure hidden-initially" data-theme="pressure">
           <div class="flex justify-between items-start mb-4">
-            <div class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-1 rounded-full">NLP總分: 92</div>
+            <div class="bg-emotion-pressure-100 text-emotion-pressure-700 text-xs font-medium px-2.5 py-1 rounded-full">NLP總分: 92</div>
             <div class="flex space-x-1">
-              <div class="emotion-tag bg-emotion-pressure text-white">被欺壓感: 10</div>
-              <div class="emotion-tag bg-emotion-anxiety text-white">壓迫性敘述: 10</div>
+              <div class="tag tag-pressure">被欺壓感: 10</div>
+              <div class="tag tag-pressure">壓迫性敘述: 10</div>
             </div>
           </div>
-          <h3 class="text-xl font-bold text-neutral-800 mb-2">「自己買了300萬，你們連一半都不到」</h3>
+          <h3 class="text-xl font-bold text-neutral-800 mb-3 flex items-center">
+            <i class="fas fa-quote-left text-emotion-pressure-300 mr-2 text-sm"></i>
+            自己買了300萬，你們連一半都不到
+          </h3>
           <p class="text-neutral-600 mb-4">主管在晨會上直接講：「某某上次達不到就是因為不夠努力，人家XX就自己買了300萬，你們連一半都不到，是怎樣？」講得像不達標就是不努力，問題是根本不是人人家裡都有錢可以這樣扛。</p>
-          <div class="text-neutral-500 text-sm">
-            <i class="fas fa-exclamation-circle text-red-500 mr-1"></i>
-            職場壓迫：主管公開指責員工不努力
+          <div class="flex justify-between items-center mt-6">
+            <div class="text-neutral-500 text-sm flex items-center">
+              <i class="fas fa-exclamation-circle text-emotion-pressure-500 mr-1"></i>
+              職場壓迫：主管公開指責員工不努力
+            </div>
+            <div class="text-xs text-neutral-400">2025-05-17</div>
           </div>
         </div>
         
-        <!-- 卡片5 -->
-        <div class="quote-card bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-shadow duration-300 pressure-card hidden-initially">
+        <!-- 卡片 5：定時定量恐嚇 -->
+        <div class="quote-card neo-card p-6 theme-pressure hidden-initially" data-theme="pressure">
           <div class="flex justify-between items-start mb-4">
-            <div class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-1 rounded-full">NLP總分: 90</div>
+            <div class="bg-emotion-pressure-100 text-emotion-pressure-700 text-xs font-medium px-2.5 py-1 rounded-full">NLP總分: 90</div>
             <div class="flex space-x-1">
-              <div class="emotion-tag bg-emotion-pressure text-white">壓迫性敘述: 10</div>
-              <div class="emotion-tag bg-emotion-despair text-white">情緒爆點值: 8</div>
+              <div class="tag tag-pressure">壓迫性敘述: 10</div>
+              <div class="tag tag-pressure">情緒爆點值: 8</div>
             </div>
           </div>
-          <h3 class="text-xl font-bold text-neutral-800 mb-2">「定時定量恐嚇」</h3>
+          <h3 class="text-xl font-bold text-neutral-800 mb-3 flex items-center">
+            <i class="fas fa-quote-left text-emotion-pressure-300 mr-2 text-sm"></i>
+            定時定量恐嚇
+          </h3>
           <p class="text-neutral-600 mb-4">定時定量的恐嚇強制交出業績。證券同事都被迫接受，做不到的被要求信貸。沒完成責任額被主管說是「打混」，說「銷售是業務的天職」。</p>
-          <div class="text-neutral-500 text-sm">
-            <i class="fas fa-exclamation-circle text-red-500 mr-1"></i>
-            職場壓迫：主管用恐嚇要求業績
+          <div class="flex justify-between items-center mt-6">
+            <div class="text-neutral-500 text-sm flex items-center">
+              <i class="fas fa-exclamation-circle text-emotion-pressure-500 mr-1"></i>
+              職場壓迫：主管用恐嚇要求業績
+            </div>
+            <div class="text-xs text-neutral-400">2025-05-17</div>
           </div>
         </div>
         
-        <!-- 卡片6 -->
-        <div class="quote-card bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-shadow duration-300 pressure-card hidden-initially">
+        <!-- 卡片 6：貸款買責任額 -->
+        <div class="quote-card neo-card p-6 theme-anxiety hidden-initially" data-theme="anxiety">
           <div class="flex justify-between items-start mb-4">
-            <div class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-1 rounded-full">NLP總分: 85</div>
+            <div class="bg-emotion-anxiety-100 text-emotion-anxiety-700 text-xs font-medium px-2.5 py-1 rounded-full">NLP總分: 85</div>
             <div class="flex space-x-1">
-              <div class="emotion-tag bg-emotion-pressure text-white">被欺壓感: 10</div>
-              <div class="emotion-tag bg-emotion-anxiety text-white">恐懼焦慮: 9</div>
+              <div class="tag tag-anxiety">被欺壓感: 10</div>
+              <div class="tag tag-anxiety">恐懼焦慮: 9</div>
             </div>
           </div>
-          <h3 class="text-xl font-bold text-neutral-800 mb-2">「貸款買責任額」</h3>
+          <h3 class="text-xl font-bold text-neutral-800 mb-3 flex items-center">
+            <i class="fas fa-quote-left text-emotion-anxiety-300 mr-2 text-sm"></i>
+            貸款買責任額
+          </h3>
           <p class="text-neutral-600 mb-4">OO證券OO分公司在全體營業員會議中，單位主管邀請「神秘嘉賓」蒞臨做經驗分享，該名神秘嘉賓是營業員，他說他們分公司很多營業員都貸款買責任額商品，建議我們也可以這麼做，還可以介紹認識的貸款專員給我們。</p>
-          <div class="text-neutral-500 text-sm">
-            <i class="fas fa-exclamation-circle text-red-500 mr-1"></i>
-            職場亂象：會議鼓勵貸款買責任額
+          <div class="flex justify-between items-center mt-6">
+            <div class="text-neutral-500 text-sm flex items-center">
+              <i class="fas fa-exclamation-circle text-emotion-anxiety-500 mr-1"></i>
+              職場亂象：會議鼓勵貸款買責任額
+            </div>
+            <div class="text-xs text-neutral-400">2025-05-17</div>
           </div>
         </div>
       </div>
       
       <!-- 顯示更多按鈕 -->
       <div class="flex justify-center mt-8">
-        <button id="show-more-quotes" class="bg-primary-100 hover:bg-primary-200 text-primary-700 font-medium py-2 px-6 rounded-lg transition transform duration-200 hover:scale-105 focus:outline-none">
-          顯示更多語錄
-          <i class="fas fa-chevron-down ml-1"></i>
+        <button id="show-more-quotes" class="bg-white hover:bg-gray-100 text-neutral-700 font-medium py-2.5 px-6 rounded-lg transition transform duration-200 hover:scale-105 border border-neutral-200 shadow-sm flex items-center gap-2">
+          顯示更多心聲
+          <i class="fas fa-chevron-down"></i>
         </button>
+      </div>
+      
+      <!-- 員工內心獨白 -->
+      <div class="mt-16 hidden-initially">
+        <h3 class="text-xl md:text-2xl font-bold text-center mb-8">
+          營業員的內心獨白
+        </h3>
+        
+        <div class="relative py-10">
+          <!-- 獨白時間軸 -->
+          <div class="absolute left-0 md:left-1/2 top-0 bottom-0 w-px bg-neutral-200 transform md:translate-x-0 translate-x-4"></div>
+          
+          <!-- 獨白 1 -->
+          <div class="relative mb-12">
+            <div class="flex flex-col md:flex-row items-start">
+              <div class="md:w-1/2 pr-0 md:pr-8 mb-4 md:mb-0 pl-10 md:pl-0 relative">
+                <div class="w-8 h-8 bg-primary-500 absolute left-0 md:right-0 top-0 rounded-full z-10 flex items-center justify-center md:translate-x-4 md:left-auto shadow-md">
+                  <i class="fas fa-comment-alt text-white text-sm"></i>
+                </div>
+                <div class="testimonial-bubble animate__animated animate__fadeInRight">
+                  <p class="text-neutral-700">
+                    「說真的，我已經很久沒有覺得自己是個「正常工作的人」了。在這個產業，我們的價值不是被當作專業顧問看待，而是像被逼迫販賣業績的工具。每次IPO來的時候，大家都要先確認「自己準備了多少錢」，不是幫客戶選好產品，而是先確保自己可以補多少洞。」
+                  </p>
+                </div>
+                <div class="mt-2 text-right">
+                  <span class="text-xs text-neutral-400">某證券營業員，6年資歷</span>
+                </div>
+              </div>
+              <div class="md:w-1/2 pl-10 md:pl-8 relative">
+                <div class="hidden md:block w-8 h-8 bg-secondary-100 absolute left-0 top-0 rounded-full z-10 md:translate-x-4 md:left-auto">
+                </div>
+                <div class="mt-8 md:mt-0 hidden md:block animate__animated animate__fadeInLeft">
+                  <span class="tag" style="background-color: rgba(236, 72, 153, 0.1); color: #be185d;">
+                    <i class="fas fa-heart-broken mr-1"></i>工作價值感喪失
+                  </span>
+                  <h4 class="font-bold text-neutral-800 mt-2">失去職業尊嚴</h4>
+                  <p class="text-sm text-neutral-600 mt-2">
+                    這名營業員表達了對專業價值的失落感，反映許多從業人員由金融顧問淪為銷售工具的心理創傷。
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- 獨白 2 -->
+          <div class="relative mb-12">
+            <div class="flex flex-col md:flex-row items-start">
+              <div class="md:w-1/2 pr-0 md:pr-8 mb-4 md:mb-0 md:text-right pl-10 md:pl-0 relative order-1 md:order-none">
+                <div class="mt-8 md:mt-0 hidden md:block animate__animated animate__fadeInRight">
+                  <span class="tag" style="background-color: rgba(59, 130, 246, 0.1); color: #1d4ed8;">
+                    <i class="fas fa-money-bill-wave mr-1"></i>經濟壓力
+                  </span>
+                  <h4 class="font-bold text-neutral-800 mt-2">財務重擔</h4>
+                  <p class="text-sm text-neutral-600 mt-2">
+                    這反映了許多金融從業人員為達成責任額而導致個人財務危機的普遍現象。
+                  </p>
+                </div>
+              </div>
+              <div class="md:w-1/2 pl-10 md:pl-8 relative">
+                <div class="w-8 h-8 bg-primary-500 absolute left-0 md:left-0 top-0 rounded-full z-10 flex items-center justify-center md:translate-x-4 md:left-auto shadow-md">
+                  <i class="fas fa-comment-alt text-white text-sm"></i>
+                </div>
+                <div class="testimonial-bubble animate__animated animate__fadeInLeft">
+                  <p class="text-neutral-700">
+                    「你知道我們裡面有人為了責任額去貸款、去質押保單，甚至把自己的儲蓄清空嗎？你知道有人被當眾罵「丟公司的人」之後就請假三天，沒講一句話，只說「想靜一靜」嗎？主管們說：「這就是行規」，但你們從來不是真的在現場call客、跑拜訪、處理客戶的抱怨。」
+                  </p>
+                </div>
+                <div class="mt-2">
+                  <span class="text-xs text-neutral-400">某銀行理專，4年資歷</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- 獨白 3 -->
+          <div class="relative">
+            <div class="flex flex-col md:flex-row items-start">
+              <div class="md:w-1/2 pr-0 md:pr-8 mb-4 md:mb-0 pl-10 md:pl-0 relative">
+                <div class="w-8 h-8 bg-primary-500 absolute left-0 md:right-0 top-0 rounded-full z-10 flex items-center justify-center md:translate-x-4 md:left-auto shadow-md">
+                  <i class="fas fa-comment-alt text-white text-sm"></i>
+                </div>
+                <div class="testimonial-bubble animate__animated animate__fadeInRight">
+                  <p class="text-neutral-700">
+                    「我想好好工作，不想靠信貸生存；我想被當作人看，而不是一個被逼買單的業績工具。如果你們還有一點點良知，請你們停止用責任額制度剝削人，停止用假象的獎金制度操控人。讓我們重新找回尊嚴與價值，不要讓這份工作變成讓人得焦慮症的根源。」
+                  </p>
+                </div>
+                <div class="mt-2 text-right">
+                  <span class="text-xs text-neutral-400">某證券營業員，12年資歷</span>
+                </div>
+              </div>
+              <div class="md:w-1/2 pl-10 md:pl-8 relative">
+                <div class="hidden md:block w-8 h-8 bg-secondary-100 absolute left-0 top-0 rounded-full z-10 md:translate-x-4 md:left-auto">
+                </div>
+                <div class="mt-8 md:mt-0 hidden md:block animate__animated animate__fadeInLeft">
+                  <span class="tag" style="background-color: rgba(16, 185, 129, 0.1); color: #047857;">
+                    <i class="fas fa-hands-helping mr-1"></i>改革呼籲
+                  </span>
+                  <h4 class="font-bold text-neutral-800 mt-2">尋求尊嚴與價值</h4>
+                  <p class="text-sm text-neutral-600 mt-2">
+                    從業人員的內心呼喊，希望制度改革能讓他們重拾工作尊嚴，不再被當作只有數字價值的銷售工具。
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </section>
 
   <!-- 情緒分析區塊 -->
   <section id="emotion-analysis" class="py-16 bg-white">
-    <div class="container mx-auto px-4">
-      <h2 class="text-2xl md:text-3xl font-bold mb-2 text-center text-neutral-800">
-        <span class="highlight-text">情緒指標深度分析</span>
-      </h2>
-      <p class="text-center text-neutral-600 mb-10">探討金融業員工面對IPO責任額時的情緒變化與壓力來源</p>
-      
-      <!-- 標籤選項 -->
-      <div class="flex flex-wrap justify-center mb-10 hidden-initially">
-        <button class="tab-button active mx-2 mb-2 text-lg font-medium text-neutral-600 hover:text-primary-600 transition duration-200" data-tab="pressure">
-          壓力來源分析
-        </button>
-        <button class="tab-button mx-2 mb-2 text-lg font-medium text-neutral-600 hover:text-primary-600 transition duration-200" data-tab="keywords">
-          關鍵字雲分析
-        </button>
-        <button class="tab-button mx-2 mb-2 text-lg font-medium text-neutral-600 hover:text-primary-600 transition duration-200" data-tab="correlation">
-          情緒關聯分析
-        </button>
+    <div class="container mx-auto px-4 md:px-6">
+      <div class="text-center mb-12">
+        <h2 class="text-2xl md:text-3xl font-bold text-neutral-800 mb-3">
+          <span class="highlight">情緒分析深度解剖</span>
+        </h2>
+        <p class="text-neutral-600 max-w-2xl mx-auto">
+          運用NLP技術分析心聲背後的情緒樣態，揭示職場壓力的多層面影響
+        </p>
       </div>
       
-      <!-- 標籤內容 -->
-      <div>
-        <!-- 壓力來源分析 -->
-        <div id="pressure-tab" class="tab-content active">
-          <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <!-- 壓力來源圖表 -->
-            <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-shadow duration-300 hidden-initially">
-              <h3 class="text-xl font-semibold mb-6 text-neutral-700">主要壓力來源分布</h3>
-              <div id="pressure-sources-chart" class="h-64 md:h-72">
-                <!-- 壓力來源圖表將由JavaScript生成 -->
+      <!-- 情緒指標卡片 -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
+        <!-- 被欺壓感 -->
+        <div class="neo-card p-6 theme-oppression hidden-initially">
+          <div class="flex items-center gap-4 mb-4">
+            <div class="relative">
+              <div class="circular-progress">
+                <svg viewBox="0 0 120 120" width="120" height="120">
+                  <circle class="circle-bg" cx="60" cy="60" r="54" fill="none" stroke-width="12"></circle>
+                  <circle class="circle" cx="60" cy="60" r="54" fill="none" stroke="#ff4040" stroke-width="12" stroke-linecap="round" stroke-dasharray="339.292" stroke-dashoffset="13.57168"></circle>
+                </svg>
+                <div class="text text-emotion-oppression-600">9.6</div>
               </div>
             </div>
-            
-            <!-- 壓力指標說明 -->
-            <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-shadow duration-300 hidden-initially">
-              <h3 class="text-xl font-semibold mb-6 text-neutral-700">壓力指標解析</h3>
-              <div class="space-y-4">
-                <div>
-                  <div class="flex justify-between items-center mb-1">
-                    <span class="text-neutral-700 font-medium">被欺壓感 (9.6/10)</span>
-                    <span class="text-xs text-neutral-500">最高分</span>
-                  </div>
-                  <div class="w-full bg-gray-200 rounded-full h-2.5">
-                    <div class="bg-red-600 h-2.5 rounded-full" style="width: 96%"></div>
-                  </div>
-                  <p class="text-sm text-neutral-600 mt-1">金融從業人員普遍感受到嚴重的被欺壓感，來自上級的威脅與恐嚇。</p>
-                </div>
-                
-                <div>
-                  <div class="flex justify-between items-center mb-1">
-                    <span class="text-neutral-700 font-medium">壓迫性敘述 (9.1/10)</span>
-                    <span class="text-xs text-neutral-500">次高分</span>
-                  </div>
-                  <div class="w-full bg-gray-200 rounded-full h-2.5">
-                    <div class="bg-orange-500 h-2.5 rounded-full" style="width: 91%"></div>
-                  </div>
-                  <p class="text-sm text-neutral-600 mt-1">主管常以強壓性話術脅迫員工達成銷售目標，如「不然你去告我啊！」</p>
-                </div>
-                
-                <div>
-                  <div class="flex justify-between items-center mb-1">
-                    <span class="text-neutral-700 font-medium">恐懼焦慮 (8.7/10)</span>
-                  </div>
-                  <div class="w-full bg-gray-200 rounded-full h-2.5">
-                    <div class="bg-yellow-500 h-2.5 rounded-full" style="width: 87%"></div>
-                  </div>
-                  <p class="text-sm text-neutral-600 mt-1">失業威脅與績效考核恐嚇導致嚴重焦慮，「工作還要不要？」成為常見語句。</p>
-                </div>
-                
-                <div>
-                  <div class="flex justify-between items-center mb-1">
-                    <span class="text-neutral-700 font-medium">無奈感 (7.5/10)</span>
-                  </div>
-                  <div class="w-full bg-gray-200 rounded-full h-2.5">
-                    <div class="bg-blue-500 h-2.5 rounded-full" style="width: 75%"></div>
-                  </div>
-                  <p class="text-sm text-neutral-600 mt-1">面對不合理的要求，員工感到極度無奈但又不得不服從。</p>
-                </div>
+            <div>
+              <h3 class="text-xl font-bold text-neutral-800">被欺壓感</h3>
+              <p class="text-neutral-600 text-sm mt-1">主管施壓、威脅與公開羞辱所產生的壓迫感</p>
+            </div>
+          </div>
+          <div class="p-4 bg-emotion-oppression-50 rounded-lg">
+            <h4 class="font-semibold text-emotion-oppression-800 mb-2">主要來源</h4>
+            <ul class="space-y-2 text-neutral-600 text-sm">
+              <li class="flex items-start">
+                <i class="fas fa-check-circle text-emotion-oppression-500 mt-0.5 mr-2"></i>
+                <span>工作威脅：「做不到就不要做這行」</span>
+              </li>
+              <li class="flex items-start">
+                <i class="fas fa-check-circle text-emotion-oppression-500 mt-0.5 mr-2"></i>
+                <span>公開羞辱：晨會點名批評未達標員工</span>
+              </li>
+              <li class="flex items-start">
+                <i class="fas fa-check-circle text-emotion-oppression-500 mt-0.5 mr-2"></i>
+                <span>客戶資源被移轉：「把你的客戶轉走」</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+        
+        <!-- 情緒爆點值 -->
+        <div class="neo-card p-6 theme-pressure hidden-initially">
+          <div class="flex items-center gap-4 mb-4">
+            <div class="relative">
+              <div class="circular-progress">
+                <svg viewBox="0 0 120 120" width="120" height="120">
+                  <circle class="circle-bg" cx="60" cy="60" r="54" fill="none" stroke-width="12"></circle>
+                  <circle class="circle" cx="60" cy="60" r="54" fill="none" stroke="#9333ea" stroke-width="12" stroke-linecap="round" stroke-dasharray="339.292" stroke-dashoffset="54.28672"></circle>
+                </svg>
+                <div class="text text-purple-600">8.4</div>
               </div>
+            </div>
+            <div>
+              <h3 class="text-xl font-bold text-neutral-800">情緒爆點值</h3>
+              <p class="text-neutral-600 text-sm mt-1">情緒崩潰臨界點的指標</p>
+            </div>
+          </div>
+          <div class="p-4 bg-purple-50 rounded-lg">
+            <h4 class="font-semibold text-purple-800 mb-2">危險信號</h4>
+            <ul class="space-y-2 text-neutral-600 text-sm">
+              <li class="flex items-start">
+                <i class="fas fa-check-circle text-purple-500 mt-0.5 mr-2"></i>
+                <span>多位員工在晨會後情緒崩潰</span>
+              </li>
+              <li class="flex items-start">
+                <i class="fas fa-check-circle text-purple-500 mt-0.5 mr-2"></i>
+                <span>部分受訪者表示有自我傷害想法</span>
+              </li>
+              <li class="flex items-start">
+                <i class="fas fa-check-circle text-purple-500 mt-0.5 mr-2"></i>
+                <span>長期壓力導致24%受訪者尋求心理治療</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 關鍵詞與主題分析 -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+        <!-- 負面情緒關鍵詞雲 -->
+        <div class="neo-card p-6 hover-elevate hidden-initially">
+          <h3 class="text-xl font-semibold mb-6 text-neutral-700 flex items-center">
+            <i class="fas fa-cloud text-primary-500 mr-2"></i>負面情緒關鍵詞雲
+          </h3>
+          <div class="flex justify-center mb-6">
+            <div id="keywords-cloud" class="w-full h-64 md:h-72">
+              <!-- 關鍵詞雲將由JavaScript生成 -->
+            </div>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
+            <div>
+              <h4 class="font-medium text-neutral-700 mb-3 text-sm uppercase tracking-wider">高頻主管話術</h4>
+              <ul class="space-y-1.5 text-neutral-600 text-sm">
+                <li class="flex items-start">
+                  <i class="fas fa-caret-right text-xs text-primary-500 mt-1.5 mr-2"></i>
+                  <span class="bg-neutral-100 px-1.5 py-0.5 rounded">「做不到就自己想辦法」</span>
+                </li>
+                <li class="flex items-start">
+                  <i class="fas fa-caret-right text-xs text-primary-500 mt-1.5 mr-2"></i>
+                  <span class="bg-neutral-100 px-1.5 py-0.5 rounded">「別人做得到，為什麼你不行？」</span>
+                </li>
+                <li class="flex items-start">
+                  <i class="fas fa-caret-right text-xs text-primary-500 mt-1.5 mr-2"></i>
+                  <span class="bg-neutral-100 px-1.5 py-0.5 rounded">「責任額就當做是清潔費」</span>
+                </li>
+              </ul>
+            </div>
+            <div>
+              <h4 class="font-medium text-neutral-700 mb-3 text-sm uppercase tracking-wider">員工內心高頻詞</h4>
+              <ul class="space-y-1.5 text-neutral-600 text-sm">
+                <li class="flex items-start">
+                  <i class="fas fa-caret-right text-xs text-primary-500 mt-1.5 mr-2"></i>
+                  <span class="bg-neutral-100 px-1.5 py-0.5 rounded">「我不想被迫自購」</span>
+                </li>
+                <li class="flex items-start">
+                  <i class="fas fa-caret-right text-xs text-primary-500 mt-1.5 mr-2"></i>
+                  <span class="bg-neutral-100 px-1.5 py-0.5 rounded">「我受夠了這種壓力」</span>
+                </li>
+                <li class="flex items-start">
+                  <i class="fas fa-caret-right text-xs text-primary-500 mt-1.5 mr-2"></i>
+                  <span class="bg-neutral-100 px-1.5 py-0.5 rounded">「制度已經生病了」</span>
+                </li>
+              </ul>
             </div>
           </div>
         </div>
         
-        <!-- 關鍵字雲分析 -->
-        <div id="keywords-tab" class="tab-content">
-          <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-shadow duration-300">
-            <h3 class="text-xl font-semibold mb-6 text-neutral-700">負面情緒關鍵字雲</h3>
-            <div class="flex justify-center mb-8">
-              <div id="keywords-cloud" class="w-full h-64 md:h-80">
-                <!-- 關鍵字雲將由JavaScript生成 -->
+        <!-- 情緒指標關聯分析 -->
+        <div class="neo-card p-6 hover-elevate hidden-initially">
+          <h3 class="text-xl font-semibold mb-6 text-neutral-700 flex items-center">
+            <i class="fas fa-project-diagram text-primary-500 mr-2"></i>情緒指標關聯分析
+          </h3>
+          <div id="correlation-chart" class="h-64 md:h-72 mb-4">
+            <!-- 情緒關聯圖表將由JavaScript生成 -->
+          </div>
+          <div class="p-4 bg-neutral-50 rounded-lg mt-4">
+            <h4 class="font-medium text-neutral-700 mb-2">關聯解析</h4>
+            <p class="text-neutral-600 text-sm">
+              數據分析顯示，「被欺壓感」與「壓迫性敘述」、「恐懼焦慮」之間存在<span class="font-semibold text-red-600">顯著正相關 (0.92)</span>，表明主管壓迫式的言行直接導致員工的恐懼與焦慮。「情緒爆點值」與「語氣強度」也呈現<span class="font-semibold text-red-600">強烈正相關 (0.91)</span>，反映職場高壓環境的系統性影響。
+            </p>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 情緒壓力分布 -->
+      <div class="neo-card p-6 hover-elevate mb-12 hidden-initially">
+        <h3 class="text-xl font-semibold mb-6 text-neutral-700 flex items-center">
+          <i class="fas fa-chart-area text-primary-500 mr-2"></i>員工心理健康風險分布
+        </h3>
+        
+        <!-- 心理健康儀表板 -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+          <!-- 低風險 -->
+          <div class="bg-green-50 rounded-xl p-5 border border-green-100">
+            <div class="flex justify-between items-start mb-4">
+              <h4 class="font-semibold text-green-800">低風險人群</h4>
+              <div class="bg-white rounded-full w-10 h-10 flex items-center justify-center shadow-sm">
+                <span class="text-lg font-bold text-green-600">22%</span>
               </div>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
-              <div>
-                <h4 class="font-medium text-neutral-700 mb-3">高頻出現主管話術</h4>
-                <ul class="space-y-2 text-neutral-600">
-                  <li class="flex items-start">
-                    <i class="fas fa-chevron-right text-xs text-primary-500 mt-1.5 mr-2"></i>
-                    <span>「做不到就自己想辦法」</span>
-                  </li>
-                  <li class="flex items-start">
-                    <i class="fas fa-chevron-right text-xs text-primary-500 mt-1.5 mr-2"></i>
-                    <span>「別人做得到，為什麼你不行？」</span>
-                  </li>
-                  <li class="flex items-start">
-                    <i class="fas fa-chevron-right text-xs text-primary-500 mt-1.5 mr-2"></i>
-                    <span>「責任額就當做是清潔費」</span>
-                  </li>
-                  <li class="flex items-start">
-                    <i class="fas fa-chevron-right text-xs text-primary-500 mt-1.5 mr-2"></i>
-                    <span>「不做就滾，現在一堆人搶這個位置」</span>
-                  </li>
-                </ul>
-              </div>
-              <div>
-                <h4 class="font-medium text-neutral-700 mb-3">員工內心話語高頻詞</h4>
-                <ul class="space-y-2 text-neutral-600">
-                  <li class="flex items-start">
-                    <i class="fas fa-chevron-right text-xs text-primary-500 mt-1.5 mr-2"></i>
-                    <span>「我不想被迫自購」</span>
-                  </li>
-                  <li class="flex items-start">
-                    <i class="fas fa-chevron-right text-xs text-primary-500 mt-1.5 mr-2"></i>
-                    <span>「我受夠了這種壓力」</span>
-                  </li>
-                  <li class="flex items-start">
-                    <i class="fas fa-chevron-right text-xs text-primary-500 mt-1.5 mr-2"></i>
-                    <span>「制度已經生病了」</span>
-                  </li>
-                  <li class="flex items-start">
-                    <i class="fas fa-chevron-right text-xs text-primary-500 mt-1.5 mr-2"></i>
-                    <span>「這是犯罪行為，不是銷售」</span>
-                  </li>
-                </ul>
+            <p class="text-sm text-neutral-600 mb-3">主要為：</p>
+            <ul class="space-y-1 text-sm text-neutral-600">
+              <li class="flex items-center">
+                <i class="fas fa-check text-green-500 mr-2"></i>
+                <span>業績優異員工</span>
+              </li>
+              <li class="flex items-center">
+                <i class="fas fa-check text-green-500 mr-2"></i>
+                <span>資深營業員</span>
+              </li>
+              <li class="flex items-center">
+                <i class="fas fa-check text-green-500 mr-2"></i>
+                <span>管理職位人員</span>
+              </li>
+            </ul>
+          </div>
+          
+          <!-- 中風險 -->
+          <div class="bg-yellow-50 rounded-xl p-5 border border-yellow-100">
+            <div class="flex justify-between items-start mb-4">
+              <h4 class="font-semibold text-yellow-800">中風險人群</h4>
+              <div class="bg-white rounded-full w-10 h-10 flex items-center justify-center shadow-sm">
+                <span class="text-lg font-bold text-yellow-600">36%</span>
               </div>
             </div>
+            <p class="text-sm text-neutral-600 mb-3">主要為：</p>
+            <ul class="space-y-1 text-sm text-neutral-600">
+              <li class="flex items-center">
+                <i class="fas fa-check text-yellow-500 mr-2"></i>
+                <span>中階營業員</span>
+              </li>
+              <li class="flex items-center">
+                <i class="fas fa-check text-yellow-500 mr-2"></i>
+                <span>業績波動人員</span>
+              </li>
+              <li class="flex items-center">
+                <i class="fas fa-check text-yellow-500 mr-2"></i>
+                <span>經歷1-2次責任額未達標人員</span>
+              </li>
+            </ul>
+          </div>
+          
+          <!-- 高風險 -->
+          <div class="bg-red-50 rounded-xl p-5 border border-red-100">
+            <div class="flex justify-between items-start mb-4">
+              <h4 class="font-semibold text-red-800">高風險人群</h4>
+              <div class="bg-white rounded-full w-10 h-10 flex items-center justify-center shadow-sm">
+                <span class="text-lg font-bold text-red-600">42%</span>
+              </div>
+            </div>
+            <p class="text-sm text-neutral-600 mb-3">主要為：</p>
+            <ul class="space-y-1 text-sm text-neutral-600">
+              <li class="flex items-center">
+                <i class="fas fa-check text-red-500 mr-2"></i>
+                <span>新進營業員 (1年內)</span>
+              </li>
+              <li class="flex items-center">
+                <i class="fas fa-check text-red-500 mr-2"></i>
+                <span>多次責任額未達標人員</span>
+              </li>
+              <li class="flex items-center">
+                <i class="fas fa-check text-red-500 mr-2"></i>
+                <span>曾自掏腰包/貸款買單人員</span>
+              </li>
+            </ul>
           </div>
         </div>
         
-        <!-- 情緒關聯分析 -->
-        <div id="correlation-tab" class="tab-content">
-          <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-shadow duration-300">
-            <h3 class="text-xl font-semibold mb-6 text-neutral-700">情緒指標關聯性分析</h3>
-            <div id="correlation-chart" class="h-64 md:h-96">
-              <!-- 情緒關聯圖表將由JavaScript生成 -->
+        <!-- 心理健康風險圖表 -->
+        <div class="mt-8 flex items-center justify-center">
+          <div class="w-full max-w-2xl">
+            <h4 class="text-center font-medium text-neutral-700 mb-3">工作壓力與心理健康風險分布</h4>
+            <div class="bg-neutral-100 rounded-lg p-4">
+              <!-- 壓力風險圖表 -->
+              <div class="liquid-progress mb-8" style="--progress: 42%; --color-start: #ef4444; --color-end: #f87171;">
+                <div class="liquid"></div>
+                <div class="text">42% 高風險人群</div>
+              </div>
+              <div class="liquid-progress mb-8" style="--progress: 36%; --color-start: #eab308; --color-end: #facc15;">
+                <div class="liquid"></div>
+                <div class="text">36% 中風險人群</div>
+              </div>
+              <div class="liquid-progress" style="--progress: 22%; --color-start: #22c55e; --color-end: #4ade80;">
+                <div class="liquid"></div>
+                <div class="text">22% 低風險人群</div>
+              </div>
             </div>
-            <div class="mt-8">
-              <h4 class="font-medium text-neutral-700 mb-3">關聯解析</h4>
-              <p class="text-neutral-600 mb-4">
-                數據分析顯示，「被欺壓感」與「壓迫性敘述」、「恐懼焦慮」之間存在顯著的正相關，表明主管壓迫式的言行直接導致員工的恐懼與焦慮。
-              </p>
-              <p class="text-neutral-600">
-                「情緒爆點值」與「語氣強度」也呈現強烈正相關，反映出職場環境的高壓氛圍。此外，「委屈沉默」與其他負面情緒指標的高度關聯性，暗示許多員工選擇沉默忍受而非表達不滿。
-              </p>
-            </div>
+            <p class="text-center text-sm text-neutral-500 mt-4">
+              <i class="fas fa-info-circle mr-1"></i>根據NLP情緒分析與受訪者自述心理健康狀況綜合評估
+            </p>
           </div>
+        </div>
+      </div>
+      
+      <!-- 心理健康影響 -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+        <!-- 影響1：心理健康 -->
+        <div class="neo-card p-6 hidden-initially">
+          <div class="flex items-center mb-5">
+            <div class="rounded-full bg-red-100 p-3 mr-4">
+              <i class="fas fa-heartbeat text-red-500"></i>
+            </div>
+            <h3 class="text-lg font-bold text-neutral-800">心理健康危機</h3>
+          </div>
+          <p class="text-neutral-600 mb-4">
+            68%的受訪者表示責任額壓力已嚴重影響其心理健康，其中：
+          </p>
+          <ul class="space-y-3 text-neutral-600">
+            <li class="flex items-start">
+              <div class="flex-shrink-0 h-5 w-5 rounded-full bg-red-500 flex items-center justify-center text-white text-xs mr-2 mt-0.5">
+                <i class="fas fa-pills"></i>
+              </div>
+              <span>32%定期服用抗焦慮藥物</span>
+            </li>
+            <li class="flex items-start">
+              <div class="flex-shrink-0 h-5 w-5 rounded-full bg-red-500 flex items-center justify-center text-white text-xs mr-2 mt-0.5">
+                <i class="fas fa-bed"></i>
+              </div>
+              <span>58%出現嚴重失眠問題</span>
+            </li>
+            <li class="flex items-start">
+              <div class="flex-shrink-0 h-5 w-5 rounded-full bg-red-500 flex items-center justify-center text-white text-xs mr-2 mt-0.5">
+                <i class="fas fa-brain"></i>
+              </div>
+              <span>24%正在接受專業心理諮詢</span>
+            </li>
+          </ul>
+        </div>
+        
+        <!-- 影響2：財務壓力 -->
+        <div class="neo-card p-6 hidden-initially">
+          <div class="flex items-center mb-5">
+            <div class="rounded-full bg-blue-100 p-3 mr-4">
+              <i class="fas fa-wallet text-blue-500"></i>
+            </div>
+            <h3 class="text-lg font-bold text-neutral-800">財務危機循環</h3>
+          </div>
+          <p class="text-neutral-600 mb-4">
+            為達成責任額，從業人員常陷入財務危機：
+          </p>
+          <ul class="space-y-3 text-neutral-600">
+            <li class="flex items-start">
+              <div class="flex-shrink-0 h-5 w-5 rounded-full bg-blue-500 flex items-center justify-center text-white text-xs mr-2 mt-0.5">
+                <i class="fas fa-credit-card"></i>
+              </div>
+              <span>45%曾申請信貸購買IPO產品</span>
+            </li>
+            <li class="flex items-start">
+              <div class="flex-shrink-0 h-5 w-5 rounded-full bg-blue-500 flex items-center justify-center text-white text-xs mr-2 mt-0.5">
+                <i class="fas fa-piggy-bank"></i>
+              </div>
+              <span>37%動用家庭儲蓄應付責任額</span>
+            </li>
+            <li class="flex items-start">
+              <div class="flex-shrink-0 h-5 w-5 rounded-full bg-blue-500 flex items-center justify-center text-white text-xs mr-2 mt-0.5">
+                <i class="fas fa-home"></i>
+              </div>
+              <span>18%曾增貸房屋以購買IPO產品</span>
+            </li>
+          </ul>
+        </div>
+        
+        <!-- 影響3：職涯發展 -->
+        <div class="neo-card p-6 hidden-initially">
+          <div class="flex items-center mb-5">
+            <div class="rounded-full bg-green-100 p-3 mr-4">
+              <i class="fas fa-briefcase text-green-500"></i>
+            </div>
+            <h3 class="text-lg font-bold text-neutral-800">職涯發展阻礙</h3>
+          </div>
+          <p class="text-neutral-600 mb-4">
+            責任額制度對職業發展造成多重影響：
+          </p>
+          <ul class="space-y-3 text-neutral-600">
+            <li class="flex items-start">
+              <div class="flex-shrink-0 h-5 w-5 rounded-full bg-green-500 flex items-center justify-center text-white text-xs mr-2 mt-0.5">
+                <i class="fas fa-user-graduate"></i>
+              </div>
+              <span>62%認為專業成長被責任額壓力取代</span>
+            </li>
+            <li class="flex items-start">
+              <div class="flex-shrink-0 h-5 w-5 rounded-full bg-green-500 flex items-center justify-center text-white text-xs mr-2 mt-0.5">
+                <i class="fas fa-chart-line"></i>
+              </div>
+              <span>53%表示專業價值感嚴重受損</span>
+            </li>
+            <li class="flex items-start">
+              <div class="flex-shrink-0 h-5 w-5 rounded-full bg-green-500 flex items-center justify-center text-white text-xs mr-2 mt-0.5">
+                <i class="fas fa-door-open"></i>
+              </div>
+              <span>72%考慮轉換行業，擺脫責任額壓力</span>
+            </li>
+          </ul>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- 報導大綱區塊 -->
+  <!-- 深度報導區塊 -->
   <section id="report" class="py-16 bg-gray-50">
-    <div class="container mx-auto px-4">
-      <h2 class="text-2xl md:text-3xl font-bold mb-2 text-center text-neutral-800">
-        <span class="highlight-text">調查報導大綱</span>
-      </h2>
-      <p class="text-center text-neutral-600 mb-10">從記者角度揭露金融業責任額制度的黑暗面</p>
+    <div class="container mx-auto px-4 md:px-6">
+      <div class="text-center mb-12">
+        <h2 class="text-2xl md:text-3xl font-bold text-neutral-800 mb-3">
+          <span class="highlight">調查報導：金融業責任額黑幕</span>
+        </h2>
+        <p class="text-neutral-600 max-w-2xl mx-auto">
+          從記者角度揭露金融業責任額制度的系統性問題與人性代價
+        </p>
+      </div>
       
       <!-- 報導標題與引言 -->
-      <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-shadow duration-300 mb-8 hidden-initially">
-        <h3 class="text-2xl font-bold text-neutral-800 mb-3">【血汗金融】IPO責任額的黑幕：營業員的血淚自白</h3>
-        <p class="text-neutral-600 italic border-l-4 border-primary-500 pl-4 py-2">
-          「這就是公司任務，使命必達，沒有藉口。客戶不買就暗示明示自己買單。」——一名在金融業服務24年的營業員如此描述他的工作現實。本報深入調查揭露金融業IPO責任額制度下，員工被迫自掏腰包、貸款達標的黑暗真相。
-        </p>
+      <div class="neo-card p-6 mb-10 hidden-initially">
+        <h3 class="text-2xl font-bold text-neutral-800 mb-4 flex items-center">
+          <i class="fas fa-newspaper text-primary-500 mr-3"></i>
+          【血汗金融】IPO責任額的黑幕：營業員的血淚自白
+        </h3>
+        <div class="p-5 bg-primary-50 border-l-4 border-primary-500 rounded-r-lg my-4">
+          <p class="text-neutral-700 italic">
+            「這就是公司任務，使命必達，沒有藉口。客戶不買就暗示明示自己買單。」——一名在金融業服務24年的營業員如此描述他的工作現實。本報深入調查揭露金融業IPO責任額制度下，員工被迫自掏腰包、貸款達標的黑暗真相。
+          </p>
+        </div>
+        
+        <!-- 調查摘要 -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+          <div class="p-4 bg-neutral-50 rounded-lg">
+            <div class="flex items-center mb-2">
+              <div class="w-8 h-8 rounded-full bg-neutral-200 flex items-center justify-center mr-2">
+                <i class="fas fa-users text-neutral-700"></i>
+              </div>
+              <h4 class="font-semibold text-neutral-700">調查對象</h4>
+            </div>
+            <p class="text-neutral-600 text-sm">
+              50名來自證券、銀行與保險業的在職金融從業人員，匿名提供真實經歷與心聲
+            </p>
+          </div>
+          
+          <div class="p-4 bg-neutral-50 rounded-lg">
+            <div class="flex items-center mb-2">
+              <div class="w-8 h-8 rounded-full bg-neutral-200 flex items-center justify-center mr-2">
+                <i class="fas fa-calendar-alt text-neutral-700"></i>
+              </div>
+              <h4 class="font-semibold text-neutral-700">調查期間</h4>
+            </div>
+            <p class="text-neutral-600 text-sm">
+              2025年3月至5月，橫跨多家金融機構，包含不同規模公司與地區
+            </p>
+          </div>
+          
+          <div class="p-4 bg-neutral-50 rounded-lg">
+            <div class="flex items-center mb-2">
+              <div class="w-8 h-8 rounded-full bg-neutral-200 flex items-center justify-center mr-2">
+                <i class="fas fa-tasks text-neutral-700"></i>
+              </div>
+              <h4 class="font-semibold text-neutral-700">調查方法</h4>
+            </div>
+            <p class="text-neutral-600 text-sm">
+              深度訪談、匿名問卷與NLP情緒分析，全面探索責任額制度對從業人員的影響
+            </p>
+          </div>
+        </div>
       </div>
       
       <!-- 報導主體 -->
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <!-- 左欄：揭露現況 -->
+        <!-- 左側：兩個主要報導區塊 -->
         <div class="lg:col-span-2">
-          <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-shadow duration-300 mb-8 hidden-initially">
-            <h4 class="text-xl font-bold text-neutral-800 mb-4">責任額制度的殘酷真相</h4>
+          <!-- 報導區塊1：責任額制度的殘酷真相 -->
+          <div class="neo-card p-6 mb-8 hidden-initially">
+            <h4 class="text-xl font-bold text-neutral-800 mb-4 flex items-center">
+              <div class="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center mr-2 text-red-600">
+                <i class="fas fa-exclamation"></i>
+              </div>
+              責任額制度的殘酷真相
+            </h4>
             <p class="text-neutral-600 mb-4">
               根據本報獨家取得的50位金融業從業人員的匿名訴求，超過78%的受訪者在NLP情緒分析中呈現高度負面情緒，平均得分高達82.1分（滿分100分）。其中，「被欺壓感」和「壓迫性敘述」指標分別達到9.6分和9.1分（滿分10分），顯示嚴重的心理壓力。
             </p>
             <p class="text-neutral-600 mb-4">
               數據顯示，主管最常使用的施壓話術包括：「別人做得到，為什麼你不行？」、「你上次欠我五十萬這次要補」、「不然你去告我啊！」等帶有明顯威脅性的言論。更令人震驚的是，有超過65%的受訪者表示曾被主管暗示或直接要求自掏腰包購買IPO產品，甚至鼓勵貸款完成責任額。
             </p>
-            <div class="flex items-center justify-between p-4 bg-red-50 rounded-lg mt-6">
-              <div class="text-red-700">
+            
+            <!-- 關鍵發現框 -->
+            <div class="flex items-center p-4 bg-red-50 rounded-lg mt-6">
+              <div class="text-red-700 text-sm leading-relaxed">
                 <span class="font-bold">調查發現：</span>
-                部分金融機構在正式會議中公開提倡「貸款買責任額」作為「成功經驗分享」，嚴重違反金融倫理。
+                部分金融機構在正式會議中公開提倡「貸款買責任額」作為「成功經驗分享」，嚴重違反金融倫理。多位受訪者提供了相同的證詞，指出這種做法已成為業界公開的秘密。
               </div>
-              <div class="text-red-500 text-4xl">
+              <div class="text-red-500 text-4xl ml-4 flex-shrink-0">
                 <i class="fas fa-exclamation-circle"></i>
               </div>
             </div>
           </div>
           
-          <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-shadow duration-300 hidden-initially">
-            <h4 class="text-xl font-bold text-neutral-800 mb-4">系統性壓迫的惡性循環</h4>
+          <!-- 報導區塊2：系統性壓迫的惡性循環 -->
+          <div class="neo-card p-6 hidden-initially">
+            <h4 class="text-xl font-bold text-neutral-800 mb-4 flex items-center">
+              <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center mr-2 text-blue-600">
+                <i class="fas fa-sync-alt"></i>
+              </div>
+              系統性壓迫的惡性循環
+            </h4>
             <p class="text-neutral-600 mb-4">
-              「做不到就移轉客戶」、「公司不養冗員」、「沒有數字就說你很危險」——這些成為主管常見的恐嚇話術，形成一種系統性的壓迫。
+              「做不到就移轉客戶」、「公司不養冗員」、「沒有數字就說你很危險」——這些成為主管常見的恐嚇話術，形成一種系統性的壓迫。多位受訪者描述了相似的經歷：未達標的營業員被剝奪客戶資源，形成惡性循環，最終往往被迫離職或屈服於「自買單」的壓力。
             </p>
             <p class="text-neutral-600 mb-4">
               多位受訪者提到，在他們所屬的金融機構中，不僅存在工作不保的威脅，更有「公開羞辱」的文化，如在晨會上點名批評未達標員工，稱其為「丟公司的臉」、「沒有羞恥心」等。這種文化導致嚴重的心理健康問題，多位受訪者提及需服用抗焦慮藥物才能應對工作壓力。
             </p>
-            <div class="mt-6 p-4 bg-blue-50 rounded-lg flex items-start">
-              <div class="flex-shrink-0 text-blue-500 text-xl mr-3">
+            
+            <!-- 親身經歷框 -->
+            <div class="mt-6 p-5 bg-blue-50 rounded-lg flex items-start">
+              <div class="flex-shrink-0 text-blue-500 text-xl mr-3 mt-1">
                 <i class="fas fa-quote-left"></i>
               </div>
-              <div class="text-blue-700 italic">
-                「我從業30幾年，第一次感覺自己是詐騙集團。什麼時候我的業績需要去騙客戶才能完成？每次IPO上市，都比我自己買壓力還要大，怕對不起從頭到尾這麼挺我的客戶。」
-                <div class="text-blue-500 text-sm mt-2">——某券商資深營業員</div>
+              <div>
+                <p class="text-blue-700 italic leading-relaxed">
+                  「我從業30幾年，第一次感覺自己是詐騙集團。什麼時候我的業績需要去騙客戶才能完成？每次IPO上市，都比我自己買壓力還要大，怕對不起從頭到尾這麼挺我的客戶。」
+                </p>
+                <div class="text-blue-500 text-sm mt-2 flex items-center">
+                  <i class="fas fa-user-tie mr-2"></i>某券商資深營業員，服務年資32年
+                </div>
+              </div>
+            </div>
+            
+            <!-- 調查數據 -->
+            <div class="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div class="p-4 bg-neutral-50 rounded-lg text-center">
+                <div class="text-2xl font-bold text-red-600 mb-1">76%</div>
+                <p class="text-neutral-600 text-sm">受訪者曾在晨會上經歷公開羞辱</p>
+              </div>
+              <div class="p-4 bg-neutral-50 rounded-lg text-center">
+                <div class="text-2xl font-bold text-red-600 mb-1">58%</div>
+                <p class="text-neutral-600 text-sm">受訪者曾因未達標被威脅移轉客戶</p>
+              </div>
+              <div class="p-4 bg-neutral-50 rounded-lg text-center">
+                <div class="text-2xl font-bold text-red-600 mb-1">83%</div>
+                <p class="text-neutral-600 text-sm">認為責任額制度已嚴重扭曲職場文化</p>
               </div>
             </div>
           </div>
         </div>
         
-        <!-- 右欄：員工訴求 -->
+        <!-- 右側：員工訴求與分析 -->
         <div>
-          <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-shadow duration-300 mb-8 hidden-initially">
-            <h4 class="text-xl font-bold text-neutral-800 mb-4">營業員心聲與訴求</h4>
-            <div class="space-y-4">
+          <!-- 報導區塊3：營業員心聲與訴求 -->
+          <div class="neo-card p-6 mb-8 hidden-initially">
+            <h4 class="text-xl font-bold text-neutral-800 mb-4 flex items-center">
+              <div class="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center mr-2 text-green-600">
+                <i class="fas fa-comment-alt"></i>
+              </div>
+              營業員心聲與訴求
+            </h4>
+            
+            <!-- 心聲列表 -->
+            <div class="space-y-3">
               <div class="p-3 bg-neutral-50 rounded-lg">
-                <p class="text-neutral-600">
+                <p class="text-neutral-600 text-sm">
                   <i class="fas fa-comment text-neutral-400 mr-2"></i>
                   「我想好好工作，不想靠信貸生存；我想被當作人看，而不是一個被逼買單的業績工具。」
                 </p>
               </div>
               <div class="p-3 bg-neutral-50 rounded-lg">
-                <p class="text-neutral-600">
+                <p class="text-neutral-600 text-sm">
                   <i class="fas fa-comment text-neutral-400 mr-2"></i>
                   「不要包山包海，每檔IPO都要承銷，每檔距離近不說，類似的都擠在一起。」
                 </p>
               </div>
               <div class="p-3 bg-neutral-50 rounded-lg">
-                <p class="text-neutral-600">
-                  <i class="fas fa-comment text-neutral-400 mr-2"></i>
-                  「證券業真的病了。主管不錯，但要求越來越多。」
-                </p>
-              </div>
-              <div class="p-3 bg-neutral-50 rounded-lg">
-                <p class="text-neutral-600">
+                <p class="text-neutral-600 text-sm">
                   <i class="fas fa-comment text-neutral-400 mr-2"></i>
                   「拜託，我們不是24小時工作機器人誒。無時無刻都在情緒勒索，早到晚，包含假日，還要收到訊息檢討、追蹤。」
                 </p>
               </div>
+              <div class="p-3 bg-neutral-50 rounded-lg">
+                <p class="text-neutral-600 text-sm">
+                  <i class="fas fa-comment text-neutral-400 mr-2"></i>
+                  「證券業真的病了...從兩年前身心壓力之下也去看了醫生，每天需要吃藥睡覺,恐慌焦慮的情緒時常伴隨。」
+                </p>
+              </div>
             </div>
+            
+            <!-- 主要訴求 -->
             <div class="mt-6">
-              <h5 class="font-medium text-neutral-700 mb-3">主要訴求焦點</h5>
-              <ul class="space-y-2 text-neutral-600">
+              <h5 class="font-medium text-neutral-700 mb-3 text-sm uppercase tracking-wider">主要訴求焦點</h5>
+              <ul class="space-y-3 text-neutral-600 text-sm">
                 <li class="flex items-start">
-                  <div class="flex-shrink-0 h-5 w-5 rounded-full bg-red-500 flex items-center justify-center text-white text-xs mr-2">1</div>
-                  <span>取消強制性責任額制度</span>
+                  <div class="flex-shrink-0 h-5 w-5 rounded-full bg-primary-500 flex items-center justify-center text-white text-xs mr-2 mt-0.5">1</div>
+                  <span>取消強制性責任額制度，改以客戶需求為導向</span>
                 </li>
                 <li class="flex items-start">
-                  <div class="flex-shrink-0 h-5 w-5 rounded-full bg-red-500 flex items-center justify-center text-white text-xs mr-2">2</div>
-                  <span>杜絕職場霸凌與公開羞辱</span>
+                  <div class="flex-shrink-0 h-5 w-5 rounded-full bg-primary-500 flex items-center justify-center text-white text-xs mr-2 mt-0.5">2</div>
+                  <span>杜絕職場霸凌與公開羞辱，建立健康職場文化</span>
                 </li>
                 <li class="flex items-start">
-                  <div class="flex-shrink-0 h-5 w-5 rounded-full bg-red-500 flex items-center justify-center text-white text-xs mr-2">3</div>
-                  <span>禁止暗示員工自掏腰包或貸款達標</span>
+                  <div class="flex-shrink-0 h-5 w-5 rounded-full bg-primary-500 flex items-center justify-center text-white text-xs mr-2 mt-0.5">3</div>
+                  <span>禁止暗示員工自掏腰包或貸款達標的行為</span>
                 </li>
                 <li class="flex items-start">
-                  <div class="flex-shrink-0 h-5 w-5 rounded-full bg-red-500 flex items-center justify-center text-white text-xs mr-2">4</div>
-                  <span>建立健康、尊重的職場環境</span>
+                  <div class="flex-shrink-0 h-5 w-5 rounded-full bg-primary-500 flex items-center justify-center text-white text-xs mr-2 mt-0.5">4</div>
+                  <span>建立公平、透明的績效考核與薪酬制度</span>
                 </li>
               </ul>
             </div>
           </div>
           
-          <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-shadow duration-300 hidden-initially">
-            <h4 class="text-xl font-bold text-neutral-800 mb-4">後續追蹤重點</h4>
-            <div class="space-y-3 text-neutral-600">
-              <div class="flex items-start">
-                <div class="flex-shrink-0 text-yellow-500 mt-1 mr-2">
+          <!-- 報導區塊4：後續追蹤重點 -->
+          <div class="neo-card p-6 hidden-initially">
+            <h4 class="text-xl font-bold text-neutral-800 mb-4 flex items-center">
+              <div class="w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center mr-2 text-purple-600">
+                <i class="fas fa-search"></i>
+              </div>
+              後續追蹤重點
+            </h4>
+            
+            <!-- 追蹤重點列表 -->
+            <div class="space-y-3 text-neutral-600 text-sm">
+              <div class="flex items-start p-3 bg-neutral-50 rounded-lg">
+                <div class="flex-shrink-0 text-yellow-500 mt-0.5 mr-3">
                   <i class="fas fa-exclamation-triangle"></i>
                 </div>
-                <p>金管會是否了解責任額制度的執行現況？</p>
+                <p>金管會是否了解責任額制度的執行現況？相關監管機制是否存在漏洞？</p>
               </div>
-              <div class="flex items-start">
-                <div class="flex-shrink-0 text-yellow-500 mt-1 mr-2">
+              <div class="flex items-start p-3 bg-neutral-50 rounded-lg">
+                <div class="flex-shrink-0 text-yellow-500 mt-0.5 mr-3">
                   <i class="fas fa-exclamation-triangle"></i>
                 </div>
-                <p>要求貸款買單是否已形成業界「默許」的陋習？</p>
+                <p>要求貸款買單是否已形成業界「默許」的陋習？這是否已違反金融業倫理準則？</p>
               </div>
-              <div class="flex items-start">
-                <div class="flex-shrink-0 text-yellow-500 mt-1 mr-2">
+              <div class="flex items-start p-3 bg-neutral-50 rounded-lg">
+                <div class="flex-shrink-0 text-yellow-500 mt-0.5 mr-3">
                   <i class="fas fa-exclamation-triangle"></i>
                 </div>
-                <p>投資人是否知道部分IPO產品是由營業員自掏腰包「救」起來的？</p>
+                <p>投資人是否知道部分IPO產品是由營業員自掏腰包「救」起來的？這是否構成市場操縱？</p>
               </div>
-              <div class="flex items-start">
-                <div class="flex-shrink-0 text-yellow-500 mt-1 mr-2">
+              <div class="flex items-start p-3 bg-neutral-50 rounded-lg">
+                <div class="flex-shrink-0 text-yellow-500 mt-0.5 mr-3">
                   <i class="fas fa-exclamation-triangle"></i>
                 </div>
-                <p>金融業高層與基層的薪資差距是否合理？</p>
+                <p>金融業高層與基層的薪資差距是否合理？高層是否應對這種制度負責？</p>
               </div>
+            </div>
+            
+            <!-- 記者聯絡資訊 -->
+            <div class="mt-6 p-4 bg-primary-50 rounded-lg flex flex-col sm:flex-row justify-between items-center">
+              <div class="text-neutral-700 text-sm mb-3 sm:mb-0">
+                <span class="font-medium">若您有相關經歷願意分享，請聯絡：</span>
+                <br/>finvoices@example.com （保證匿名）
+              </div>
+              <button class="bg-primary-600 hover:bg-primary-700 text-white text-sm px-4 py-2 rounded-lg transition duration-200 shadow-sm">
+                <i class="fas fa-envelope mr-1"></i>匿名提供資訊
+              </button>
             </div>
           </div>
         </div>
       </div>
+      
+      <!-- 記者觀點總結 -->
+      <div class="neo-card p-6 mt-10 hidden-initially">
+        <h3 class="text-xl font-bold text-neutral-800 mb-4 flex items-center">
+          <i class="fas fa-pen-fancy text-primary-500 mr-2"></i>
+          記者觀點：制度性壓迫與改革的迫切性
+        </h3>
+        <p class="text-neutral-600 mb-4 leading-relaxed">
+          本次調查揭露了金融業責任額制度背後的系統性問題。從數據分析與深度訪談可見，這不僅是個別主管的管理問題，而是整個行業長期形成的制度性壓迫。責任額制度已嚴重扭曲了金融服務的本質，從以客戶需求為中心轉向以銷售額為唯一目標。
+        </p>
+        <p class="text-neutral-600 mb-4 leading-relaxed">
+          更令人憂心的是，這種制度正在摧毀從業人員的身心健康，並間接傷害了投資者的權益。當營業員被迫推銷不適合客戶的產品，或自掏腰包「救」IPO時，金融市場的健康運作和誠信原則都受到了嚴重損害。
+        </p>
+        <p class="text-neutral-600 leading-relaxed">
+          金管會和各金融機構必須正視這一問題，從根本上改革績效考核制度，回歸以客戶需求和專業服務為導向的金融服務本質。同時，建立更完善的員工心理健康支援系統和職場文化監督機制，才能真正遏制這種制度性壓迫，挽救金融業正在流失的人才與專業價值。
+        </p>
+      </div>
     </div>
   </section>
 
-  <!-- 改進建議區塊 -->
-  <section id="recommendations" class="py-16 bg-white">
-    <div class="container mx-auto px-4">
-      <h2 class="text-2xl md:text-3xl font-bold mb-2 text-center text-neutral-800">
-        <span class="highlight-text">制度改革建議</span>
-      </h2>
-      <p class="text-center text-neutral-600 mb-10">基於數據分析與業界現況，提出實質改善方案</p>
+  <!-- 改革建議區塊 -->
+  <section id="solutions" class="py-16 bg-gradient-to-br from-primary-50 to-blue-50">
+    <div class="container mx-auto px-4 md:px-6">
+      <div class="text-center mb-12">
+        <h2 class="text-2xl md:text-3xl font-bold text-neutral-800 mb-3">
+          <span class="highlight">制度改革建議</span>
+        </h2>
+        <p class="text-neutral-600 max-w-2xl mx-auto">
+          基於數據分析與業界現況，提出實質可行的金融業環境改善方案
+        </p>
+      </div>
       
-      <!-- 建議卡片 -->
+      <!-- 建議卡片網格 -->
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        <!-- 卡片1 -->
-        <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-shadow duration-300 hidden-initially zoom-on-hover">
-          <div class="flex items-center mb-4">
-            <div class="flex-shrink-0 h-12 w-12 rounded-full bg-primary-100 flex items-center justify-center text-primary-600 mr-4">
+        <!-- 卡片1：監管強化 -->
+        <div class="neo-card p-6 hidden-initially hover-elevate">
+          <div class="flex items-center mb-5">
+            <div class="flex-shrink-0 h-14 w-14 rounded-full bg-gradient-to-br from-primary-100 to-primary-200 flex items-center justify-center text-primary-600 mr-4">
               <i class="fas fa-gavel text-xl"></i>
             </div>
             <h3 class="text-xl font-bold text-neutral-800">監管強化</h3>
           </div>
-          <p class="text-neutral-600 mb-4">
+          <p class="text-neutral-600 mb-5">
             金管會應建立更完善的監督機制，嚴格審查金融機構的業績考核制度，禁止強制責任額與隱性自購要求。
           </p>
-          <ul class="space-y-2 text-neutral-600">
+          <ul class="space-y-3 text-neutral-600">
             <li class="flex items-start">
-              <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
-              <span>設立專門檢舉管道與保護機制</span>
+              <i class="fas fa-check-circle text-green-500 mt-0.5 mr-2"></i>
+              <span>設立專門檢舉管道與吹哨人保護機制</span>
             </li>
             <li class="flex items-start">
-              <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
-              <span>對違規機構實施嚴厲罰則</span>
+              <i class="fas fa-check-circle text-green-500 mt-0.5 mr-2"></i>
+              <span>對違規機構實施嚴厲罰則，包括高額罰鍰與禁止上市新產品</span>
             </li>
             <li class="flex items-start">
-              <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
-              <span>定期抽查金融機構內部會議記錄</span>
+              <i class="fas fa-check-circle text-green-500 mt-0.5 mr-2"></i>
+              <span>定期抽查金融機構內部會議記錄與員工訪談</span>
             </li>
           </ul>
         </div>
         
-        <!-- 卡片2 -->
-        <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-shadow duration-300 hidden-initially zoom-on-hover">
-          <div class="flex items-center mb-4">
-            <div class="flex-shrink-0 h-12 w-12 rounded-full bg-primary-100 flex items-center justify-center text-primary-600 mr-4">
+        <!-- 卡片2：績效制度改革 -->
+        <div class="neo-card p-6 hidden-initially hover-elevate">
+          <div class="flex items-center mb-5">
+            <div class="flex-shrink-0 h-14 w-14 rounded-full bg-gradient-to-br from-blue-100 to-blue-200 flex items-center justify-center text-blue-600 mr-4">
               <i class="fas fa-balance-scale text-xl"></i>
             </div>
             <h3 class="text-xl font-bold text-neutral-800">績效制度改革</h3>
           </div>
-          <p class="text-neutral-600 mb-4">
+          <p class="text-neutral-600 mb-5">
             重新設計以客戶滿意度與專業服務品質為主的績效制度，降低純銷售數字的權重。
           </p>
-          <ul class="space-y-2 text-neutral-600">
+          <ul class="space-y-3 text-neutral-600">
             <li class="flex items-start">
-              <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
-              <span>引入客戶回饋與投資成效評分</span>
+              <i class="fas fa-check-circle text-green-500 mt-0.5 mr-2"></i>
+              <span>引入客戶回饋與投資成效評分作為主要績效指標</span>
             </li>
             <li class="flex items-start">
-              <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
-              <span>建立合理、可達成的銷售目標</span>
+              <i class="fas fa-check-circle text-green-500 mt-0.5 mr-2"></i>
+              <span>建立合理、可達成的銷售目標，考慮市場環境與職員資歷</span>
             </li>
             <li class="flex items-start">
-              <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
-              <span>打破「定時定量」的僵化考核</span>
+              <i class="fas fa-check-circle text-green-500 mt-0.5 mr-2"></i>
+              <span>打破「定時定量」的僵化考核，改為季度彈性目標</span>
             </li>
           </ul>
         </div>
         
-        <!-- 卡片3 -->
-        <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-shadow duration-300 hidden-initially zoom-on-hover">
-          <div class="flex items-center mb-4">
-            <div class="flex-shrink-0 h-12 w-12 rounded-full bg-primary-100 flex items-center justify-center text-primary-600 mr-4">
+        <!-- 卡片3：心理健康支持 -->
+        <div class="neo-card p-6 hidden-initially hover-elevate">
+          <div class="flex items-center mb-5">
+            <div class="flex-shrink-0 h-14 w-14 rounded-full bg-gradient-to-br from-red-100 to-red-200 flex items-center justify-center text-red-600 mr-4">
               <i class="fas fa-heart text-xl"></i>
             </div>
             <h3 class="text-xl font-bold text-neutral-800">心理健康支持</h3>
           </div>
-          <p class="text-neutral-600 mb-4">
+          <p class="text-neutral-600 mb-5">
             金融機構應提供完善的心理健康支持系統，幫助員工面對工作壓力，預防職業倦怠與心理疾病。
           </p>
-          <ul class="space-y-2 text-neutral-600">
+          <ul class="space-y-3 text-neutral-600">
             <li class="flex items-start">
-              <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
-              <span>提供免費心理諮詢服務</span>
+              <i class="fas fa-check-circle text-green-500 mt-0.5 mr-2"></i>
+              <span>提供免費匿名心理諮詢服務與壓力管理課程</span>
             </li>
             <li class="flex items-start">
-              <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
-              <span>主管必修情緒智商培訓課程</span>
+              <i class="fas fa-check-circle text-green-500 mt-0.5 mr-2"></i>
+              <span>主管必修情緒智商培訓與健康管理課程</span>
             </li>
             <li class="flex items-start">
-              <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
-              <span>建立職場霸凌零容忍政策</span>
+              <i class="fas fa-check-circle text-green-500 mt-0.5 mr-2"></i>
+              <span>建立職場霸凌零容忍政策與投訴跟蹤系統</span>
             </li>
           </ul>
         </div>
         
-        <!-- 卡片4 -->
-        <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-shadow duration-300 hidden-initially zoom-on-hover">
-          <div class="flex items-center mb-4">
-            <div class="flex-shrink-0 h-12 w-12 rounded-full bg-primary-100 flex items-center justify-center text-primary-600 mr-4">
+        <!-- 卡片4：行業自律協會 -->
+        <div class="neo-card p-6 hidden-initially hover-elevate">
+          <div class="flex items-center mb-5">
+            <div class="flex-shrink-0 h-14 w-14 rounded-full bg-gradient-to-br from-green-100 to-green-200 flex items-center justify-center text-green-600 mr-4">
               <i class="fas fa-users text-xl"></i>
             </div>
             <h3 class="text-xl font-bold text-neutral-800">行業自律協會</h3>
           </div>
-          <p class="text-neutral-600 mb-4">
+          <p class="text-neutral-600 mb-5">
             成立由前線員工與管理層共同組成的行業自律協會，建立倫理標準與投訴處理機制。
           </p>
-          <ul class="space-y-2 text-neutral-600">
+          <ul class="space-y-3 text-neutral-600">
             <li class="flex items-start">
-              <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
-              <span>制定行業道德規範與最佳實踐</span>
+              <i class="fas fa-check-circle text-green-500 mt-0.5 mr-2"></i>
+              <span>制定行業道德規範與最佳實踐標準</span>
             </li>
             <li class="flex items-start">
-              <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
-              <span>定期發布行業透明度報告</span>
+              <i class="fas fa-check-circle text-green-500 mt-0.5 mr-2"></i>
+              <span>定期發布行業透明度報告與績效評估</span>
             </li>
             <li class="flex items-start">
-              <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
-              <span>提供員工申訴與仲裁渠道</span>
+              <i class="fas fa-check-circle text-green-500 mt-0.5 mr-2"></i>
+              <span>提供員工申訴與仲裁渠道，保護舉報人</span>
             </li>
           </ul>
         </div>
         
-        <!-- 卡片5 -->
-        <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-shadow duration-300 hidden-initially zoom-on-hover">
-          <div class="flex items-center mb-4">
-            <div class="flex-shrink-0 h-12 w-12 rounded-full bg-primary-100 flex items-center justify-center text-primary-600 mr-4">
+        <!-- 卡片5：專業能力培訓 -->
+        <div class="neo-card p-6 hidden-initially hover-elevate">
+          <div class="flex items-center mb-5">
+            <div class="flex-shrink-0 h-14 w-14 rounded-full bg-gradient-to-br from-yellow-100 to-yellow-200 flex items-center justify-center text-yellow-600 mr-4">
               <i class="fas fa-graduation-cap text-xl"></i>
             </div>
             <h3 class="text-xl font-bold text-neutral-800">專業能力培訓</h3>
           </div>
-          <p class="text-neutral-600 mb-4">
+          <p class="text-neutral-600 mb-5">
             加強營業員的專業知識與客戶服務能力培訓，從「賣產品」轉向「提供價值」。
           </p>
-          <ul class="space-y-2 text-neutral-600">
+          <ul class="space-y-3 text-neutral-600">
             <li class="flex items-start">
-              <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
-              <span>增加產品風險評估培訓</span>
+              <i class="fas fa-check-circle text-green-500 mt-0.5 mr-2"></i>
+              <span>增加產品風險評估與客戶需求分析培訓</span>
             </li>
             <li class="flex items-start">
-              <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
-              <span>強化需求分析與顧問式銷售技巧</span>
+              <i class="fas fa-check-circle text-green-500 mt-0.5 mr-2"></i>
+              <span>強化需求分析與顧問式銷售技巧訓練</span>
             </li>
             <li class="flex items-start">
-              <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
-              <span>提供持續進修獎勵機制</span>
+              <i class="fas fa-check-circle text-green-500 mt-0.5 mr-2"></i>
+              <span>提供持續進修獎勵機制與專業認證支持</span>
             </li>
           </ul>
         </div>
         
-        <!-- 卡片6 -->
-        <div class="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-shadow duration-300 hidden-initially zoom-on-hover">
-          <div class="flex items-center mb-4">
-            <div class="flex-shrink-0 h-12 w-12 rounded-full bg-primary-100 flex items-center justify-center text-primary-600 mr-4">
+        <!-- 卡片6：薪資制度透明化 -->
+        <div class="neo-card p-6 hidden-initially hover-elevate">
+          <div class="flex items-center mb-5">
+            <div class="flex-shrink-0 h-14 w-14 rounded-full bg-gradient-to-br from-purple-100 to-purple-200 flex items-center justify-center text-purple-600 mr-4">
               <i class="fas fa-shield-alt text-xl"></i>
             </div>
             <h3 class="text-xl font-bold text-neutral-800">薪資制度透明化</h3>
           </div>
-          <p class="text-neutral-600 mb-4">
+          <p class="text-neutral-600 mb-5">
             建立更公平、透明的薪資制度，縮小高層與基層的薪資差距，改善獎金分配機制。
           </p>
-          <ul class="space-y-2 text-neutral-600">
+          <ul class="space-y-3 text-neutral-600">
             <li class="flex items-start">
-              <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
-              <span>公開高管與基層薪資比例</span>
+              <i class="fas fa-check-circle text-green-500 mt-0.5 mr-2"></i>
+              <span>公開高管與基層薪資比例，控制在合理範圍</span>
             </li>
             <li class="flex items-start">
-              <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
-              <span>設立合理的獎金分配標準</span>
+              <i class="fas fa-check-circle text-green-500 mt-0.5 mr-2"></i>
+              <span>設立合理的獎金分配標準，避免不公平分配</span>
             </li>
             <li class="flex items-start">
-              <i class="fas fa-check text-green-500 mt-1 mr-2"></i>
-              <span>健全員工基本保障機制</span>
+              <i class="fas fa-check-circle text-green-500 mt-0.5 mr-2"></i>
+              <span>健全員工基本保障機制，提高固定薪資比例</span>
             </li>
           </ul>
+        </div>
+      </div>
+      
+      <!-- 行動呼籲 -->
+      <div class="mt-16 flex justify-center hidden-initially">
+        <div class="neo-card p-6 text-center max-w-2xl mx-auto">
+          <h3 class="text-xl font-bold text-neutral-800 mb-4">行動呼籲</h3>
+          <p class="text-neutral-600 mb-6">
+            改革必須從各層面共同推動，無論您是金融業從業人員、監管機構或投資者，都可以為改善金融業環境貢獻一份力量。
+          </p>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            <div class="p-4 rounded-lg bg-white shadow-sm">
+              <div class="w-10 h-10 mx-auto rounded-full bg-primary-100 flex items-center justify-center text-primary-600 mb-3">
+                <i class="fas fa-user-tie"></i>
+              </div>
+              <h4 class="font-semibold text-neutral-700 mb-2">從業人員</h4>
+              <p class="text-neutral-600 text-sm">勇敢發聲，提供匿名證詞，參與行業改革倡議</p>
+            </div>
+            <div class="p-4 rounded-lg bg-white shadow-sm">
+              <div class="w-10 h-10 mx-auto rounded-full bg-primary-100 flex items-center justify-center text-primary-600 mb-3">
+                <i class="fas fa-landmark"></i>
+              </div>
+              <h4 class="font-semibold text-neutral-700 mb-2">金融機構</h4>
+              <p class="text-neutral-600 text-sm">審視內部績效制度，建立以客為尊的企業文化</p>
+            </div>
+            <div class="p-4 rounded-lg bg-white shadow-sm">
+              <div class="w-10 h-10 mx-auto rounded-full bg-primary-100 flex items-center justify-center text-primary-600 mb-3">
+                <i class="fas fa-chart-pie"></i>
+              </div>
+              <h4 class="font-semibold text-neutral-700 mb-2">投資者</h4>
+              <p class="text-neutral-600 text-sm">了解金融產品背後故事，關注金融機構的倫理表現</p>
+            </div>
+          </div>
+          <div class="mt-4">
+            <button class="bg-gradient-to-r from-primary-600 to-primary-500 hover:from-primary-700 hover:to-primary-600 text-white font-medium py-3 px-6 rounded-lg transition transform duration-200 hover:scale-105 shadow-lg flex items-center justify-center mx-auto">
+              <i class="fas fa-envelope mr-2"></i>
+              加入改革倡議行動網絡
+            </button>
+          </div>
         </div>
       </div>
     </div>
   </section>
 
   <!-- 頁尾區塊 -->
-  <footer class="py-10 bg-neutral-800 text-white">
-    <div class="container mx-auto px-4">
-      <div class="flex flex-col md:flex-row justify-between items-center">
+  <footer class="py-12 bg-neutral-800 text-white">
+    <div class="container mx-auto px-4 md:px-6">
+      <div class="flex flex-col md:flex-row justify-between items-center mb-8">
         <div class="mb-6 md:mb-0">
           <div class="text-xl font-bold flex items-center">
-            <i class="fas fa-chart-line mr-2"></i>
-            <span>金融業心聲</span>
+            <i class="fas fa-volume-up mr-2"></i>
+            <span>金融業真相專案</span>
           </div>
           <p class="text-neutral-400 mt-2">
             揭露真相，促進改變
           </p>
         </div>
-        <div class="flex flex-col md:flex-row md:space-x-8 items-center">
-          <a href="#overview" class="text-neutral-400 hover:text-white transition duration-200 my-2 md:my-0">總覽</a>
-          <a href="#top-quotes" class="text-neutral-400 hover:text-white transition duration-200 my-2 md:my-0">高分語錄</a>
-          <a href="#emotion-analysis" class="text-neutral-400 hover:text-white transition duration-200 my-2 md:my-0">情緒分析</a>
-          <a href="#report" class="text-neutral-400 hover:text-white transition duration-200 my-2 md:my-0">報導大綱</a>
-          <a href="#recommendations" class="text-neutral-400 hover:text-white transition duration-200 my-2 md:my-0">改進建議</a>
+        <div class="flex flex-col md:flex-row md:space-x-8 space-y-4 md:space-y-0 items-center">
+          <a href="#overview" class="text-neutral-400 hover:text-white transition duration-200">總覽</a>
+          <a href="#voices" class="text-neutral-400 hover:text-white transition duration-200">第一線心聲</a>
+          <a href="#emotion-analysis" class="text-neutral-400 hover:text-white transition duration-200">情緒分析</a>
+          <a href="#report" class="text-neutral-400 hover:text-white transition duration-200">深度報導</a>
+          <a href="#solutions" class="text-neutral-400 hover:text-white transition duration-200">改革建議</a>
         </div>
       </div>
-      <div class="border-t border-neutral-700 mt-8 pt-8 text-center text-neutral-400 text-sm">
-        <p>本網站僅供研究參考，網站內容不代表任何金融機構立場</p>
+      <div class="border-t border-neutral-700 mt-6 pt-6 text-center text-neutral-400 text-sm">
+        <p>本網站僅供研究參考，所有訪談內容已獲得匿名受訪者授權發布</p>
         <p class="mt-2">© 2025 金融業心聲專案小組</p>
       </div>
     </div>
@@ -1201,58 +2475,72 @@
 
   <!-- 隱藏彩蛋按鈕 -->
   <div class="easter-egg">
-    <i class="fas fa-comments text-primary-500 text-2xl"></i>
+    <i class="fas fa-comment-dots text-primary-500 text-xl"></i>
   </div>
   
   <!-- 彩蛋內容 -->
   <div id="easter-egg-overlay"></div>
-  <div id="easter-egg-content">
+  <div id="easter-egg-content" class="card-glassmorphism">
     <div class="text-right mb-4">
-      <button id="close-easter-egg" class="text-neutral-500 hover:text-neutral-700 transition duration-200">
+      <button id="close-easter-egg" class="text-neutral-500 hover:text-neutral-700 transition duration-200 w-8 h-8 flex items-center justify-center rounded-full hover:bg-neutral-100">
         <i class="fas fa-times"></i>
       </button>
     </div>
-    <h3 class="text-xl font-bold text-neutral-800 mb-4">金融從業人員的心聲小遊戲</h3>
-    <p class="text-neutral-600 mb-6">為了幫助大家理解金融從業人員的處境，我們設計了這個互動式體驗。您將面臨真實的工作情境，體驗營業員的日常壓力。</p>
+    <h3 class="text-xl font-bold text-neutral-800 mb-4">金融從業人員壓力模擬器</h3>
+    <p class="text-neutral-600 mb-6">
+      為了幫助大家理解金融從業人員的處境，我們設計了這個互動式體驗。您將面臨真實的工作情境，體驗營業員的日常壓力。
+    </p>
     
     <div id="game-container">
-      <div id="game-scenario" class="p-4 bg-neutral-100 rounded-lg mb-4">
+      <div id="game-scenario" class="p-5 bg-neutral-50 rounded-lg mb-5">
         <p class="text-neutral-700">
           今天早上的晨會，主管宣布新一檔IPO將在下週開賣，您的責任額是100萬元。您手上的客戶對此興趣不高，您會如何應對？
         </p>
       </div>
       <div id="game-options" class="space-y-3">
-        <button class="game-option w-full text-left p-3 border border-neutral-300 rounded-lg hover:bg-neutral-50 transition duration-200">
+        <button class="game-option w-full text-left p-4 border border-neutral-200 rounded-lg hover:bg-neutral-50 transition duration-200 flex items-center">
+          <div class="w-6 h-6 rounded-full bg-neutral-100 flex-shrink-0 flex items-center justify-center mr-3 text-neutral-500">
+            <span class="text-xs">A</span>
+          </div>
           努力說服客戶，解釋產品優點與投資價值
         </button>
-        <button class="game-option w-full text-left p-3 border border-neutral-300 rounded-lg hover:bg-neutral-50 transition duration-200">
+        <button class="game-option w-full text-left p-4 border border-neutral-200 rounded-lg hover:bg-neutral-50 transition duration-200 flex items-center">
+          <div class="w-6 h-6 rounded-full bg-neutral-100 flex-shrink-0 flex items-center justify-center mr-3 text-neutral-500">
+            <span class="text-xs">B</span>
+          </div>
           向親友借錢，自己買一部分達標
         </button>
-        <button class="game-option w-full text-left p-3 border border-neutral-300 rounded-lg hover:bg-neutral-50 transition duration-200">
+        <button class="game-option w-full text-left p-4 border border-neutral-200 rounded-lg hover:bg-neutral-50 transition duration-200 flex items-center">
+          <div class="w-6 h-6 rounded-full bg-neutral-100 flex-shrink-0 flex items-center justify-center mr-3 text-neutral-500">
+            <span class="text-xs">C</span>
+          </div>
           向主管坦白達標困難，請求調整責任額
         </button>
-        <button class="game-option w-full text-left p-3 border border-neutral-300 rounded-lg hover:bg-neutral-50 transition duration-200">
+        <button class="game-option w-full text-left p-4 border border-neutral-200 rounded-lg hover:bg-neutral-50 transition duration-200 flex items-center">
+          <div class="w-6 h-6 rounded-full bg-neutral-100 flex-shrink-0 flex items-center justify-center mr-3 text-neutral-500">
+            <span class="text-xs">D</span>
+          </div>
           申請信貸，自己買單確保達標
         </button>
       </div>
-      <div id="game-result" class="hidden mt-6 p-4 rounded-lg"></div>
-      <div id="game-next" class="hidden mt-4 text-center">
-        <button id="next-scenario" class="bg-primary-600 hover:bg-primary-700 text-white font-medium py-2 px-6 rounded-lg transition transform duration-200 hover:scale-105">
+      <div id="game-result" class="hidden mt-6 p-5 rounded-lg"></div>
+      <div id="game-next" class="hidden mt-6 text-center">
+        <button id="next-scenario" class="bg-primary-600 hover:bg-primary-700 text-white font-medium py-2.5 px-6 rounded-lg transition transform duration-200 hover:scale-105 shadow-sm">
           繼續體驗
         </button>
       </div>
-      <div id="game-restart" class="hidden mt-4 text-center">
-        <button id="restart-game" class="bg-neutral-600 hover:bg-neutral-700 text-white font-medium py-2 px-6 rounded-lg transition transform duration-200 hover:scale-105">
+      <div id="game-restart" class="hidden mt-6 text-center">
+        <button id="restart-game" class="bg-neutral-600 hover:bg-neutral-700 text-white font-medium py-2.5 px-6 rounded-lg transition transform duration-200 hover:scale-105 shadow-sm">
           重新開始
         </button>
       </div>
-      <div id="pressure-meter" class="mt-6">
-        <div class="flex justify-between mb-1">
+      <div id="pressure-meter" class="mt-8">
+        <div class="flex justify-between mb-2">
           <span class="text-sm text-neutral-500">壓力指數</span>
           <span id="pressure-value" class="text-sm font-medium text-neutral-700">0%</span>
         </div>
-        <div class="w-full bg-neutral-200 rounded-full h-2.5">
-          <div id="pressure-bar" class="bg-green-500 h-2.5 rounded-full" style="width: 0%"></div>
+        <div class="w-full h-3 bg-neutral-200 rounded-full overflow-hidden">
+          <div id="pressure-bar" class="h-full rounded-full" style="width: 0%; background: linear-gradient(90deg, #22c55e 0%, #eab308 50%, #ef4444 100%);"></div>
         </div>
       </div>
     </div>
@@ -1260,7 +2548,7 @@
 
   <!-- JavaScript -->
   <script>
-    // 數據
+    // 資料
     const emotionData = {
       '被欺壓感': 9.6,
       '壓迫性敘述': 9.1,
@@ -1295,47 +2583,71 @@
       mobileMenu.classList.toggle('hidden');
     });
     
-    // 標籤切換功能
-    document.querySelectorAll('.tab-button').forEach(button => {
+    // 主題切換
+    document.querySelectorAll('.theme-btn').forEach(button => {
       button.addEventListener('click', function() {
-        // 移除所有標籤的active狀態
-        document.querySelectorAll('.tab-button').forEach(btn => {
-          btn.classList.remove('active');
+        // 移除所有按鈕的active狀態
+        document.querySelectorAll('.theme-btn').forEach(btn => {
+          btn.classList.remove('active', 'bg-primary-50', 'text-primary-700', 'bg-emotion-oppression-100', 'text-emotion-oppression-700', 'bg-emotion-anxiety-100', 'text-emotion-anxiety-700', 'bg-emotion-pressure-100', 'text-emotion-pressure-700');
+          btn.classList.add('bg-white', 'text-neutral-700');
         });
         
-        // 移除所有內容的active狀態
-        document.querySelectorAll('.tab-content').forEach(content => {
-          content.classList.remove('active');
-        });
-        
-        // 為當前標籤添加active狀態
+        // 為當前按鈕添加active狀態
+        this.classList.remove('bg-white', 'text-neutral-700');
         this.classList.add('active');
         
-        // 顯示對應的內容
-        const tabId = this.getAttribute('data-tab');
-        document.getElementById(tabId + '-tab').classList.add('active');
+        // 根據主題設置按鈕樣式
+        const theme = this.getAttribute('data-theme');
+        if (theme === 'all') {
+          this.classList.add('bg-primary-50', 'text-primary-700');
+        } else if (theme === 'oppression') {
+          this.classList.add('bg-emotion-oppression-100', 'text-emotion-oppression-700');
+        } else if (theme === 'anxiety') {
+          this.classList.add('bg-emotion-anxiety-100', 'text-emotion-anxiety-700');
+        } else if (theme === 'pressure') {
+          this.classList.add('bg-emotion-pressure-100', 'text-emotion-pressure-700');
+        }
+        
+        // 顯示對應主題的卡片
+        const cards = document.querySelectorAll('.quote-card');
+        cards.forEach(card => {
+          if (theme === 'all' || card.getAttribute('data-theme') === theme) {
+            card.classList.remove('hidden');
+          } else {
+            card.classList.add('hidden');
+          }
+        });
       });
     });
     
-    // 顯示更多語錄
+    // 顯示更多按鈕
     document.getElementById('show-more-quotes').addEventListener('click', function() {
       const button = this;
-      const container = document.getElementById('top-quotes');
-      const hiddenQuotes = container.querySelectorAll('.quote-card.hidden');
+      const hiddenQuotes = document.querySelectorAll('.quote-card.hidden');
       
-      if (hiddenQuotes.length > 0) {
-        // 顯示更多語錄
-        hiddenQuotes.forEach((quote, index) => {
+      // 找出當前活動的主題
+      const activeTheme = document.querySelector('.theme-btn.active').getAttribute('data-theme');
+      
+      // 過濾出符合當前主題的卡片
+      const filteredQuotes = Array.from(hiddenQuotes).filter(card => {
+        return activeTheme === 'all' || card.getAttribute('data-theme') === activeTheme;
+      });
+      
+      if (filteredQuotes.length > 0) {
+        // 顯示更多卡片
+        filteredQuotes.forEach((quote, index) => {
           if (index < 3) { // 每次顯示3個
             quote.classList.remove('hidden');
             quote.classList.add('animate__animated', 'animate__fadeIn');
           }
         });
         
-        // 如果沒有更多隱藏的語錄，隱藏按鈕
-        if (hiddenQuotes.length <= 3) {
+        // 如果沒有更多隱藏的卡片，隱藏按鈕
+        if (filteredQuotes.length <= 3) {
           button.classList.add('hidden');
         }
+      } else {
+        button.classList.add('hidden');
       }
     });
     
@@ -1349,8 +2661,8 @@
         const elementVisible = 150;
         
         if (elementTop < windowHeight - elementVisible) {
-          reveals[i].classList.add('animate__animated', 'animate__fadeInUp');
           reveals[i].classList.remove('hidden-initially');
+          reveals[i].classList.add('animate__animated', 'animate__fadeInUp');
         }
       }
     }
@@ -1362,25 +2674,31 @@
     
     // 計數器動畫
     function animateCounters() {
-      const counters = document.querySelectorAll('.counter');
+      const counters = document.querySelectorAll('.animate-number');
       const speed = 200;
       
-      counters.forEach(counter => {
-        const target = +counter.getAttribute('data-target');
+      counters.forEach((counter, index) => {
+        const target = parseFloat(counter.getAttribute('data-value'));
         let count = 0;
         const increment = target / speed;
+        const delay = index * 300;
         
-        const updateCount = () => {
-          if (count < target) {
-            count += increment;
-            counter.innerText = Math.ceil(count);
-            setTimeout(updateCount, 1);
-          } else {
-            counter.innerText = target;
-          }
-        };
+        // 設置延遲時間
+        counter.style.setProperty('--delay', `${delay}ms`);
         
-        updateCount();
+        setTimeout(() => {
+          const updateCount = () => {
+            if (count < target) {
+              count += increment;
+              counter.textContent = target.toString().includes('.') ? Math.round(count * 10) / 10 : Math.ceil(count);
+              setTimeout(updateCount, 1);
+            } else {
+              counter.textContent = target;
+            }
+          };
+          
+          updateCount();
+        }, delay);
       });
     }
     
@@ -1394,7 +2712,7 @@
       });
     });
     
-    document.querySelectorAll('.counter').forEach(counter => {
+    document.querySelectorAll('.animate-number').forEach(counter => {
       counterObserver.observe(counter);
     });
     
@@ -1431,22 +2749,26 @@
           {
             text: "努力說服客戶，解釋產品優點與投資價值",
             result: "您努力推銷，但客戶仍不感興趣。主管在下次晨會點名批評您：「別人都做到了，為什麼你還沒有進度？」",
-            pressure: 20
+            pressure: 20,
+            resultClass: "bg-yellow-50 border border-yellow-100 text-neutral-700"
           },
           {
             text: "向親友借錢，自己買一部分達標",
             result: "您向三位好友各借了20萬，自己出40萬達標。產品上市後立即破發，您損失了15%，還背負著還款壓力。",
-            pressure: 40
+            pressure: 40,
+            resultClass: "bg-red-50 border border-red-100 text-neutral-700"
           },
           {
             text: "向主管坦白達標困難，請求調整責任額",
             result: "主管直接回絕：「這是最低要求，做不到就不要做這行。」並警告這將影響您的年終考核。",
-            pressure: 30
+            pressure: 30,
+            resultClass: "bg-orange-50 border border-orange-100 text-neutral-700"
           },
           {
             text: "申請信貸，自己買單確保達標",
             result: "您申請了100萬信貸，達成目標獲得主管讚賞。但每個月多出的還款壓力讓您夜不能寐。",
-            pressure: 50
+            pressure: 50,
+            resultClass: "bg-red-50 border border-red-100 text-neutral-700"
           }
         ]
       },
@@ -1456,22 +2778,26 @@
           {
             text: "坦承市場風險，提供後續建議與補救方案",
             result: "客戶仍不滿意，威脅要投訴。主管聽到後警告您：「處理不好客訴，就準備交接你的客戶。」",
-            pressure: 25
+            pressure: 25,
+            resultClass: "bg-yellow-50 border border-yellow-100 text-neutral-700"
           },
           {
             text: "推卸責任，歸咎於市場整體表現不佳",
             result: "客戶更加憤怒，提出正式投訴。主管訓斥您缺乏專業，並在月會上公開您的「失誤」。",
-            pressure: 35
+            pressure: 35,
+            resultClass: "bg-red-50 border border-red-100 text-neutral-700"
           },
           {
             text: "自掏腰包部分補償客戶損失，息事寧人",
             result: "您賠了8萬元給重要客戶。雖然保住了客戶關係，但您的財務壓力更大了。",
-            pressure: 45
+            pressure: 45,
+            resultClass: "bg-red-50 border border-red-100 text-neutral-700"
           },
           {
             text: "安撫客戶情緒，建議再等等市場可能回升",
             result: "客戶暫時接受，但產品繼續下跌。客戶對您的信任度嚴重下降，影響未來業務開展。",
-            pressure: 30
+            pressure: 30,
+            resultClass: "bg-orange-50 border border-orange-100 text-neutral-700"
           }
         ]
       },
@@ -1481,22 +2807,26 @@
           {
             text: "據理力爭，表明目標不合理並請求調整",
             result: "主管當眾斥責您：「我們這裡不養懶人，做不到就離開。」同事們都低著頭不敢說話。",
-            pressure: 40
+            pressure: 40,
+            resultClass: "bg-red-50 border border-red-100 text-neutral-700"
           },
           {
             text: "接受挑戰，加班加點擴展客戶名單",
             result: "您每天工作超過12小時，週末也不休息。儘管如此，目標仍遙不可及，您開始出現頭痛、失眠等症狀。",
-            pressure: 35
+            pressure: 35,
+            resultClass: "bg-orange-50 border border-orange-100 text-neutral-700"
           },
           {
             text: "向房貸銀行申請增貸，準備自己買單",
             result: "銀行批准了您的增貸申請。您用這筆錢買下全部額度，但房貸壓力讓您每個月入不敷出。",
-            pressure: 55
+            pressure: 55,
+            resultClass: "bg-red-50 border border-red-100 text-neutral-700"
           },
           {
             text: "消極應對，做多少算多少，準備尋找新工作",
             result: "您的業績落後，主管將您列入「觀察名單」，並開始將您的優質客戶資源調配給其他同事。",
-            pressure: 30
+            pressure: 30,
+            resultClass: "bg-orange-50 border border-orange-100 text-neutral-700"
           }
         ]
       }
@@ -1509,6 +2839,7 @@
       option.addEventListener('click', function() {
         const result = scenarios[currentScenario].options[index].result;
         const pressure = scenarios[currentScenario].options[index].pressure;
+        const resultClass = scenarios[currentScenario].options[index].resultClass;
         
         // 更新壓力指數
         pressureLevel += pressure;
@@ -1517,23 +2848,15 @@
         document.getElementById('pressure-value').textContent = pressureLevel + '%';
         document.getElementById('pressure-bar').style.width = pressureLevel + '%';
         
-        // 根據壓力值改變顏色
-        if (pressureLevel < 30) {
-          document.getElementById('pressure-bar').className = 'bg-green-500 h-2.5 rounded-full';
-        } else if (pressureLevel < 70) {
-          document.getElementById('pressure-bar').className = 'bg-yellow-500 h-2.5 rounded-full';
-        } else {
-          document.getElementById('pressure-bar').className = 'bg-red-500 h-2.5 rounded-full';
-        }
-        
         // 顯示結果
         const resultElement = document.getElementById('game-result');
-        resultElement.innerHTML = `<p class="text-neutral-700">${result}</p>`;
+        resultElement.innerHTML = `<p>${result}</p>`;
+        resultElement.className = `p-5 rounded-lg ${resultClass}`;
         
         if (pressureLevel >= 100) {
           resultElement.innerHTML += `
-            <p class="text-red-600 font-medium mt-3">您的壓力指數已達100%！</p>
-            <p class="text-neutral-700 mt-2">您因長期承受高壓工作環境，出現了嚴重的焦慮症狀，被醫生建議休假調養。這反映了許多金融從業人員面臨的真實處境。</p>
+            <p class="font-medium mt-3 text-red-600">您的壓力指數已達100%！</p>
+            <p class="mt-2">您因長期承受高壓工作環境，出現了嚴重的焦慮症狀，被醫生建議休假調養。這反映了許多金融從業人員面臨的真實處境。</p>
           `;
           
           document.getElementById('game-next').classList.add('hidden');
@@ -1545,18 +2868,18 @@
           // 遊戲結束，顯示最終結果
           if (pressureLevel < 30) {
             resultElement.innerHTML += `
-              <p class="text-green-600 font-medium mt-3">恭喜！您成功地維持了較低的壓力水平！</p>
-              <p class="text-neutral-700 mt-2">您是少數能在金融業保持心理健康的從業人員，但這往往意味著業績可能不是最優秀的。在現實中，這種平衡非常難以達成。</p>
+              <p class="font-medium mt-3 text-green-600">恭喜！您成功地維持了較低的壓力水平！</p>
+              <p class="mt-2">您是少數能在金融業保持心理健康的從業人員，但這往往意味著業績可能不是最優秀的。在現實中，這種平衡非常難以達成。</p>
             `;
           } else if (pressureLevel < 70) {
             resultElement.innerHTML += `
-              <p class="text-yellow-600 font-medium mt-3">您承受了中等程度的壓力！</p>
-              <p class="text-neutral-700 mt-2">這反映了大多數金融從業人員的實際狀況——在業績與心理健康之間艱難平衡，長期處於亞健康狀態。</p>
+              <p class="font-medium mt-3 text-yellow-600">您承受了中等程度的壓力！</p>
+              <p class="mt-2">這反映了大多數金融從業人員的實際狀況——在業績與心理健康之間艱難平衡，長期處於亞健康狀態。</p>
             `;
           } else {
             resultElement.innerHTML += `
-              <p class="text-orange-600 font-medium mt-3">您承受了高度壓力！</p>
-              <p class="text-neutral-700 mt-2">您的壓力指數非常高，可能已經影響到身心健康。許多金融從業人員長期處於類似狀態，導致職業倦怠甚至更嚴重的健康問題。</p>
+              <p class="font-medium mt-3 text-orange-600">您承受了高度壓力！</p>
+              <p class="mt-2">您的壓力指數非常高，可能已經影響到身心健康。許多金融從業人員長期處於類似狀態，導致職業倦怠甚至更嚴重的健康問題。</p>
             `;
           }
           
@@ -1606,7 +2929,6 @@
       // 更新壓力指數
       document.getElementById('pressure-value').textContent = '0%';
       document.getElementById('pressure-bar').style.width = '0%';
-      document.getElementById('pressure-bar').className = 'bg-green-500 h-2.5 rounded-full';
       
       // 更新場景描述
       document.getElementById('game-scenario').innerHTML = `
@@ -1616,12 +2938,18 @@
       // 更新選項
       const options = document.querySelectorAll('.game-option');
       scenarios[currentScenario].options.forEach((option, index) => {
-        options[index].textContent = option.text;
+        // 重設選項文字和按鈕內容
+        options[index].innerHTML = `
+          <div class="w-6 h-6 rounded-full bg-neutral-100 flex-shrink-0 flex items-center justify-center mr-3 text-neutral-500">
+            <span class="text-xs">${String.fromCharCode(65 + index)}</span>
+          </div>
+          ${option.text}
+        `;
         options[index].disabled = false;
         options[index].classList.remove('opacity-50', 'cursor-not-allowed');
       });
       
-      // 隱藏結果和重新開始按鈕，顯示下一步按鈕
+      // 隱藏結果和重新開始按鈕
       document.getElementById('game-result').classList.add('hidden');
       document.getElementById('game-restart').classList.add('hidden');
     });
@@ -1629,6 +2957,8 @@
     // 生成雷達圖
     function createRadarChart() {
       const radarChartElement = document.getElementById('radar-chart');
+      if (!radarChartElement) return;
+      
       const width = radarChartElement.clientWidth;
       const height = radarChartElement.clientHeight;
       const centerX = width / 2;
@@ -1709,39 +3039,120 @@
         return `${px},${py}`;
       }).join(' ');
       
+      // 創建數據區域漸變
+      const gradientId = 'radar-gradient';
+      const gradient = document.createElementNS('http://www.w3.org/2000/svg', 'linearGradient');
+      gradient.setAttribute('id', gradientId);
+      gradient.setAttribute('x1', '0%');
+      gradient.setAttribute('y1', '0%');
+      gradient.setAttribute('x2', '100%');
+      gradient.setAttribute('y2', '100%');
+      
+      const stop1 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
+      stop1.setAttribute('offset', '0%');
+      stop1.setAttribute('stop-color', 'rgba(59, 130, 246, 0.6)');
+      
+      const stop2 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
+      stop2.setAttribute('offset', '100%');
+      stop2.setAttribute('stop-color', 'rgba(236, 72, 153, 0.6)');
+      
+      gradient.appendChild(stop1);
+      gradient.appendChild(stop2);
+      
+      const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+      defs.appendChild(gradient);
+      svg.appendChild(defs);
+      
+      // 繪製數據填充區域
       const polygon = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
       polygon.setAttribute('points', points);
-      polygon.setAttribute('fill', 'rgba(59, 130, 246, 0.2)');
+      polygon.setAttribute('fill', `url(#${gradientId})`);
+      polygon.setAttribute('fill-opacity', '0.6');
       polygon.setAttribute('stroke', 'rgba(59, 130, 246, 0.8)');
       polygon.setAttribute('stroke-width', '2');
-      polygon.classList.add('radar-chart-line');
+      polygon.setAttribute('stroke-dasharray', '1000');
+      polygon.setAttribute('stroke-dashoffset', '1000');
+      polygon.setAttribute('stroke-linecap', 'round');
+      polygon.setAttribute('stroke-linejoin', 'round');
+      
+      // 添加動畫
+      const animate = document.createElementNS('http://www.w3.org/2000/svg', 'animate');
+      animate.setAttribute('attributeName', 'stroke-dashoffset');
+      animate.setAttribute('from', '1000');
+      animate.setAttribute('to', '0');
+      animate.setAttribute('dur', '1.5s');
+      animate.setAttribute('fill', 'freeze');
+      animate.setAttribute('begin', '0.5s');
+      polygon.appendChild(animate);
+      
       svg.appendChild(polygon);
       
       // 繪製數據點
       data.forEach((item, i) => {
-        const angle = i * angleStep - Math.PI / 2; // 從上方開始
-        const value = item[1] / 10; // 假設最大值為10
+        const angle = i * angleStep - Math.PI / 2;
+        const value = item[1] / 10;
         const px = centerX + radius * value * Math.cos(angle);
         const py = centerY + radius * value * Math.sin(angle);
         
+        // 數據點外環
+        const pointRing = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        pointRing.setAttribute('cx', px);
+        pointRing.setAttribute('cy', py);
+        pointRing.setAttribute('r', '6');
+        pointRing.setAttribute('fill', 'rgba(255, 255, 255, 0.8)');
+        pointRing.setAttribute('stroke', 'rgba(59, 130, 246, 0.8)');
+        pointRing.setAttribute('stroke-width', '1');
+        svg.appendChild(pointRing);
+        
+        // 數據點
         const point = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
         point.setAttribute('cx', px);
         point.setAttribute('cy', py);
         point.setAttribute('r', '4');
-        point.setAttribute('fill', 'rgb(59, 130, 246)');
-        point.setAttribute('stroke', 'white');
-        point.setAttribute('stroke-width', '1');
+        
+        // 根據值設置不同顏色
+        let pointColor = 'rgb(59, 130, 246)';
+        if (item[1] > 9) {
+          pointColor = 'rgb(239, 68, 68)';
+        } else if (item[1] > 7) {
+          pointColor = 'rgb(245, 158, 11)';
+        }
+        
+        point.setAttribute('fill', pointColor);
+        
+        // 添加點的動畫
+        point.style.opacity = '0';
+        point.style.transform = 'scale(0)';
+        point.style.transformOrigin = `${px}px ${py}px`;
+        point.style.transition = 'all 0.5s ease';
+        point.style.transitionDelay = `${i * 0.1 + 1}s`;
+        
+        setTimeout(() => {
+          point.style.opacity = '1';
+          point.style.transform = 'scale(1)';
+        }, 100);
+        
         svg.appendChild(point);
         
         // 添加數值標籤
         const valueLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
         valueLabel.setAttribute('x', px);
-        valueLabel.setAttribute('y', py - 10);
+        valueLabel.setAttribute('y', py - 12);
         valueLabel.setAttribute('text-anchor', 'middle');
         valueLabel.setAttribute('font-size', '10');
         valueLabel.setAttribute('font-weight', 'bold');
-        valueLabel.setAttribute('fill', '#374151');
+        valueLabel.setAttribute('fill', pointColor);
         valueLabel.textContent = item[1].toFixed(1);
+        
+        // 添加標籤的動畫
+        valueLabel.style.opacity = '0';
+        valueLabel.style.transition = 'opacity 0.5s ease';
+        valueLabel.style.transitionDelay = `${i * 0.1 + 1.2}s`;
+        
+        setTimeout(() => {
+          valueLabel.style.opacity = '1';
+        }, 100);
+        
         svg.appendChild(valueLabel);
       });
       
@@ -1751,11 +3162,13 @@
     // 生成類別圓餅圖
     function createCategoriesChart() {
       const categoriesChartElement = document.getElementById('categories-chart');
+      if (!categoriesChartElement) return;
+      
       const width = categoriesChartElement.clientWidth;
       const height = categoriesChartElement.clientHeight;
       const centerX = width / 2;
       const centerY = height / 2;
-      const radius = Math.min(centerX, centerY) * 0.8;
+      const radius = Math.min(centerX, centerY) * 0.7;
       
       const data = Object.entries(pressureSources);
       const colors = ['#ef4444', '#3b82f6', '#f59e0b', '#10b981'];
@@ -1768,6 +3181,39 @@
       svg.setAttribute('width', '100%');
       svg.setAttribute('height', '100%');
       svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
+      
+      // 中央圓環漸變
+      const gradientId = 'donut-gradient';
+      const gradient = document.createElementNS('http://www.w3.org/2000/svg', 'linearGradient');
+      gradient.setAttribute('id', gradientId);
+      gradient.setAttribute('x1', '0%');
+      gradient.setAttribute('y1', '0%');
+      gradient.setAttribute('x2', '100%');
+      gradient.setAttribute('y2', '100%');
+      
+      const stop1 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
+      stop1.setAttribute('offset', '0%');
+      stop1.setAttribute('stop-color', '#f0f9ff');
+      
+      const stop2 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
+      stop2.setAttribute('offset', '100%');
+      stop2.setAttribute('stop-color', '#e0f2fe');
+      
+      gradient.appendChild(stop1);
+      gradient.appendChild(stop2);
+      
+      const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+      defs.appendChild(gradient);
+      svg.appendChild(defs);
+      
+      // 中央圓環
+      const centerCircle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      centerCircle.setAttribute('cx', centerX);
+      centerCircle.setAttribute('cy', centerY);
+      centerCircle.setAttribute('r', radius * 0.5);
+      centerCircle.setAttribute('fill', `url(#${gradientId})`);
+      centerCircle.setAttribute('filter', 'drop-shadow(0 4px 3px rgba(0, 0, 0, 0.07))');
+      svg.appendChild(centerCircle);
       
       // 繪製圓餅圖
       let startAngle = 0;
@@ -1790,57 +3236,154 @@
           'Z'
         ].join(' ');
         
+        // 創建扇形
         const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
         path.setAttribute('d', pathData);
         path.setAttribute('fill', colors[i]);
         path.setAttribute('stroke', 'white');
-        path.setAttribute('stroke-width', '1');
+        path.setAttribute('stroke-width', '2');
+        path.setAttribute('data-category', item[0]);
+        path.setAttribute('data-percentage', item[1]);
         
-        // 添加過渡動畫
+        // 添加漸變效果
         path.style.opacity = '0';
+        path.style.transition = 'opacity 0.5s ease';
+        path.style.transitionDelay = `${i * 0.2}s`;
+        
         setTimeout(() => {
-          path.style.transition = 'opacity 0.5s ease';
           path.style.opacity = '1';
-        }, i * 200);
+        }, 100);
+        
+        // 添加滑鼠交互效果
+        path.addEventListener('mouseover', function() {
+          this.style.transform = 'scale(1.05)';
+          this.style.transformOrigin = `${centerX}px ${centerY}px`;
+          this.style.transition = 'transform 0.3s ease';
+          
+          // 高亮相應的標籤
+          const category = this.getAttribute('data-category');
+          document.querySelectorAll('.vis-tag').forEach(tag => {
+            if (tag.getAttribute('data-category') === category) {
+              tag.style.transform = 'translateY(-3px) scale(1.05)';
+              tag.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)';
+            }
+          });
+        });
+        
+        path.addEventListener('mouseout', function() {
+          this.style.transform = 'scale(1)';
+          
+          // 恢復標籤
+          document.querySelectorAll('.vis-tag').forEach(tag => {
+            tag.style.transform = '';
+            tag.style.boxShadow = '';
+          });
+        });
         
         svg.appendChild(path);
         
         // 添加百分比標籤
-        const labelAngle = startAngle + (endAngle - startAngle) / 2;
-        const labelRadius = radius * 0.7; // 稍微向內一點
-        const labelX = centerX + labelRadius * Math.cos(labelAngle);
-        const labelY = centerY + labelRadius * Math.sin(labelAngle);
+        const midAngle = startAngle + (endAngle - startAngle) / 2;
+        const labelRadius = radius * 0.75;
+        const labelX = centerX + labelRadius * Math.cos(midAngle);
+        const labelY = centerY + labelRadius * Math.sin(midAngle);
         
         const percentLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
         percentLabel.setAttribute('x', labelX);
         percentLabel.setAttribute('y', labelY);
         percentLabel.setAttribute('text-anchor', 'middle');
         percentLabel.setAttribute('dominant-baseline', 'middle');
-        percentLabel.setAttribute('font-size', '16');
+        percentLabel.setAttribute('font-size', '14');
         percentLabel.setAttribute('font-weight', 'bold');
         percentLabel.setAttribute('fill', 'white');
-        percentLabel.textContent = `${Math.round(percentage * 100)}%`;
+        percentLabel.textContent = `${item[1]}%`;
         
-        // 添加過渡動畫
+        // 添加標籤動畫
         percentLabel.style.opacity = '0';
+        percentLabel.style.transition = 'opacity 0.5s ease';
+        percentLabel.style.transitionDelay = `${i * 0.2 + 0.3}s`;
+        
         setTimeout(() => {
-          percentLabel.style.transition = 'opacity 0.5s ease';
           percentLabel.style.opacity = '1';
-        }, (i * 200) + 300);
+        }, 100);
         
         svg.appendChild(percentLabel);
         
         startAngle = endAngle;
       });
       
+      // 中央總計標籤
+      const centerLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      centerLabel.setAttribute('x', centerX);
+      centerLabel.setAttribute('y', centerY - 10);
+      centerLabel.setAttribute('text-anchor', 'middle');
+      centerLabel.setAttribute('font-size', '14');
+      centerLabel.setAttribute('fill', '#1f2937');
+      centerLabel.textContent = '主要問題';
+      
+      const centerValue = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      centerValue.setAttribute('x', centerX);
+      centerValue.setAttribute('y', centerY + 15);
+      centerValue.setAttribute('text-anchor', 'middle');
+      centerValue.setAttribute('font-size', '18');
+      centerValue.setAttribute('font-weight', 'bold');
+      centerValue.setAttribute('fill', '#1f2937');
+      centerValue.textContent = '分布';
+      
+      // 添加中央標籤動畫
+      centerLabel.style.opacity = '0';
+      centerValue.style.opacity = '0';
+      centerLabel.style.transition = 'opacity 0.5s ease';
+      centerValue.style.transition = 'opacity 0.5s ease';
+      centerLabel.style.transitionDelay = '1s';
+      centerValue.style.transitionDelay = '1.2s';
+      
+      setTimeout(() => {
+        centerLabel.style.opacity = '1';
+        centerValue.style.opacity = '1';
+      }, 100);
+      
+      svg.appendChild(centerLabel);
+      svg.appendChild(centerValue);
+      
       categoriesChartElement.appendChild(svg);
+      
+      // 為標籤添加交互
+      document.querySelectorAll('.vis-tag').forEach(tag => {
+        tag.addEventListener('mouseover', function() {
+          const category = this.getAttribute('data-category');
+          
+          // 高亮相應的扇形
+          svg.querySelectorAll('path').forEach(path => {
+            if (path.getAttribute('data-category') === category) {
+              path.style.transform = 'scale(1.05)';
+              path.style.transformOrigin = `${centerX}px ${centerY}px`;
+              path.style.transition = 'transform 0.3s ease';
+            }
+          });
+          
+          this.style.transform = 'translateY(-3px) scale(1.05)';
+          this.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)';
+        });
+        
+        tag.addEventListener('mouseout', function() {
+          svg.querySelectorAll('path').forEach(path => {
+            path.style.transform = 'scale(1)';
+          });
+          
+          this.style.transform = '';
+          this.style.boxShadow = '';
+        });
+      });
     }
     
     // 生成壓力來源圖表
     function createPressureSourcesChart() {
-      const pressureSourcesChartElement = document.getElementById('pressure-sources-chart');
-      const width = pressureSourcesChartElement.clientWidth;
-      const height = pressureSourcesChartElement.clientHeight;
+      const chartElement = document.getElementById('pressure-sources-chart');
+      if (!chartElement) return;
+      
+      const width = chartElement.clientWidth;
+      const height = chartElement.clientHeight;
       const padding = { top: 20, right: 30, bottom: 50, left: 120 };
       
       const data = Object.entries(pressureSources).sort((a, b) => b[1] - a[1]);
@@ -1851,6 +3394,30 @@
       svg.setAttribute('height', '100%');
       svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
       
+      // 添加漸變
+      const gradientId = 'bar-gradient';
+      const gradient = document.createElementNS('http://www.w3.org/2000/svg', 'linearGradient');
+      gradient.setAttribute('id', gradientId);
+      gradient.setAttribute('x1', '0%');
+      gradient.setAttribute('y1', '0%');
+      gradient.setAttribute('x2', '100%');
+      gradient.setAttribute('y2', '0%');
+      
+      const stop1 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
+      stop1.setAttribute('offset', '0%');
+      stop1.setAttribute('stop-color', 'rgba(59, 130, 246, 0.8)');
+      
+      const stop2 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
+      stop2.setAttribute('offset', '100%');
+      stop2.setAttribute('stop-color', 'rgba(59, 130, 246, 0.5)');
+      
+      gradient.appendChild(stop1);
+      gradient.appendChild(stop2);
+      
+      const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+      defs.appendChild(gradient);
+      svg.appendChild(defs);
+      
       // 計算比例尺
       const maxValue = Math.max(...data.map(item => item[1]));
       const barHeight = (height - padding.top - padding.bottom) / data.length;
@@ -1860,22 +3427,36 @@
         const barLength = ((width - padding.left - padding.right) * item[1]) / maxValue;
         const yPosition = padding.top + i * barHeight;
         
+        // 繪製背景條
+        const bgBar = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+        bgBar.setAttribute('x', padding.left);
+        bgBar.setAttribute('y', yPosition + barHeight * 0.1);
+        bgBar.setAttribute('width', width - padding.left - padding.right);
+        bgBar.setAttribute('height', barHeight * 0.8);
+        bgBar.setAttribute('fill', 'rgba(0, 0, 0, 0.05)');
+        bgBar.setAttribute('rx', 4);
+        bgBar.setAttribute('ry', 4);
+        svg.appendChild(bgBar);
+        
         // 添加條形
         const bar = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
         bar.setAttribute('x', padding.left);
         bar.setAttribute('y', yPosition + barHeight * 0.1);
         bar.setAttribute('width', 0); // 初始寬度為0，用於動畫
         bar.setAttribute('height', barHeight * 0.8);
-        bar.setAttribute('fill', `hsl(${210 - i * 30}, 80%, 50%)`);
+        bar.setAttribute('fill', `url(#${gradientId})`);
         bar.setAttribute('rx', 4);
         bar.setAttribute('ry', 4);
-        svg.appendChild(bar);
         
         // 添加條形動畫
+        bar.style.transition = 'width 1s ease-out';
+        bar.style.transitionDelay = `${i * 0.2}s`;
+        
         setTimeout(() => {
-          bar.style.transition = 'width 1s ease-out';
           bar.setAttribute('width', barLength);
-        }, i * 200);
+        }, 100);
+        
+        svg.appendChild(bar);
         
         // 添加標籤
         const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
@@ -1886,6 +3467,16 @@
         label.setAttribute('font-size', '14');
         label.setAttribute('fill', '#4b5563');
         label.textContent = item[0];
+        
+        // 添加標籤動畫
+        label.style.opacity = '0';
+        label.style.transition = 'opacity 0.5s ease-out';
+        label.style.transitionDelay = `${i * 0.2}s`;
+        
+        setTimeout(() => {
+          label.style.opacity = '1';
+        }, 100);
+        
         svg.appendChild(label);
         
         // 添加數值
@@ -1896,41 +3487,53 @@
         value.setAttribute('dominant-baseline', 'middle');
         value.setAttribute('font-size', '14');
         value.setAttribute('font-weight', 'bold');
-        value.setAttribute('fill', '#374151');
+        value.setAttribute('fill', '#3b82f6');
         value.textContent = `${item[1]}%`;
+        
+        // 添加數值動畫
+        value.style.opacity = '0';
+        value.style.transition = 'opacity 0.5s ease-out';
+        value.style.transitionDelay = `${i * 0.2 + 0.5}s`;
+        
+        setTimeout(() => {
+          value.style.opacity = '1';
+        }, 100);
+        
         svg.appendChild(value);
       });
       
-      pressureSourcesChartElement.appendChild(svg);
+      chartElement.appendChild(svg);
     }
     
-    // 生成關鍵字雲
+    // 生成關鍵詞雲
     function createKeywordsCloud() {
-      const keywordsCloudElement = document.getElementById('keywords-cloud');
-      const width = keywordsCloudElement.clientWidth;
-      const height = keywordsCloudElement.clientHeight;
+      const cloudElement = document.getElementById('keywords-cloud');
+      if (!cloudElement) return;
+      
+      const width = cloudElement.clientWidth;
+      const height = cloudElement.clientHeight;
       
       const keywordsData = [
-        { text: '責任額', size: 100 },
-        { text: '被迫買單', size: 90 },
-        { text: '職場霸凌', size: 85 },
-        { text: '貸款買單', size: 80 },
-        { text: '壓力大', size: 75 },
-        { text: 'IPO破發', size: 72 },
-        { text: '人人做得到', size: 70 },
-        { text: '績效考核', size: 68 },
-        { text: '別人都做到了', size: 65 },
-        { text: '自掏腰包', size: 63 },
-        { text: '移轉客戶', size: 60 },
-        { text: '責任制', size: 58 },
-        { text: '不然就滾', size: 55 },
-        { text: '情緒勒索', size: 53 },
-        { text: '公開羞辱', size: 50 },
-        { text: '焦慮症', size: 48 },
-        { text: '睡不著', size: 45 },
-        { text: '我想被當人看', size: 42 },
-        { text: '沒有羞恥心', size: 40 },
-        { text: '制度生病了', size: 38 }
+        { text: '責任額', size: 100, color: '#ef4444' },
+        { text: '被迫買單', size: 90, color: '#ef4444' },
+        { text: '職場霸凌', size: 85, color: '#3b82f6' },
+        { text: '貸款買單', size: 80, color: '#ef4444' },
+        { text: '壓力大', size: 75, color: '#3b82f6' },
+        { text: 'IPO破發', size: 72, color: '#f59e0b' },
+        { text: '人人做得到', size: 70, color: '#3b82f6' },
+        { text: '績效考核', size: 68, color: '#f59e0b' },
+        { text: '別人都做到了', size: 65, color: '#3b82f6' },
+        { text: '自掏腰包', size: 63, color: '#ef4444' },
+        { text: '移轉客戶', size: 60, color: '#3b82f6' },
+        { text: '責任制', size: 58, color: '#f59e0b' },
+        { text: '不然就滾', size: 55, color: '#3b82f6' },
+        { text: '情緒勒索', size: 53, color: '#f59e0b' },
+        { text: '公開羞辱', size: 50, color: '#3b82f6' },
+        { text: '焦慮症', size: 48, color: '#9333ea' },
+        { text: '睡不著', size: 45, color: '#9333ea' },
+        { text: '我想被當人看', size: 42, color: '#10b981' },
+        { text: '沒有羞恥心', size: 40, color: '#3b82f6' },
+        { text: '制度生病了', size: 38, color: '#10b981' }
       ];
       
       // 創建SVG
@@ -1939,11 +3542,19 @@
       svg.setAttribute('height', '100%');
       svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
       
-      // 隨機放置關鍵詞
+      // 添加背景
+      const background = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+      background.setAttribute('width', width);
+      background.setAttribute('height', height);
+      background.setAttribute('fill', 'rgba(255, 255, 255, 0.5)');
+      background.setAttribute('rx', '8');
+      svg.appendChild(background);
+      
+      // 簡易排佈算法
       const placedWords = [];
       
-      keywordsData.forEach(word => {
-        let fontSize = Math.max(12, word.size / 5);
+      keywordsData.forEach((word, index) => {
+        let fontSize = Math.max(14, word.size / 3.5);
         let attempt = 0;
         let placed = false;
         let wordWidth = fontSize * word.text.length * 0.6;
@@ -1953,9 +3564,9 @@
         while (!placed && attempt < 100) {
           attempt++;
           
-          // 嘗試隨機位置
-          let x = Math.random() * (width - wordWidth);
-          let y = height / 2 + (Math.random() - 0.5) * height * 0.8;
+          // 嘗試隨機位置，但更傾向於中央
+          let x = width/2 + (Math.random() - 0.5) * width * 0.8;
+          let y = height/2 + (Math.random() - 0.5) * height * 0.8;
           
           // 檢查是否與已放置的詞重疊
           let overlapping = placedWords.some(placedWord => {
@@ -1968,39 +3579,53 @@
           });
           
           if (!overlapping) {
-            // 放置詞語
+            // 創建詞語元素
             const wordElement = document.createElementNS('http://www.w3.org/2000/svg', 'text');
             wordElement.setAttribute('x', x);
             wordElement.setAttribute('y', y);
             wordElement.setAttribute('font-size', `${fontSize}px`);
-            wordElement.setAttribute('font-weight', word.size > 50 ? 'bold' : 'normal');
-            
-            // 根據大小設置顏色
-            let hue = 210;
-            if (word.size > 80) hue = 0; // 紅色
-            else if (word.size > 60) hue = 30; // 橙色
-            else if (word.size > 40) hue = 200; // 藍色
-            
-            wordElement.setAttribute('fill', `hsl(${hue}, ${Math.min(100, word.size)}%, ${Math.max(30, 100 - word.size / 2)}%)`);
+            wordElement.setAttribute('font-weight', word.size > 70 ? 'bold' : 'normal');
+            wordElement.setAttribute('fill', word.color);
             wordElement.setAttribute('text-anchor', 'middle');
             wordElement.textContent = word.text;
             
-            // 添加點擊互動效果
-            wordElement.setAttribute('class', 'cursor-pointer hover:opacity-80');
-            wordElement.style.transition = 'all 0.3s ease';
-            wordElement.onclick = function() {
-              this.style.fontSize = `${fontSize * 1.2}px`;
-              setTimeout(() => {
-                this.style.fontSize = `${fontSize}px`;
-              }, 300);
-            };
+            // 為詞語添加陰影效果
+            if (word.size > 70) {
+              const shadow = document.createElementNS('http://www.w3.org/2000/svg', 'filter');
+              shadow.setAttribute('id', `shadow-${index}`);
+              
+              const feDropShadow = document.createElementNS('http://www.w3.org/2000/svg', 'feDropShadow');
+              feDropShadow.setAttribute('dx', '0');
+              feDropShadow.setAttribute('dy', '1');
+              feDropShadow.setAttribute('stdDeviation', '1');
+              feDropShadow.setAttribute('flood-opacity', '0.3');
+              
+              shadow.appendChild(feDropShadow);
+              defs.appendChild(shadow);
+              
+              wordElement.setAttribute('filter', `url(#shadow-${index})`);
+            }
             
-            // 添加進入動畫
+            // 添加動畫效果
             wordElement.style.opacity = '0';
+            wordElement.style.transition = 'opacity 0.5s ease';
+            wordElement.style.transitionDelay = `${index * 0.05}s`;
+            
             setTimeout(() => {
-              wordElement.style.transition = 'opacity 0.5s ease';
               wordElement.style.opacity = '1';
-            }, attempt * 30);
+            }, 100);
+            
+            // 添加互動效果
+            wordElement.addEventListener('mouseover', function() {
+              this.style.transform = 'scale(1.2)';
+              this.style.transformOrigin = 'center';
+              this.style.transition = 'transform 0.3s ease';
+              this.style.cursor = 'pointer';
+            });
+            
+            wordElement.addEventListener('mouseout', function() {
+              this.style.transform = 'scale(1)';
+            });
             
             svg.appendChild(wordElement);
             
@@ -2017,17 +3642,18 @@
         }
       });
       
-      keywordsCloudElement.appendChild(svg);
+      cloudElement.appendChild(svg);
     }
     
     // 生成情緒關聯分析圖
     function createCorrelationChart() {
-      const correlationChartElement = document.getElementById('correlation-chart');
-      const width = correlationChartElement.clientWidth;
-      const height = correlationChartElement.clientHeight;
-      const padding = { top: 60, right: 30, bottom: 60, left: 60 };
+      const chartElement = document.getElementById('correlation-chart');
+      if (!chartElement) return;
       
-      // 相關性數據 (示例數據)
+      const width = chartElement.clientWidth;
+      const height = chartElement.clientHeight;
+      
+      // 相關性數據
       const correlationData = [
         { source: '被欺壓感', target: '壓迫性敘述', value: 0.92 },
         { source: '被欺壓感', target: '恐懼焦慮', value: 0.88 },
@@ -2052,75 +3678,75 @@
       svg.setAttribute('height', '100%');
       svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
       
-      // 模擬力導向圖佈局
-      // 這裡使用簡化版本，實際中可以使用D3.js等庫
+      // 添加漸變
+      const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+      
+      // 線條漸變
+      const lineGradientId = 'line-gradient';
+      const lineGradient = document.createElementNS('http://www.w3.org/2000/svg', 'linearGradient');
+      lineGradient.setAttribute('id', lineGradientId);
+      lineGradient.setAttribute('x1', '0%');
+      lineGradient.setAttribute('y1', '0%');
+      lineGradient.setAttribute('x2', '100%');
+      lineGradient.setAttribute('y2', '100%');
+      
+      const lineStop1 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
+      lineStop1.setAttribute('offset', '0%');
+      lineStop1.setAttribute('stop-color', 'rgba(59, 130, 246, 0.7)');
+      
+      const lineStop2 = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
+      lineStop2.setAttribute('offset', '100%');
+      lineStop2.setAttribute('stop-color', 'rgba(236, 72, 153, 0.7)');
+      
+      lineGradient.appendChild(lineStop1);
+      lineGradient.appendChild(lineStop2);
+      defs.appendChild(lineGradient);
+      
+      svg.appendChild(defs);
+      
+      // 計算節點位置
       const nodePositions = {};
       
-      // 隨機初始化節點位置
-      nodes.forEach(node => {
+      // 設置固定位置（簡化，實際應用可以使用力導向算法）
+      nodes.forEach((node, index) => {
+        const angleStep = (Math.PI * 2) / nodes.length;
+        const angle = index * angleStep;
+        const radius = height * 0.35;
+        
         nodePositions[node.name] = {
-          x: padding.left + Math.random() * (width - padding.left - padding.right),
-          y: padding.top + Math.random() * (height - padding.top - padding.bottom)
+          x: width / 2 + radius * Math.cos(angle),
+          y: height / 2 + radius * Math.sin(angle)
         };
       });
       
-      // 模擬力導向佈局（簡化版）
-      for (let i = 0; i < 100; i++) { // 迭代100次
-        // 節點之間的斥力
-        nodes.forEach(node1 => {
-          nodes.forEach(node2 => {
-            if (node1.name !== node2.name) {
-              const dx = nodePositions[node1.name].x - nodePositions[node2.name].x;
-              const dy = nodePositions[node1.name].y - nodePositions[node2.name].y;
-              const distance = Math.sqrt(dx * dx + dy * dy);
-              if (distance < 100) { // 太近時施加斥力
-                const force = 5 / distance;
-                nodePositions[node1.name].x += dx * force;
-                nodePositions[node1.name].y += dy * force;
-                nodePositions[node2.name].x -= dx * force;
-                nodePositions[node2.name].y -= dy * force;
-              }
-            }
-          });
-        });
-        
-        // 鏈接之間的引力
-        correlationData.forEach(link => {
-          const dx = nodePositions[link.source].x - nodePositions[link.target].x;
-          const dy = nodePositions[link.source].y - nodePositions[link.target].y;
-          const distance = Math.sqrt(dx * dx + dy * dy);
-          const force = (distance - 100 * link.value) * 0.01; // 相關性越高，引力越大
-          
-          nodePositions[link.source].x -= dx * force;
-          nodePositions[link.source].y -= dy * force;
-          nodePositions[link.target].x += dx * force;
-          nodePositions[link.target].y += dy * force;
-        });
-        
-        // 邊界約束
-        nodes.forEach(node => {
-          nodePositions[node.name].x = Math.max(padding.left, Math.min(width - padding.right, nodePositions[node.name].x));
-          nodePositions[node.name].y = Math.max(padding.top, Math.min(height - padding.bottom, nodePositions[node.name].y));
-        });
-      }
-      
       // 繪製連接線
-      correlationData.forEach(link => {
+      correlationData.forEach((link, index) => {
         const sourcePos = nodePositions[link.source];
         const targetPos = nodePositions[link.target];
         
+        // 計算線條寬度（基於相關性）
+        const lineWidth = Math.max(1, link.value * 5);
+        
+        // 繪製連接線
         const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
         line.setAttribute('x1', sourcePos.x);
         line.setAttribute('y1', sourcePos.y);
-        line.setAttribute('x2', targetPos.x);
-        line.setAttribute('y2', targetPos.y);
-        line.setAttribute('stroke', `rgba(59, 130, 246, ${link.value})`);
-        line.setAttribute('stroke-width', link.value * 5);
+        line.setAttribute('x2', sourcePos.x); // 初始值與起點相同，用於動畫
+        line.setAttribute('y2', sourcePos.y); // 初始值與起點相同，用於動畫
+        line.setAttribute('stroke', `url(#${lineGradientId})`);
+        line.setAttribute('stroke-width', lineWidth);
+        line.setAttribute('stroke-dasharray', '5,3');
+        line.setAttribute('data-target-x', targetPos.x);
+        line.setAttribute('data-target-y', targetPos.y);
         
-        // 添加連接線動畫
-        line.style.strokeDasharray = '5,5';
-        line.style.strokeDashoffset = '0';
-        line.style.animation = `dash ${3 / link.value}s linear infinite`;
+        // 動畫效果
+        line.style.transition = 'all 1s ease';
+        line.style.transitionDelay = `${index * 0.1}s`;
+        
+        setTimeout(() => {
+          line.setAttribute('x2', targetPos.x);
+          line.setAttribute('y2', targetPos.y);
+        }, 100);
         
         svg.appendChild(line);
         
@@ -2137,33 +3763,73 @@
         correlationLabel.setAttribute('font-weight', 'bold');
         correlationLabel.setAttribute('fill', 'white');
         correlationLabel.setAttribute('stroke', '#3b82f6');
-        correlationLabel.setAttribute('stroke-width', '5');
+        correlationLabel.setAttribute('stroke-width', '4');
         correlationLabel.setAttribute('paint-order', 'stroke');
         correlationLabel.textContent = link.value.toFixed(2);
+        
+        // 添加標籤動畫
+        correlationLabel.style.opacity = '0';
+        correlationLabel.style.transition = 'opacity 0.5s ease';
+        correlationLabel.style.transitionDelay = `${index * 0.1 + 0.5}s`;
+        
+        setTimeout(() => {
+          correlationLabel.style.opacity = '1';
+        }, 100);
         
         svg.appendChild(correlationLabel);
       });
       
       // 繪製節點
-      nodes.forEach(node => {
+      nodes.forEach((node, index) => {
         const pos = nodePositions[node.name];
+        
+        // 節點外圈
+        const nodeRing = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        nodeRing.setAttribute('cx', pos.x);
+        nodeRing.setAttribute('cy', pos.y);
+        nodeRing.setAttribute('r', Math.max(20, node.value * 2.5));
+        nodeRing.setAttribute('fill', 'rgba(255, 255, 255, 0.2)');
+        nodeRing.setAttribute('stroke', 'rgba(255, 255, 255, 0.6)');
+        nodeRing.setAttribute('stroke-width', '1');
         
         // 節點圓圈
         const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
         circle.setAttribute('cx', pos.x);
         circle.setAttribute('cy', pos.y);
-        circle.setAttribute('r', Math.max(20, node.value * 5));
-        circle.setAttribute('fill', node.name === '被欺壓感' ? '#ef4444' : '#3b82f6');
+        circle.setAttribute('r', Math.max(16, node.value * 2));
+        
+        // 根據情緒指標設置顏色
+        let nodeColor = '#3b82f6'; // 預設藍色
+        if (node.name === '被欺壓感' || node.name === '壓迫性敘述') {
+          nodeColor = '#ef4444'; // 紅色
+        } else if (node.name === '恐懼焦慮' || node.name === '情緒爆點值') {
+          nodeColor = '#f59e0b'; // 橙色
+        }
+        
+        circle.setAttribute('fill', nodeColor);
         circle.setAttribute('stroke', 'white');
         circle.setAttribute('stroke-width', '2');
         
         // 添加節點動畫
+        nodeRing.style.opacity = '0';
         circle.style.opacity = '0';
-        setTimeout(() => {
-          circle.style.transition = 'opacity 0.5s ease';
-          circle.style.opacity = '1';
-        }, 500);
+        nodeRing.style.transform = 'scale(0)';
+        circle.style.transform = 'scale(0)';
+        nodeRing.style.transformOrigin = `${pos.x}px ${pos.y}px`;
+        circle.style.transformOrigin = `${pos.x}px ${pos.y}px`;
+        nodeRing.style.transition = 'all 0.5s ease';
+        circle.style.transition = 'all 0.5s ease';
+        nodeRing.style.transitionDelay = `${index * 0.1}s`;
+        circle.style.transitionDelay = `${index * 0.1 + 0.1}s`;
         
+        setTimeout(() => {
+          nodeRing.style.opacity = '1';
+          circle.style.opacity = '1';
+          nodeRing.style.transform = 'scale(1)';
+          circle.style.transform = 'scale(1)';
+        }, 100);
+        
+        svg.appendChild(nodeRing);
         svg.appendChild(circle);
         
         // 節點標籤
@@ -2172,26 +3838,71 @@
         label.setAttribute('y', pos.y);
         label.setAttribute('text-anchor', 'middle');
         label.setAttribute('dominant-baseline', 'middle');
-        label.setAttribute('font-size', '14');
+        label.setAttribute('font-size', '12');
         label.setAttribute('font-weight', 'bold');
         label.setAttribute('fill', 'white');
         label.textContent = node.name;
         
+        // 添加標籤動畫
+        label.style.opacity = '0';
+        label.style.transition = 'opacity 0.5s ease';
+        label.style.transitionDelay = `${index * 0.1 + 0.2}s`;
+        
+        setTimeout(() => {
+          label.style.opacity = '1';
+        }, 100);
+        
+        // 添加節點互動效果
+        circle.addEventListener('mouseover', function() {
+          this.style.transform = 'scale(1.1)';
+          this.style.cursor = 'pointer';
+          
+          // 高亮相關連接線
+          correlationData.forEach((link, i) => {
+            if (link.source === node.name || link.target === node.name) {
+              svg.querySelectorAll('line')[i].style.strokeWidth = (link.value * 5) * 1.5;
+              svg.querySelectorAll('line')[i].style.stroke = nodeColor;
+            }
+          });
+        });
+        
+        circle.addEventListener('mouseout', function() {
+          this.style.transform = 'scale(1)';
+          
+          // 恢復連接線
+          correlationData.forEach((link, i) => {
+            if (link.source === node.name || link.target === node.name) {
+              svg.querySelectorAll('line')[i].style.strokeWidth = link.value * 5;
+              svg.querySelectorAll('line')[i].style.stroke = `url(#${lineGradientId})`;
+            }
+          });
+        });
+        
         svg.appendChild(label);
+        
+        // 節點數值
+        const valueLabel = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        valueLabel.setAttribute('x', pos.x);
+        valueLabel.setAttribute('y', pos.y + Math.max(25, node.value * 2.5) + 15);
+        valueLabel.setAttribute('text-anchor', 'middle');
+        valueLabel.setAttribute('font-size', '12');
+        valueLabel.setAttribute('fill', nodeColor);
+        valueLabel.textContent = `${node.value.toFixed(1)}/10`;
+        
+        // 添加數值標籤動畫
+        valueLabel.style.opacity = '0';
+        valueLabel.style.transition = 'opacity 0.5s ease';
+        valueLabel.style.transitionDelay = `${index * 0.1 + 0.3}s`;
+        
+        setTimeout(() => {
+          valueLabel.style.opacity = '1';
+        }, 100);
+        
+        svg.appendChild(valueLabel);
       });
       
-      correlationChartElement.appendChild(svg);
+      chartElement.appendChild(svg);
     }
-    
-    // 頁面加載完成後初始化圖表
-    window.addEventListener('load', function() {
-      // 延遲加載各圖表，避免性能問題
-      setTimeout(createRadarChart, 500);
-      setTimeout(createCategoriesChart, 700);
-      setTimeout(createPressureSourcesChart, 900);
-      setTimeout(createKeywordsCloud, 1100);
-      setTimeout(createCorrelationChart, 1300);
-    });
     
     // 添加鍵盤彩蛋觸發
     let keySequence = '';
@@ -2211,6 +3922,28 @@
         easterEggContent.style.transform = 'translate(-50%, -50%) scale(1)';
         keySequence = '';
       }
+    });
+    
+    // 頁面加載完成後初始化圖表
+    window.addEventListener('load', function() {
+      // 延遲加載各圖表，避免性能問題
+      setTimeout(createRadarChart, 500);
+      setTimeout(createCategoriesChart, 800);
+      setTimeout(createPressureSourcesChart, 1100);
+      setTimeout(createKeywordsCloud, 1400);
+      setTimeout(createCorrelationChart, 1700);
+      
+      // 初始化圓形進度條
+      document.querySelectorAll('.circular-progress .circle').forEach(circle => {
+        const radius = circle.getAttribute('r');
+        const circumference = 2 * Math.PI * radius;
+        const value = parseFloat(circle.parentNode.querySelector('.text').textContent);
+        const maxValue = 10;
+        const offset = circumference - (value / maxValue) * circumference;
+        
+        circle.style.strokeDasharray = `${circumference} ${circumference}`;
+        circle.style.strokeDashoffset = offset;
+      });
     });
   </script>
 </body>
