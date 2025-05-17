@@ -162,30 +162,85 @@ table tbody tr:hover {
 /* 彩蛋觸發點呼吸效果 */
 .secret-trigger {
   position: fixed;
-  bottom: 20px;
-  left: 20px;
+  bottom: 5px;
+  right: 5px;
   width: 10px;
   height: 10px;
-  background-color: rgba(14, 165, 233, 0.7);
-  border-radius: 50%;
-  z-index: 50;
   cursor: pointer;
-  animation: breathe 2s infinite alternate;
+  z-index: 9999;
 }
 
-.secret-trigger:hover {
-  background-color: rgba(14, 165, 233, 1);
-  box-shadow: 0 0 15px rgba(14, 165, 233, 0.8);
+#mood-trigger {
+  transform-origin: center;
+  transition: all 0.3s ease;
 }
 
-@keyframes breathe {
-  0% {
-    transform: scale(1);
-    opacity: 0.3;
+#mood-trigger:hover {
+  transform: scale(1.2) rotate(10deg);
+}
+
+.particle {
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0.8;
+  pointer-events: none;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
   }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes glow {
+  0%,
   100% {
-    transform: scale(1.2);
-    opacity: 0.5;
+    box-shadow: 0 0 5px rgba(255, 215, 0, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
+  }
+}
+
+#easter-egg-dialog .bg-white {
+  animation: fadeInDown 0.3s ease forwards;
+}
+
+#quote-text,
+#inner-thought-text {
+  min-height: 3rem;
+}
+
+#quote-text::after,
+#inner-thought-text::after {
+  content: "|";
+  display: inline-block;
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
   }
 }
 
@@ -701,20 +756,39 @@ th.sort-desc i.fas {
   border-bottom-right-radius: 8px;
 }
 
-/* 圖表樣式優化 */
+/* 圖表容器樣式 */
 .chart-container {
   position: relative;
-  border-radius: 8px;
-  overflow: hidden;
-  padding: 10px;
-  background-color: rgba(255, 255, 255, 0.7);
-  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.03);
-}
-
-.chart-container canvas {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 0.75rem;
+  padding: 1rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
   transition: all 0.3s ease;
 }
 
-.chart-container:hover canvas {
-  transform: scale(1.01);
+.dark .chart-container {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.chart-container:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.chart-container canvas {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* 確保圖表容器在不同尺寸下保持合適的比例 */
+@media (max-width: 768px) {
+  .chart-container {
+    min-height: 300px;
+  }
+
+  .chart-container.radar-chart-inner {
+    min-height: 350px;
+  }
 }

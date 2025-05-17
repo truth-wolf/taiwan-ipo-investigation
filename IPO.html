@@ -1114,10 +1114,10 @@
                 </span>
               </div>
             </div>
-            <div class="radar-chart hidden-initially">
-              <div class="radar-chart-inner" id="radar-chart">
-                <!-- 雷達圖將由JavaScript生成 -->
-              </div>
+            <div
+              class="chart-container radar-chart-inner relative h-[400px] w-full mb-8"
+            >
+              <canvas id="radar-chart"></canvas>
             </div>
           </div>
 
@@ -1144,8 +1144,10 @@
                 </span>
               </div>
             </div>
-            <div id="categories-chart" class="h-64 md:h-72 hidden-initially">
-              <!-- 類別圖表將由JavaScript生成 -->
+            <div
+              class="chart-container relative h-64 md:h-72 hidden-initially mb-8"
+            >
+              <canvas id="categories-chart"></canvas>
             </div>
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
               <div
@@ -1811,8 +1813,10 @@
                 </button>
               </div>
 
-              <div class="aspect-[4/3] w-full" id="emotion-radar-chart">
-                <!-- 雷達圖將由JavaScript生成 -->
+              <div
+                class="chart-container radar-chart-inner relative h-[400px] w-full mb-8"
+              >
+                <canvas id="emotion-radar-chart"></canvas>
               </div>
             </div>
           </div>
@@ -2883,6 +2887,151 @@
 
     <!-- 彩蛋觸發器 -->
     <div id="secret-trigger" class="secret-trigger"></div>
+
+    <!-- 多元彩蛋系統 -->
+    <!-- 彩蛋：IPO真心話對話框 -->
+    <div
+      id="easter-egg-dialog"
+      class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 hidden flex-col items-center justify-center"
+    >
+      <div
+        class="bg-white dark:bg-neutral-800 rounded-2xl shadow-2xl max-w-2xl w-full mx-4 overflow-hidden transform transition-all duration-500"
+      >
+        <div class="p-6 md:p-8">
+          <div class="flex justify-between items-center mb-6">
+            <h3
+              class="text-xl font-bold text-primary-600 dark:text-primary-400 flex items-center"
+            >
+              <i class="fas fa-comment-dots mr-2"></i>
+              <span id="easter-egg-title">金融業真心話</span>
+            </h3>
+            <button
+              id="easter-egg-close"
+              class="w-8 h-8 flex items-center justify-center rounded-full bg-neutral-100 dark:bg-neutral-700 text-neutral-600 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-600"
+            >
+              <i class="fas fa-xmark"></i>
+            </button>
+          </div>
+
+          <div id="easter-egg-content" class="relative min-h-[200px]">
+            <div
+              class="absolute inset-0 flex items-center justify-center"
+              id="easter-egg-loading"
+            >
+              <div
+                class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-500"
+              ></div>
+            </div>
+
+            <div id="easter-egg-message" class="hidden">
+              <div class="flex items-start mb-6">
+                <div
+                  class="w-12 h-12 rounded-full bg-primary-100 dark:bg-primary-900/50 flex items-center justify-center text-primary-600 dark:text-primary-400 mr-4 flex-shrink-0"
+                >
+                  <i class="fas fa-user-tie text-xl"></i>
+                </div>
+                <div
+                  class="bg-primary-50 dark:bg-primary-900/20 rounded-lg p-4 relative"
+                >
+                  <p
+                    id="quote-text"
+                    class="text-neutral-700 dark:text-neutral-300 text-base md:text-lg"
+                  ></p>
+                  <div
+                    class="absolute -bottom-2 left-4 transform rotate-45 w-4 h-4 bg-primary-50 dark:bg-primary-900/20"
+                  ></div>
+                </div>
+              </div>
+
+              <div class="flex items-start mb-6">
+                <div
+                  class="bg-secondary-50 dark:bg-secondary-900/20 rounded-lg p-4 relative mr-4"
+                >
+                  <p
+                    id="inner-thought-text"
+                    class="text-neutral-700 dark:text-neutral-300 text-base md:text-lg italic"
+                  ></p>
+                  <div
+                    class="absolute -bottom-2 right-4 transform rotate-45 w-4 h-4 bg-secondary-50 dark:bg-secondary-900/20"
+                  ></div>
+                </div>
+                <div
+                  class="w-12 h-12 rounded-full bg-secondary-100 dark:bg-secondary-900/50 flex items-center justify-center text-secondary-600 dark:text-secondary-400 flex-shrink-0"
+                >
+                  <i class="fas fa-brain text-xl"></i>
+                </div>
+              </div>
+
+              <div class="mt-4 flex flex-wrap gap-2">
+                <div
+                  class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-400"
+                >
+                  <i class="fas fa-compress-alt mr-1"></i>
+                  <span>被欺壓感: </span>
+                  <span id="pressure-score" class="ml-1 font-bold"></span>
+                </div>
+                <div
+                  class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-400"
+                >
+                  <i class="fas fa-exclamation-circle mr-1"></i>
+                  <span>恐懼焦慮: </span>
+                  <span id="anxiety-score" class="ml-1 font-bold"></span>
+                </div>
+                <div
+                  class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-yellow-100 dark:bg-yellow-900/30 text-yellow-800 dark:text-yellow-400"
+                >
+                  <i class="fas fa-bolt mr-1"></i>
+                  <span>語氣強度: </span>
+                  <span id="intensity-score" class="ml-1 font-bold"></span>
+                </div>
+                <div
+                  class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-400"
+                >
+                  <i class="fas fa-bomb mr-1"></i>
+                  <span>NLP分數: </span>
+                  <span id="nlp-score" class="ml-1 font-bold"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-6 flex justify-between">
+            <button
+              id="easter-egg-prev"
+              class="px-4 py-2 bg-neutral-200 dark:bg-neutral-700 hover:bg-neutral-300 dark:hover:bg-neutral-600 rounded-lg text-sm font-medium transition-colors"
+            >
+              <i class="fas fa-arrow-left mr-1"></i> 上一個
+            </button>
+            <button
+              id="easter-egg-understand"
+              class="px-5 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-lg text-sm font-medium transition-colors"
+            >
+              我了解了
+            </button>
+            <button
+              id="easter-egg-next"
+              class="px-4 py-2 bg-neutral-200 dark:bg-neutral-700 hover:bg-neutral-300 dark:hover:bg-neutral-600 rounded-lg text-sm font-medium transition-colors"
+            >
+              下一個 <i class="fas fa-arrow-right ml-1"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 彩蛋：心情動態效果 -->
+    <div
+      id="mood-particles"
+      class="fixed inset-0 pointer-events-none z-40 hidden"
+    ></div>
+
+    <!-- 彩蛋：隱藏表情按鈕 -->
+    <div
+      id="mood-trigger"
+      class="fixed bottom-24 right-6 w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm shadow-lg flex items-center justify-center opacity-0 scale-0 transition-all duration-300 cursor-pointer hover:scale-110 z-40"
+    >
+      <i class="fas fa-smile text-yellow-500"></i>
+    </div>
 
     <!-- JavaScript引用 -->
     <script src="main.js"></script>
