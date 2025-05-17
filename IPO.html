@@ -1,0 +1,2890 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <meta name="theme-color" content="#0369a1" />
+    <meta
+      name="description"
+      content="揭露金融業IPO責任額真相，基於50位金融從業人員的真實心聲與訴求"
+    />
+    <title>金融業聲音 - IPO責任額壓力分析</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+TC:wght@300;400;500;700;900&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollToPlugin.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lottie-web@5.12.2/build/player/lottie.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
+    />
+
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: {
+                50: "#f0f9ff",
+                100: "#e0f2fe",
+                200: "#bae6fd",
+                300: "#7dd3fc",
+                400: "#38bdf8",
+                500: "#0ea5e9",
+                600: "#0284c7",
+                700: "#0369a1",
+                800: "#075985",
+                900: "#0c4a6e",
+                950: "#082f49",
+              },
+              secondary: {
+                50: "#fdf2f8",
+                100: "#fce7f3",
+                200: "#fbcfe8",
+                300: "#f9a8d4",
+                400: "#f472b6",
+                500: "#ec4899",
+                600: "#db2777",
+                700: "#be185d",
+                800: "#9d174d",
+                900: "#831843",
+                950: "#500724",
+              },
+              tertiary: {
+                50: "#f5f3ff",
+                100: "#ede9fe",
+                200: "#ddd6fe",
+                300: "#c4b5fd",
+                400: "#a78bfa",
+                500: "#8b5cf6",
+                600: "#7c3aed",
+                700: "#6d28d9",
+                800: "#5b21b6",
+                900: "#4c1d95",
+                950: "#2e1065",
+              },
+              neutral: {
+                50: "#f9fafb",
+                100: "#f3f4f6",
+                200: "#e5e7eb",
+                300: "#d1d5db",
+                400: "#9ca3af",
+                500: "#6b7280",
+                600: "#4b5563",
+                700: "#374151",
+                800: "#1f2937",
+                900: "#111827",
+                950: "#030712",
+              },
+              emotion: {
+                despair: "#7f1d1d",
+                anxiety: "#854d0e",
+                pressure: "#1e3a8a",
+                helpless: "#4c1d95",
+                silence: "#1e40af",
+                shame: "#b91c1c",
+                stress: "#7e22ce",
+                fear: "#c2410c",
+                hopeless: "#1e40af",
+                outraged: "#9f1239",
+              },
+              glass: {
+                white: "rgba(255, 255, 255, 0.8)",
+                blue: "rgba(14, 165, 233, 0.15)",
+                red: "rgba(239, 68, 68, 0.15)",
+                purple: "rgba(126, 34, 206, 0.15)",
+                dark: "rgba(15, 23, 42, 0.8)",
+              },
+            },
+            fontFamily: {
+              sans: ["Inter", "Noto Sans TC", "sans-serif"],
+              title: ["Noto Sans TC", "Inter", "sans-serif"],
+            },
+            keyframes: {
+              "fade-in-up": {
+                "0%": {
+                  opacity: "0",
+                  transform: "translateY(20px)",
+                },
+                "100%": {
+                  opacity: "1",
+                  transform: "translateY(0)",
+                },
+              },
+              "pulse-custom": {
+                "0%, 100%": {
+                  opacity: "1",
+                },
+                "50%": {
+                  opacity: "0.5",
+                },
+              },
+              "float-slow": {
+                "0%, 100%": {
+                  transform: "translateY(0)",
+                },
+                "50%": {
+                  transform: "translateY(-15px)",
+                },
+              },
+              "scale-in": {
+                "0%": {
+                  transform: "scale(0.5)",
+                  opacity: "0",
+                },
+                "100%": {
+                  transform: "scale(1)",
+                  opacity: "1",
+                },
+              },
+              "rotate-slow": {
+                "0%": {
+                  transform: "rotate(0deg)",
+                },
+                "100%": {
+                  transform: "rotate(360deg)",
+                },
+              },
+              "ping-slow": {
+                "75%, 100%": {
+                  transform: "scale(1.2)",
+                  opacity: "0",
+                },
+              },
+              shimmer: {
+                "0%": { backgroundPosition: "-200% 0" },
+                "100%": { backgroundPosition: "200% 0" },
+              },
+            },
+            animation: {
+              "fade-in-up": "fade-in-up 0.5s ease-out forwards",
+              "pulse-custom": "pulse-custom 2s infinite",
+              "float-slow": "float-slow 6s ease-in-out infinite",
+              "scale-in": "scale-in 0.5s ease-out forwards",
+              "rotate-slow": "rotate-slow 12s linear infinite",
+              "ping-slow": "ping-slow 2s cubic-bezier(0, 0, 0.2, 1) infinite",
+              shimmer: "shimmer 3s infinite linear",
+            },
+            backgroundImage: {
+              "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
+              "gradient-conic":
+                "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
+              shimmer:
+                "linear-gradient(90deg, transparent, rgba(255,255,255,0.8), transparent)",
+            },
+            boxShadow: {
+              glass: "0 4px 30px rgba(0, 0, 0, 0.1)",
+              "glass-strong": "0 8px 32px rgba(0, 0, 0, 0.12)",
+              neon: "0 0 5px rgba(14, 165, 233, 0.5), 0 0 20px rgba(14, 165, 233, 0.3)",
+              "neon-red":
+                "0 0 5px rgba(239, 68, 68, 0.5), 0 0 20px rgba(239, 68, 68, 0.3)",
+              brutal: "5px 5px 0px #000000",
+              "brutal-sm": "3px 3px 0px #000000",
+            },
+            borderRadius: {
+              xl: "1rem",
+              "2xl": "1.5rem",
+              "3xl": "2rem",
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      /* 核心樣式 */
+      body {
+        overflow-x: hidden;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        scroll-behavior: smooth;
+      }
+
+      /* 區塊樣式 */
+      .glass-card {
+        background: rgba(255, 255, 255, 0.7);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+      }
+
+      .glass-card-dark {
+        background: rgba(15, 23, 42, 0.7);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .intense-card {
+        background: rgba(239, 68, 68, 0.05);
+        backdrop-filter: blur(8px);
+        border-left: 4px solid #ef4444;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      }
+
+      .intense-card:hover {
+        box-shadow: 0 10px 25px rgba(239, 68, 68, 0.15);
+        transform: translateY(-5px) scale(1.01);
+      }
+
+      .pressure-card {
+        background: rgba(59, 130, 246, 0.05);
+        backdrop-filter: blur(8px);
+        border-left: 4px solid #3b82f6;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      }
+
+      .pressure-card:hover {
+        box-shadow: 0 10px 25px rgba(59, 130, 246, 0.15);
+        transform: translateY(-5px) scale(1.01);
+      }
+
+      .anxiety-card {
+        background: rgba(126, 34, 206, 0.05);
+        backdrop-filter: blur(8px);
+        border-left: 4px solid #7e22ce;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      }
+
+      .anxiety-card:hover {
+        box-shadow: 0 10px 25px rgba(126, 34, 206, 0.15);
+        transform: translateY(-5px) scale(1.01);
+      }
+
+      /* 現代化卡片 */
+      .modern-card {
+        position: relative;
+        overflow: hidden;
+        transition: all 0.5s ease;
+        border: 1px solid #e5e7eb;
+      }
+
+      .modern-card::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          to right,
+          transparent 0%,
+          rgba(255, 255, 255, 0.4) 50%,
+          transparent 100%
+        );
+        background-size: 200% 100%;
+        background-position: -100% 0;
+        transition: background-position 0.7s ease-in-out;
+        pointer-events: none;
+      }
+
+      .modern-card:hover::after {
+        background-position: 100% 0;
+      }
+
+      /* 進度指示器 */
+      .scroll-indicator {
+        height: 4px;
+        background: linear-gradient(90deg, #0ea5e9, #8b5cf6);
+        width: 0%;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 1000;
+        transition: width 0.2s ease-out;
+        box-shadow: 0 0 8px rgba(14, 165, 233, 0.5);
+      }
+
+      /* 引言卡片 */
+      .quote-card {
+        position: relative;
+        transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        overflow: hidden;
+      }
+
+      .quote-card::before {
+        content: "\201C";
+        position: absolute;
+        top: -1rem;
+        left: -0.5rem;
+        font-size: 5rem;
+        color: rgba(59, 130, 246, 0.1);
+        font-family: Georgia, serif;
+        transition: all 0.3s ease;
+      }
+
+      .quote-card:hover::before {
+        transform: translate(0.3rem, 0.3rem) rotate(5deg);
+        color: rgba(59, 130, 246, 0.15);
+      }
+
+      .quote-card:hover {
+        transform: translateY(-5px);
+      }
+
+      /* 初始隱藏用於滾動觸發動畫 */
+      .hidden-initially {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: opacity 0.6s ease, transform 0.6s ease;
+      }
+
+      /* 雷達圖樣式 */
+      .radar-chart {
+        position: relative;
+        width: 100%;
+        padding-top: 100%;
+      }
+
+      .radar-chart-inner {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+      }
+
+      .radar-chart-line {
+        stroke-dasharray: 1000;
+        stroke-dashoffset: 1000;
+        animation: dash 1.8s ease-in-out forwards;
+        filter: drop-shadow(0 0 3px rgba(59, 130, 246, 0.5));
+      }
+
+      @keyframes dash {
+        to {
+          stroke-dashoffset: 0;
+        }
+      }
+
+      /* 背景動畫 */
+      .moving-bg {
+        background: linear-gradient(120deg, #f0f9ff, #e0f2fe, #bae6fd, #ede9fe);
+        background-size: 400% 400%;
+        animation: moving-bg-animation 25s ease infinite;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .moving-bg::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: radial-gradient(
+            circle at 20% 30%,
+            rgba(100, 116, 139, 0.08) 0%,
+            transparent 50%
+          ),
+          radial-gradient(
+            circle at 80% 70%,
+            rgba(14, 165, 233, 0.08) 0%,
+            transparent 50%
+          );
+      }
+
+      @keyframes moving-bg-animation {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+
+      /* 捲動指示器 */
+      .scroll-down-indicator {
+        animation: scroll-down 2s ease-in-out infinite;
+        position: relative;
+      }
+
+      .scroll-down-indicator::after {
+        content: "";
+        position: absolute;
+        top: -20px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: radial-gradient(
+          circle,
+          rgba(14, 165, 233, 0.1) 0%,
+          transparent 70%
+        );
+        animation: ping-slow 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+      }
+
+      @keyframes scroll-down {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(10px);
+        }
+      }
+
+      /* Shimmer 效果 */
+      .shimmer {
+        position: relative;
+        overflow: hidden;
+      }
+
+      .shimmer::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        background-image: linear-gradient(
+          90deg,
+          rgba(255, 255, 255, 0) 0%,
+          rgba(255, 255, 255, 0.6) 50%,
+          rgba(255, 255, 255, 0) 100%
+        );
+        background-size: 200% 100%;
+        animation: shimmer 2s infinite;
+      }
+
+      @keyframes shimmer {
+        0% {
+          background-position: -200% 0;
+        }
+        100% {
+          background-position: 200% 0;
+        }
+      }
+
+      /* 手機優化 */
+      @media (max-width: 768px) {
+        .emotion-tag {
+          padding: 0.2rem 0.5rem;
+          font-size: 0.7rem;
+        }
+
+        .typewriter {
+          white-space: normal;
+          border-right: none;
+          animation: none;
+        }
+
+        .glass-card {
+          backdrop-filter: blur(8px);
+          -webkit-backdrop-filter: blur(8px);
+        }
+      }
+    </style>
+  </head>
+  <body class="font-sans bg-gray-50 text-neutral-800">
+    <!-- 捲動進度條 -->
+    <div class="scroll-indicator"></div>
+
+    <!-- 導航欄 -->
+    <nav
+      class="sticky top-0 z-50 backdrop-blur-xl bg-white/90 shadow-md transition-all duration-300"
+    >
+      <div class="container mx-auto px-4 py-3">
+        <div class="flex justify-between items-center">
+          <a href="#" class="flex items-center gap-3 group">
+            <div
+              class="relative w-10 h-10 flex items-center justify-center bg-gradient-to-br from-primary-500 to-primary-700 text-white rounded-lg shadow-md overflow-hidden"
+            >
+              <i class="fas fa-chart-line text-lg"></i>
+              <div
+                class="absolute inset-0 bg-primary-600 opacity-0 group-hover:opacity-30 transition-opacity"
+              ></div>
+            </div>
+            <div class="relative">
+              <span
+                class="text-lg md:text-xl font-bold text-primary-700 group-hover:text-primary-600 transition-colors"
+                >金融業心聲</span
+              >
+              <span
+                class="absolute -bottom-1 left-0 w-full h-[3px] bg-gradient-to-r from-primary-500 to-tertiary-500 rounded-full"
+              ></span>
+            </div>
+          </a>
+
+          <div class="hidden md:flex items-center space-x-1">
+            <a
+              href="#overview"
+              class="nav-link px-3 py-2 rounded-lg text-neutral-600 hover:text-primary-600 hover:bg-primary-50 transition-all duration-300"
+            >
+              <i class="fas fa-chart-pie mr-1.5 text-primary-500"></i
+              ><span>總覽</span>
+            </a>
+            <a
+              href="#top-quotes"
+              class="nav-link px-3 py-2 rounded-lg text-neutral-600 hover:text-primary-600 hover:bg-primary-50 transition-all duration-300"
+            >
+              <i class="fas fa-quote-left mr-1.5 text-primary-500"></i
+              ><span>高分語錄</span>
+            </a>
+            <a
+              href="#emotion-analysis"
+              class="nav-link px-3 py-2 rounded-lg text-neutral-600 hover:text-primary-600 hover:bg-primary-50 transition-all duration-300"
+            >
+              <i class="fas fa-brain mr-1.5 text-primary-500"></i
+              ><span>情緒分析</span>
+            </a>
+            <a
+              href="#report"
+              class="nav-link px-3 py-2 rounded-lg text-neutral-600 hover:text-primary-600 hover:bg-primary-50 transition-all duration-300"
+            >
+              <i class="fas fa-newspaper mr-1.5 text-primary-500"></i
+              ><span>報導大綱</span>
+            </a>
+            <a
+              href="#recommendations"
+              class="nav-link px-3 py-2 rounded-lg text-neutral-600 hover:text-primary-600 hover:bg-primary-50 transition-all duration-300"
+            >
+              <i class="fas fa-lightbulb mr-1.5 text-primary-500"></i
+              ><span>改進建議</span>
+            </a>
+          </div>
+
+          <!-- 分享按鈕 -->
+          <div class="hidden md:flex">
+            <button
+              class="share-btn ml-2 flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-primary-500 to-tertiary-500 text-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
+            >
+              <i class="fas fa-share-nodes"></i>
+              <span>分享</span>
+            </button>
+          </div>
+
+          <!-- 手機版選單按鈕 -->
+          <div class="flex md:hidden">
+            <button
+              id="menu-button"
+              class="w-10 h-10 flex items-center justify-center rounded-full bg-gradient-to-r from-primary-50 to-tertiary-50 text-primary-600 hover:bg-primary-100 transition-all duration-300 focus:outline-none"
+              aria-label="開啟選單"
+            >
+              <i class="fas fa-bars"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 手機版選單 -->
+      <div
+        id="mobile-menu"
+        class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden"
+        aria-hidden="true"
+      >
+        <div
+          class="h-full w-[85%] max-w-sm bg-white shadow-2xl ml-auto flex flex-col transition-transform duration-300 transform translate-x-0"
+        >
+          <div class="flex justify-between items-center p-5 border-b">
+            <div class="flex items-center gap-3">
+              <div
+                class="w-10 h-10 rounded-full bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center text-white"
+              >
+                <i class="fas fa-chart-line"></i>
+              </div>
+              <span class="font-bold text-xl text-neutral-800">金融業心聲</span>
+            </div>
+            <button
+              id="close-menu"
+              class="w-9 h-9 flex items-center justify-center rounded-full bg-neutral-100 text-neutral-600 hover:bg-neutral-200"
+            >
+              <i class="fas fa-xmark"></i>
+            </button>
+          </div>
+
+          <div class="flex-1 overflow-y-auto py-3">
+            <div class="space-y-1 px-3">
+              <a
+                href="#overview"
+                class="mobile-nav-link flex items-center p-3 rounded-xl hover:bg-primary-50 text-neutral-700"
+              >
+                <div
+                  class="w-10 h-10 rounded-full bg-primary-100 flex items-center justify-center text-primary-600 mr-3"
+                >
+                  <i class="fas fa-chart-pie"></i>
+                </div>
+                <span class="font-medium">總覽</span>
+              </a>
+              <a
+                href="#top-quotes"
+                class="mobile-nav-link flex items-center p-3 rounded-xl hover:bg-primary-50 text-neutral-700"
+              >
+                <div
+                  class="w-10 h-10 rounded-full bg-primary-100 flex items-center justify-center text-primary-600 mr-3"
+                >
+                  <i class="fas fa-quote-left"></i>
+                </div>
+                <span class="font-medium">高分語錄</span>
+              </a>
+              <a
+                href="#emotion-analysis"
+                class="mobile-nav-link flex items-center p-3 rounded-xl hover:bg-primary-50 text-neutral-700"
+              >
+                <div
+                  class="w-10 h-10 rounded-full bg-primary-100 flex items-center justify-center text-primary-600 mr-3"
+                >
+                  <i class="fas fa-brain"></i>
+                </div>
+                <span class="font-medium">情緒分析</span>
+              </a>
+              <a
+                href="#report"
+                class="mobile-nav-link flex items-center p-3 rounded-xl hover:bg-primary-50 text-neutral-700"
+              >
+                <div
+                  class="w-10 h-10 rounded-full bg-primary-100 flex items-center justify-center text-primary-600 mr-3"
+                >
+                  <i class="fas fa-newspaper"></i>
+                </div>
+                <span class="font-medium">報導大綱</span>
+              </a>
+              <a
+                href="#recommendations"
+                class="mobile-nav-link flex items-center p-3 rounded-xl hover:bg-primary-50 text-neutral-700"
+              >
+                <div
+                  class="w-10 h-10 rounded-full bg-primary-100 flex items-center justify-center text-primary-600 mr-3"
+                >
+                  <i class="fas fa-lightbulb"></i>
+                </div>
+                <span class="font-medium">改進建議</span>
+              </a>
+            </div>
+          </div>
+
+          <div class="p-5 border-t">
+            <button
+              class="w-full py-3 bg-gradient-to-r from-primary-500 to-tertiary-500 text-white rounded-xl flex items-center justify-center gap-2 shadow-md hover:shadow-lg transition-all"
+            >
+              <i class="fas fa-share-nodes"></i>
+              <span>分享網站</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- 頁首區塊 -->
+    <header
+      class="pt-16 md:pt-24 pb-20 md:pb-32 relative overflow-hidden bg-gradient-to-r from-primary-50 via-tertiary-50 to-primary-50"
+    >
+      <!-- 裝飾背景元素 -->
+      <div class="absolute top-0 left-0 w-full h-full z-0 opacity-60">
+        <div
+          class="absolute w-96 h-96 rounded-full bg-gradient-to-r from-primary-200/30 to-transparent top-1/3 -left-48 blur-3xl"
+        ></div>
+        <div
+          class="absolute w-96 h-96 rounded-full bg-gradient-to-r from-tertiary-200/30 to-transparent bottom-1/4 -right-48 blur-3xl"
+        ></div>
+
+        <div
+          class="decoration-dot w-24 h-24 top-[20%] left-[10%] animate-float-slow"
+        ></div>
+        <div
+          class="decoration-dot w-16 h-16 top-[60%] left-[20%] animate-float-slow"
+          style="animation-delay: 1s"
+        ></div>
+        <div
+          class="decoration-dot w-20 h-20 top-[30%] right-[15%] animate-float-slow"
+          style="animation-delay: 1.5s"
+        ></div>
+        <div
+          class="decoration-dot w-12 h-12 bottom-[20%] right-[25%] animate-float-slow"
+          style="animation-delay: 2.2s"
+        ></div>
+
+        <div
+          class="decoration-circle w-64 h-64 border-2 top-[10%] left-[5%] animate-rotate-slow"
+        ></div>
+        <div
+          class="decoration-circle w-96 h-96 top-[5%] right-[5%] animate-rotate-slow"
+          style="animation-direction: reverse"
+        ></div>
+
+        <div
+          class="hidden md:block absolute top-[30%] left-[5%] transform -rotate-12 opacity-10"
+        >
+          <i class="fas fa-chart-line text-9xl text-primary-600"></i>
+        </div>
+        <div
+          class="hidden md:block absolute bottom-[20%] right-[8%] transform rotate-12 opacity-10"
+        >
+          <i class="fas fa-coins text-9xl text-primary-600"></i>
+        </div>
+      </div>
+
+      <div class="container mx-auto px-4 relative z-10">
+        <div class="text-center max-w-4xl mx-auto">
+          <div
+            class="inline-block mb-4 px-4 py-1.5 bg-white/50 backdrop-blur-sm rounded-full text-primary-800 font-medium shadow-sm text-sm md:text-base"
+          >
+            <i
+              class="fas fa-exclamation-circle mr-2 text-red-500 animate-pulse-custom"
+            ></i
+            >金融業調查專題
+          </div>
+
+          <h1
+            class="font-title font-bold text-4xl md:text-6xl lg:text-7xl mb-6 text-neutral-900 leading-tight"
+          >
+            揭露<span class="relative inline-block px-1">
+              <span
+                class="absolute left-0 -bottom-1 w-full h-4 bg-primary-300/40 -z-10 rounded-lg"
+              ></span>
+              金融業 </span
+            >IPO<span
+              class="bg-clip-text text-transparent bg-gradient-to-r from-primary-600 to-tertiary-600"
+              >責任額</span
+            >真相
+          </h1>
+
+          <p
+            class="text-lg md:text-xl lg:text-2xl text-neutral-800 mb-10 leading-relaxed font-light max-w-3xl mx-auto"
+          >
+            基於<span class="font-semibold text-primary-700">50位</span
+            >金融從業人員的真實心聲與訴求<br
+              class="hidden md:block"
+            />探討業界隱藏的<span class="font-semibold text-red-600">壓力</span
+            >與<span class="font-semibold text-red-600">黑暗面</span>
+          </p>
+
+          <div
+            class="flex flex-col sm:flex-row justify-center gap-4 md:gap-6 mt-8 max-w-xl mx-auto"
+          >
+            <a
+              href="#overview"
+              class="group relative px-8 py-4 bg-gradient-to-r from-primary-600 to-tertiary-600 text-white font-medium rounded-xl transition duration-300 transform hover:scale-105 hover:shadow-lg hover:shadow-primary-300/40 overflow-hidden"
+            >
+              <span class="relative z-10 flex items-center justify-center">
+                <i class="fas fa-chart-bar mr-2"></i>
+                探索數據分析
+                <i
+                  class="fas fa-arrow-right ml-2 transform group-hover:translate-x-1 transition-transform"
+                ></i>
+              </span>
+              <span
+                class="absolute top-0 left-0 w-full h-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/10"
+              ></span>
+            </a>
+
+            <a
+              href="#top-quotes"
+              class="group relative px-8 py-4 bg-white text-primary-700 border border-primary-300 font-medium rounded-xl transition duration-300 hover:bg-primary-50 hover:border-primary-400 hover:shadow-md overflow-hidden"
+            >
+              <span class="relative z-10 flex items-center justify-center">
+                <i class="fas fa-quote-left mr-2"></i>
+                查看員工心聲
+              </span>
+              <span
+                class="absolute top-0 left-0 w-0 h-full bg-primary-50 transition-all duration-300 group-hover:w-full"
+              ></span>
+            </a>
+          </div>
+
+          <div class="mt-16 text-neutral-600 scroll-down-indicator">
+            <span class="block mb-2 text-sm font-medium">向下滾動探索更多</span>
+            <i class="fas fa-chevron-down text-2xl"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- 波浪裝飾 -->
+      <div class="absolute bottom-0 left-0 w-full overflow-hidden leading-none">
+        <svg
+          class="w-full h-12 md:h-16 lg:h-24"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 1200 120"
+          preserveAspectRatio="none"
+        >
+          <path
+            d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z"
+            style="fill: #fff"
+          ></path>
+        </svg>
+      </div>
+    </header>
+
+    <!-- 總覽區塊 -->
+    <section id="overview" class="py-16 md:py-24 bg-white relative">
+      <!-- 裝飾元素 -->
+      <div
+        class="absolute top-0 right-0 w-64 h-64 bg-primary-50 rounded-full filter blur-3xl opacity-30 -z-10"
+      ></div>
+      <div
+        class="absolute bottom-0 left-0 w-96 h-96 bg-tertiary-50 rounded-full filter blur-3xl opacity-30 -z-10"
+      ></div>
+
+      <div class="container mx-auto px-4">
+        <div class="text-center max-w-3xl mx-auto mb-16">
+          <span
+            class="inline-block px-3 py-1 bg-primary-50 text-primary-700 font-medium text-sm rounded-full mb-4"
+          >
+            <i class="fas fa-chart-line mr-1.5"></i>數據見真實
+          </span>
+          <h2
+            class="text-3xl md:text-4xl font-bold mb-4 text-neutral-800 leading-tight"
+          >
+            <span class="relative inline-block">
+              <span
+                class="absolute -bottom-1 left-0 w-full h-3 bg-primary-200 opacity-50 rounded"
+              ></span>
+              情緒數據總覽
+            </span>
+          </h2>
+          <p class="text-lg text-neutral-600 max-w-2xl mx-auto">
+            根據NLP自然語言處理分析，揭示金融業從業者面對IPO責任額的真實心理狀態
+          </p>
+        </div>
+
+        <!-- 數據卡片區 -->
+        <div
+          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8"
+        >
+          <!-- 總數據筆數 -->
+          <div
+            class="modern-card rounded-xl bg-white shadow-md p-6 hover:shadow-xl transition-all duration-500 border-t-4 border-primary-500"
+          >
+            <div class="flex items-center justify-center mb-4">
+              <div
+                class="flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-primary-400 to-primary-600 text-white shadow-md"
+              >
+                <div class="relative">
+                  <i class="fas fa-users text-xl"></i>
+                  <span
+                    class="absolute -top-1 -right-1 w-3 h-3 bg-white rounded-full animate-ping-slow"
+                  ></span>
+                </div>
+              </div>
+            </div>
+            <div class="text-center mt-4">
+              <p
+                class="text-neutral-500 text-sm font-medium uppercase tracking-wider"
+              >
+                調查樣本數
+              </p>
+              <div class="relative mt-1 flex justify-center items-center group">
+                <h3
+                  class="text-4xl md:text-5xl font-bold text-neutral-800 counter"
+                  data-target="50"
+                >
+                  0
+                </h3>
+                <span
+                  class="ml-1 text-xs font-medium bg-primary-100 text-primary-800 px-1.5 py-0.5 rounded"
+                  >位</span
+                >
+              </div>
+              <div
+                class="flex justify-center items-center space-x-1 text-xs font-medium text-neutral-500 mt-3"
+              >
+                <i class="fas fa-check-circle text-green-500"></i>
+                <span>金融業前線員工真實回饋</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 平均NLP總分 -->
+          <div
+            class="modern-card rounded-xl bg-white shadow-md p-6 hover:shadow-xl transition-all duration-500 border-t-4 border-secondary-500"
+          >
+            <div class="flex items-center justify-center mb-4">
+              <div
+                class="flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-secondary-400 to-secondary-600 text-white shadow-md"
+              >
+                <div class="relative">
+                  <i class="fas fa-brain text-xl"></i>
+                  <span
+                    class="absolute -top-1 -right-1 w-3 h-3 bg-white rounded-full animate-ping-slow"
+                  ></span>
+                </div>
+              </div>
+            </div>
+            <div class="text-center mt-4">
+              <p
+                class="text-neutral-500 text-sm font-medium uppercase tracking-wider"
+              >
+                NLP情緒分析分數
+              </p>
+              <div class="relative mt-1">
+                <div class="flex justify-center items-end">
+                  <h3
+                    class="text-4xl md:text-5xl font-bold text-neutral-800 counter"
+                    data-target="82.1"
+                  >
+                    0
+                  </h3>
+                  <span class="text-lg font-medium text-neutral-500 mb-1.5"
+                    >/100</span
+                  >
+                </div>
+                <div
+                  class="w-full bg-gray-200 rounded-full h-2 mt-3 overflow-hidden"
+                >
+                  <div
+                    class="bg-secondary-500 h-2 rounded-full progress-bar relative shimmer"
+                    style="width: 0%"
+                    data-width="82%"
+                  >
+                    <div
+                      class="absolute inset-0 bg-white/30 pulse-animation"
+                    ></div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="flex justify-center items-center space-x-1 text-xs font-medium text-neutral-500 mt-3"
+              >
+                <i class="fas fa-exclamation-circle text-red-500"></i>
+                <span>反映高度負面情緒與壓力</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 最高情緒指標 -->
+          <div
+            class="modern-card rounded-xl bg-white shadow-md p-6 hover:shadow-xl transition-all duration-500 border-t-4 border-red-500"
+          >
+            <div class="flex items-center justify-center mb-4">
+              <div
+                class="flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-red-400 to-red-600 text-white shadow-md"
+              >
+                <div class="relative">
+                  <i class="fas fa-fire text-xl"></i>
+                  <span
+                    class="absolute -top-1 -right-1 w-3 h-3 bg-white rounded-full animate-ping-slow"
+                  ></span>
+                </div>
+              </div>
+            </div>
+            <div class="text-center mt-4">
+              <p
+                class="text-neutral-500 text-sm font-medium uppercase tracking-wider"
+              >
+                最高情緒指標
+              </p>
+              <div class="mt-1">
+                <div class="flex justify-center">
+                  <h3 class="text-2xl md:text-3xl font-bold text-red-600">
+                    被欺壓感
+                  </h3>
+                </div>
+                <!-- 圓形進度條 -->
+                <div class="relative w-24 h-24 mx-auto mt-3">
+                  <svg class="w-full h-full -rotate-90" viewBox="0 0 100 100">
+                    <circle
+                      class="text-gray-200"
+                      stroke-width="8"
+                      stroke="currentColor"
+                      fill="transparent"
+                      r="40"
+                      cx="50"
+                      cy="50"
+                    />
+                    <circle
+                      class="text-red-600 circle-progress shimmer"
+                      stroke-width="8"
+                      stroke="currentColor"
+                      fill="transparent"
+                      r="40"
+                      cx="50"
+                      cy="50"
+                      stroke-dasharray="251.2"
+                      stroke-dashoffset="10"
+                    />
+                  </svg>
+                  <div
+                    class="absolute top-0 left-0 w-full h-full flex items-center justify-center"
+                  >
+                    <span class="text-xl font-bold text-neutral-800">9.6</span>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="flex justify-center items-center space-x-1 text-xs font-medium text-neutral-500 mt-3"
+              >
+                <i class="fas fa-arrow-up text-red-500"></i>
+                <span>明顯高於其他指標</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 高分訴求比例 -->
+          <div
+            class="modern-card rounded-xl bg-white shadow-md p-6 hover:shadow-xl transition-all duration-500 border-t-4 border-tertiary-500"
+          >
+            <div class="flex items-center justify-center mb-4">
+              <div
+                class="flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-tertiary-400 to-tertiary-600 text-white shadow-md"
+              >
+                <div class="relative">
+                  <i class="fas fa-percentage text-xl"></i>
+                  <span
+                    class="absolute -top-1 -right-1 w-3 h-3 bg-white rounded-full animate-ping-slow"
+                  ></span>
+                </div>
+              </div>
+            </div>
+            <div class="text-center mt-4">
+              <p
+                class="text-neutral-500 text-sm font-medium uppercase tracking-wider"
+              >
+                高分訴求比例
+              </p>
+              <div class="relative mt-1">
+                <div class="flex justify-center items-center">
+                  <h3
+                    class="text-4xl md:text-5xl font-bold text-neutral-800 counter"
+                    data-target="78"
+                  >
+                    0
+                  </h3>
+                  <span class="text-2xl font-bold text-neutral-800">%</span>
+                </div>
+                <!-- 環形進度條 -->
+                <div class="w-full mt-3 flex justify-center">
+                  <div
+                    class="relative w-full h-2 bg-gray-200 rounded-full max-w-[120px] overflow-hidden"
+                  >
+                    <div
+                      class="absolute top-0 left-0 h-full bg-tertiary-500 rounded-full progress-bar shimmer"
+                      style="width: 0%"
+                      data-width="78%"
+                    ></div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="flex justify-center items-center space-x-1 text-xs font-medium text-neutral-500 mt-3"
+              >
+                <i class="fas fa-info-circle text-tertiary-500"></i>
+                <span>NLP總分超過80分的訴求佔比</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 情緒分析總覽圖表 -->
+        <div class="mt-20 grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <!-- 雷達圖 -->
+          <div
+            class="bg-white rounded-xl shadow-md p-6 md:p-8 hover:shadow-xl transition-all duration-500 border border-gray-100"
+          >
+            <div class="flex justify-between items-center mb-6">
+              <h3
+                class="text-xl font-bold text-neutral-800 flex items-center gap-3"
+              >
+                <span
+                  class="w-10 h-10 rounded-full bg-primary-100 flex items-center justify-center text-primary-600"
+                >
+                  <i class="fas fa-chart-radar"></i>
+                </span>
+                各項情緒指標平均分數
+              </h3>
+              <div class="flex space-x-1">
+                <span
+                  class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary-100 text-primary-800"
+                >
+                  <i class="fas fa-info-circle mr-1 text-xs"></i>滿分10分
+                </span>
+              </div>
+            </div>
+            <div class="radar-chart hidden-initially">
+              <div class="radar-chart-inner" id="radar-chart">
+                <!-- 雷達圖將由JavaScript生成 -->
+              </div>
+            </div>
+          </div>
+
+          <!-- 主要問題類別 -->
+          <div
+            class="bg-white rounded-xl shadow-md p-6 md:p-8 hover:shadow-xl transition-all duration-500 border border-gray-100"
+          >
+            <div class="flex justify-between items-center mb-6">
+              <h3
+                class="text-xl font-bold text-neutral-800 flex items-center gap-3"
+              >
+                <span
+                  class="w-10 h-10 rounded-full bg-secondary-100 flex items-center justify-center text-secondary-600"
+                >
+                  <i class="fas fa-chart-pie"></i>
+                </span>
+                主要問題類別分布
+              </h3>
+              <div class="flex space-x-1">
+                <span
+                  class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-secondary-100 text-secondary-800"
+                >
+                  <i class="fas fa-percentage text-xs mr-1"></i>百分比
+                </span>
+              </div>
+            </div>
+            <div id="categories-chart" class="h-64 md:h-72 hidden-initially">
+              <!-- 類別圖表將由JavaScript生成 -->
+            </div>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
+              <div
+                class="flex items-center gap-2 p-2 rounded-lg hover:bg-gray-50 transition-colors"
+              >
+                <div
+                  class="w-3 h-3 rounded-full bg-red-500 shadow flex-shrink-0"
+                ></div>
+                <div class="flex-1 min-w-0">
+                  <span
+                    class="text-sm text-neutral-600 whitespace-nowrap overflow-hidden text-ellipsis"
+                    >責任額壓力</span
+                  >
+                  <span class="ml-1 text-sm font-medium text-red-600">38%</span>
+                </div>
+              </div>
+              <div
+                class="flex items-center gap-2 p-2 rounded-lg hover:bg-gray-50 transition-colors"
+              >
+                <div
+                  class="w-3 h-3 rounded-full bg-blue-500 shadow flex-shrink-0"
+                ></div>
+                <div class="flex-1 min-w-0">
+                  <span
+                    class="text-sm text-neutral-600 whitespace-nowrap overflow-hidden text-ellipsis"
+                    >職場霸凌</span
+                  >
+                  <span class="ml-1 text-sm font-medium text-blue-600"
+                    >26%</span
+                  >
+                </div>
+              </div>
+              <div
+                class="flex items-center gap-2 p-2 rounded-lg hover:bg-gray-50 transition-colors"
+              >
+                <div
+                  class="w-3 h-3 rounded-full bg-yellow-500 shadow flex-shrink-0"
+                ></div>
+                <div class="flex-1 min-w-0">
+                  <span
+                    class="text-sm text-neutral-600 whitespace-nowrap overflow-hidden text-ellipsis"
+                    >自掏腰包</span
+                  >
+                  <span class="ml-1 text-sm font-medium text-yellow-600"
+                    >22%</span
+                  >
+                </div>
+              </div>
+              <div
+                class="flex items-center gap-2 p-2 rounded-lg hover:bg-gray-50 transition-colors"
+              >
+                <div
+                  class="w-3 h-3 rounded-full bg-green-500 shadow flex-shrink-0"
+                ></div>
+                <div class="flex-1 min-w-0">
+                  <span
+                    class="text-sm text-neutral-600 whitespace-nowrap overflow-hidden text-ellipsis"
+                    >客戶權益</span
+                  >
+                  <span class="ml-1 text-sm font-medium text-green-600"
+                    >14%</span
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 情緒波形圖示 -->
+        <div class="mt-20 max-w-5xl mx-auto">
+          <div
+            class="relative bg-gradient-to-r from-primary-50 to-tertiary-50 rounded-2xl shadow-md overflow-hidden"
+          >
+            <!-- 波浪裝飾背景 -->
+            <div class="absolute inset-0 opacity-10">
+              <div
+                class="absolute w-full h-32 bottom-0 left-0"
+                style="
+                  background: url('data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 1200 120\' preserveAspectRatio=\'none\'%3E%3Cpath d=\'M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z\' fill=\'%230ea5e9\' opacity=\'0.3\'%3E%3C/path%3E%3C/svg%3E')
+                    no-repeat bottom;
+                  background-size: 100% 100%;
+                "
+              ></div>
+              <div
+                class="absolute w-full h-24 bottom-0 left-0"
+                style="
+                  background: url('data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 1200 120\' preserveAspectRatio=\'none\'%3E%3Cpath d=\'M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z\' fill=\'%238b5cf6\' opacity=\'0.2\'%3E%3C/path%3E%3C/svg%3E')
+                    no-repeat bottom;
+                  background-size: 100% 100%;
+                "
+              ></div>
+            </div>
+
+            <!-- 情緒指標 -->
+            <div class="relative z-10 p-8 md:p-10">
+              <h3 class="text-xl font-bold text-center mb-10 text-neutral-800">
+                情緒指標強度分布
+              </h3>
+
+              <div class="grid grid-cols-2 md:grid-cols-5 gap-6">
+                <!-- 被欺壓感 -->
+                <div
+                  class="flex flex-col items-center transform transition-all hover:scale-105"
+                >
+                  <div
+                    class="w-16 h-16 md:w-20 md:h-20 bg-gradient-to-br from-red-400 to-red-600 rounded-full flex items-center justify-center text-white shadow-lg mb-3 relative"
+                  >
+                    <i class="fas fa-compress-alt text-2xl"></i>
+                    <div
+                      class="absolute inset-0 rounded-full bg-white opacity-20 animate-ping-slow"
+                    ></div>
+                  </div>
+                  <h4 class="font-bold text-red-700 text-center">被欺壓感</h4>
+                  <div class="mt-2 flex items-center">
+                    <div class="text-2xl font-bold text-red-600">9.6</div>
+                    <div class="text-xs ml-1 text-neutral-500">/10</div>
+                  </div>
+                  <!-- 小型進度條 -->
+                  <div
+                    class="w-full bg-red-100 rounded-full h-1.5 mt-2 max-w-[80px]"
+                  >
+                    <div
+                      class="bg-red-600 h-1.5 rounded-full shimmer"
+                      style="width: 96%"
+                    ></div>
+                  </div>
+                </div>
+
+                <!-- 壓迫性敘述 -->
+                <div
+                  class="flex flex-col items-center transform transition-all hover:scale-105"
+                >
+                  <div
+                    class="w-16 h-16 md:w-20 md:h-20 bg-gradient-to-br from-orange-400 to-orange-600 rounded-full flex items-center justify-center text-white shadow-lg mb-3 relative"
+                  >
+                    <i class="fas fa-bullhorn text-2xl"></i>
+                    <div
+                      class="absolute inset-0 rounded-full bg-white opacity-20 animate-ping-slow"
+                      style="animation-delay: 0.5s"
+                    ></div>
+                  </div>
+                  <h4 class="font-bold text-orange-700 text-center">
+                    壓迫性敘述
+                  </h4>
+                  <div class="mt-2 flex items-center">
+                    <div class="text-2xl font-bold text-orange-600">9.1</div>
+                    <div class="text-xs ml-1 text-neutral-500">/10</div>
+                  </div>
+                  <!-- 小型進度條 -->
+                  <div
+                    class="w-full bg-orange-100 rounded-full h-1.5 mt-2 max-w-[80px]"
+                  >
+                    <div
+                      class="bg-orange-600 h-1.5 rounded-full shimmer"
+                      style="width: 91%"
+                    ></div>
+                  </div>
+                </div>
+
+                <!-- 恐懼焦慮 -->
+                <div
+                  class="flex flex-col items-center transform transition-all hover:scale-105"
+                >
+                  <div
+                    class="w-16 h-16 md:w-20 md:h-20 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full flex items-center justify-center text-white shadow-lg mb-3 relative"
+                  >
+                    <i class="fas fa-exclamation-circle text-2xl"></i>
+                    <div
+                      class="absolute inset-0 rounded-full bg-white opacity-20 animate-ping-slow"
+                      style="animation-delay: 1s"
+                    ></div>
+                  </div>
+                  <h4 class="font-bold text-yellow-700 text-center">
+                    恐懼焦慮
+                  </h4>
+                  <div class="mt-2 flex items-center">
+                    <div class="text-2xl font-bold text-yellow-600">8.7</div>
+                    <div class="text-xs ml-1 text-neutral-500">/10</div>
+                  </div>
+                  <!-- 小型進度條 -->
+                  <div
+                    class="w-full bg-yellow-100 rounded-full h-1.5 mt-2 max-w-[80px]"
+                  >
+                    <div
+                      class="bg-yellow-600 h-1.5 rounded-full shimmer"
+                      style="width: 87%"
+                    ></div>
+                  </div>
+                </div>
+
+                <!-- 情緒爆點 -->
+                <div
+                  class="flex flex-col items-center transform transition-all hover:scale-105"
+                >
+                  <div
+                    class="w-16 h-16 md:w-20 md:h-20 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full flex items-center justify-center text-white shadow-lg mb-3 relative"
+                  >
+                    <i class="fas fa-bomb text-2xl"></i>
+                    <div
+                      class="absolute inset-0 rounded-full bg-white opacity-20 animate-ping-slow"
+                      style="animation-delay: 1.5s"
+                    ></div>
+                  </div>
+                  <h4 class="font-bold text-blue-700 text-center">情緒爆點</h4>
+                  <div class="mt-2 flex items-center">
+                    <div class="text-2xl font-bold text-blue-600">8.4</div>
+                    <div class="text-xs ml-1 text-neutral-500">/10</div>
+                  </div>
+                  <!-- 小型進度條 -->
+                  <div
+                    class="w-full bg-blue-100 rounded-full h-1.5 mt-2 max-w-[80px]"
+                  >
+                    <div
+                      class="bg-blue-600 h-1.5 rounded-full shimmer"
+                      style="width: 84%"
+                    ></div>
+                  </div>
+                </div>
+
+                <!-- 語氣強度 -->
+                <div
+                  class="flex flex-col items-center transform transition-all hover:scale-105"
+                >
+                  <div
+                    class="w-16 h-16 md:w-20 md:h-20 bg-gradient-to-br from-tertiary-400 to-tertiary-600 rounded-full flex items-center justify-center text-white shadow-lg mb-3 relative"
+                  >
+                    <i class="fas fa-bolt text-2xl"></i>
+                    <div
+                      class="absolute inset-0 rounded-full bg-white opacity-20 animate-ping-slow"
+                      style="animation-delay: 2s"
+                    ></div>
+                  </div>
+                  <h4 class="font-bold text-tertiary-700 text-center">
+                    語氣強度
+                  </h4>
+                  <div class="mt-2 flex items-center">
+                    <div class="text-2xl font-bold text-tertiary-600">8.2</div>
+                    <div class="text-xs ml-1 text-neutral-500">/10</div>
+                  </div>
+                  <!-- 小型進度條 -->
+                  <div
+                    class="w-full bg-tertiary-100 rounded-full h-1.5 mt-2 max-w-[80px]"
+                  >
+                    <div
+                      class="bg-tertiary-600 h-1.5 rounded-full shimmer"
+                      style="width: 82%"
+                    ></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 高分語錄區塊 -->
+    <section id="top-quotes" class="py-16 md:py-24 bg-gray-50 relative">
+      <!-- 裝飾元素 -->
+      <div
+        class="absolute top-10 left-10 w-80 h-80 bg-primary-100 rounded-full filter blur-3xl opacity-30 -z-10"
+      ></div>
+      <div
+        class="absolute bottom-10 right-10 w-80 h-80 bg-secondary-100 rounded-full filter blur-3xl opacity-30 -z-10"
+      ></div>
+
+      <div class="container mx-auto px-4">
+        <div class="text-center max-w-3xl mx-auto mb-16">
+          <span
+            class="inline-block px-3 py-1 bg-secondary-50 text-secondary-700 font-medium text-sm rounded-full mb-4"
+          >
+            <i class="fas fa-quote-left mr-1.5"></i>第一手訴求
+          </span>
+          <h2
+            class="text-3xl md:text-4xl font-bold mb-4 text-neutral-800 leading-tight"
+          >
+            <span class="relative inline-block">
+              <span
+                class="absolute -bottom-1 left-0 w-full h-3 bg-secondary-200 opacity-50 rounded"
+              ></span>
+              員工高分語錄
+            </span>
+          </h2>
+          <p class="text-lg text-neutral-600 max-w-2xl mx-auto">
+            精選NLP分析分數最高的金融從業人員真實心聲，透過標籤篩選特定情緒類型
+          </p>
+        </div>
+
+        <!-- 標籤篩選 -->
+        <div
+          class="flex flex-wrap justify-center gap-2 md:gap-3 mb-10 max-w-4xl mx-auto"
+        >
+          <button
+            class="emotion-filter-btn active px-3 py-1.5 md:px-4 md:py-2 bg-white shadow-sm rounded-full text-sm md:text-base hover:shadow-md transition-all border border-gray-200 text-neutral-700 font-medium"
+          >
+            <i class="fas fa-layer-group mr-1.5 text-primary-500"></i>全部
+          </button>
+          <button
+            class="emotion-filter-btn px-3 py-1.5 md:px-4 md:py-2 bg-white shadow-sm rounded-full text-sm md:text-base hover:shadow-md transition-all border border-gray-200 text-neutral-700 font-medium"
+          >
+            <i class="fas fa-compress-alt mr-1.5 text-red-500"></i>被欺壓感
+          </button>
+          <button
+            class="emotion-filter-btn px-3 py-1.5 md:px-4 md:py-2 bg-white shadow-sm rounded-full text-sm md:text-base hover:shadow-md transition-all border border-gray-200 text-neutral-700 font-medium"
+          >
+            <i class="fas fa-bullhorn mr-1.5 text-orange-500"></i>壓迫性敘述
+          </button>
+          <button
+            class="emotion-filter-btn px-3 py-1.5 md:px-4 md:py-2 bg-white shadow-sm rounded-full text-sm md:text-base hover:shadow-md transition-all border border-gray-200 text-neutral-700 font-medium"
+          >
+            <i class="fas fa-exclamation-circle mr-1.5 text-yellow-500"></i
+            >恐懼焦慮
+          </button>
+          <button
+            class="emotion-filter-btn px-3 py-1.5 md:px-4 md:py-2 bg-white shadow-sm rounded-full text-sm md:text-base hover:shadow-md transition-all border border-gray-200 text-neutral-700 font-medium"
+          >
+            <i class="fas fa-bolt mr-1.5 text-tertiary-500"></i>語氣強度
+          </button>
+          <button
+            class="emotion-filter-btn px-3 py-1.5 md:px-4 md:py-2 bg-white shadow-sm rounded-full text-sm md:text-base hover:shadow-md transition-all border border-gray-200 text-neutral-700 font-medium"
+          >
+            <i class="fas fa-bomb mr-1.5 text-primary-500"></i>情緒爆點
+          </button>
+        </div>
+
+        <!-- 引言卡片區 -->
+        <div
+          class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 md:gap-8 max-w-7xl mx-auto"
+        >
+          <!-- 引言卡片 1 - 被欺壓感 -->
+          <div
+            class="quote-card bg-white rounded-xl shadow-md p-6 md:p-8 border-t-4 border-red-500 hover:shadow-xl transition-all duration-500"
+            data-categories="被欺壓感,語氣強度"
+          >
+            <div class="mb-4 flex flex-wrap gap-2">
+              <span
+                class="emotion-tag inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800"
+              >
+                <i class="fas fa-compress-alt mr-1"></i>被欺壓感
+              </span>
+              <span
+                class="emotion-tag inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-tertiary-100 text-tertiary-800"
+              >
+                <i class="fas fa-bolt mr-1"></i>語氣強度
+              </span>
+            </div>
+            <div class="mb-6">
+              <p class="text-neutral-700 text-lg mb-3">
+                「達不到責任額就別想拿獎金，主管還說：自己想辦法，辦不到就離職！」
+              </p>
+              <p class="text-neutral-500 text-base italic">
+                「每天都像活在地獄，責任額根本不是銷售目標，是逼死人的工具...」
+              </p>
+            </div>
+            <div class="mt-4 flex justify-between items-center text-sm">
+              <span class="font-medium text-neutral-400">投信業務</span>
+              <div class="flex items-center gap-2">
+                <span
+                  class="bg-red-50 text-red-700 font-semibold px-2 py-0.5 rounded"
+                  >NLP分數：98.5</span
+                >
+              </div>
+            </div>
+          </div>
+
+          <!-- 引言卡片 2 - 壓迫性敘述 -->
+          <div
+            class="quote-card bg-white rounded-xl shadow-md p-6 md:p-8 border-t-4 border-orange-500 hover:shadow-xl transition-all duration-500"
+            data-categories="壓迫性敘述,情緒爆點"
+          >
+            <div class="mb-4 flex flex-wrap gap-2">
+              <span
+                class="emotion-tag inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-orange-100 text-orange-800"
+              >
+                <i class="fas fa-bullhorn mr-1"></i>壓迫性敘述
+              </span>
+              <span
+                class="emotion-tag inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary-100 text-primary-800"
+              >
+                <i class="fas fa-bomb mr-1"></i>情緒爆點
+              </span>
+            </div>
+            <div class="mb-6">
+              <p class="text-neutral-700 text-lg mb-3">
+                「主管威脅如果這次IPO做不好，以後會被列入觀察名單，工作就不保了！」
+              </p>
+              <p class="text-neutral-500 text-base italic">
+                「每次新股上市就開始緊張，害怕被排擠或被孤立，這不是業務能力問題，是生存問題...」
+              </p>
+            </div>
+            <div class="mt-4 flex justify-between items-center text-sm">
+              <span class="font-medium text-neutral-400">券商營業員</span>
+              <div class="flex items-center gap-2">
+                <span
+                  class="bg-orange-50 text-orange-700 font-semibold px-2 py-0.5 rounded"
+                  >NLP分數：96.3</span
+                >
+              </div>
+            </div>
+          </div>
+
+          <!-- 引言卡片 3 - 恐懼焦慮 -->
+          <div
+            class="quote-card bg-white rounded-xl shadow-md p-6 md:p-8 border-t-4 border-yellow-500 hover:shadow-xl transition-all duration-500"
+            data-categories="恐懼焦慮,被欺壓感"
+          >
+            <div class="mb-4 flex flex-wrap gap-2">
+              <span
+                class="emotion-tag inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800"
+              >
+                <i class="fas fa-exclamation-circle mr-1"></i>恐懼焦慮
+              </span>
+              <span
+                class="emotion-tag inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800"
+              >
+                <i class="fas fa-compress-alt mr-1"></i>被欺壓感
+              </span>
+            </div>
+            <div class="mb-6">
+              <p class="text-neutral-700 text-lg mb-3">
+                「經理允許我們貸款投資新股！大家都心照不宣，只要達成責任額，方法不重要。」
+              </p>
+              <p class="text-neutral-500 text-base italic">
+                「我們都知道是惡性循環，但沒人敢講，因為說了就會變成問題人物被針對...」
+              </p>
+            </div>
+            <div class="mt-4 flex justify-between items-center text-sm">
+              <span class="font-medium text-neutral-400">銀行理專</span>
+              <div class="flex items-center gap-2">
+                <span
+                  class="bg-yellow-50 text-yellow-700 font-semibold px-2 py-0.5 rounded"
+                  >NLP分數：95.8</span
+                >
+              </div>
+            </div>
+          </div>
+
+          <!-- 引言卡片 4 - 情緒爆點 -->
+          <div
+            class="quote-card bg-white rounded-xl shadow-md p-6 md:p-8 border-t-4 border-primary-500 hover:shadow-xl transition-all duration-500"
+            data-categories="情緒爆點,壓迫性敘述"
+          >
+            <div class="mb-4 flex flex-wrap gap-2">
+              <span
+                class="emotion-tag inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary-100 text-primary-800"
+              >
+                <i class="fas fa-bomb mr-1"></i>情緒爆點
+              </span>
+              <span
+                class="emotion-tag inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-orange-100 text-orange-800"
+              >
+                <i class="fas fa-bullhorn mr-1"></i>壓迫性敘述
+              </span>
+            </div>
+            <div class="mb-6">
+              <p class="text-neutral-700 text-lg mb-3">
+                「開會時主管公開羞辱同事：『你是不是腦袋有問題？連這點業績都做不到！』」
+              </p>
+              <p class="text-neutral-500 text-base italic">
+                「多少同事因壓力過大吃藥、看精神科，甚至有人輕生...公司卻當沒看見，繼續施壓。」
+              </p>
+            </div>
+            <div class="mt-4 flex justify-between items-center text-sm">
+              <span class="font-medium text-neutral-400">證券分析師</span>
+              <div class="flex items-center gap-2">
+                <span
+                  class="bg-primary-50 text-primary-700 font-semibold px-2 py-0.5 rounded"
+                  >NLP分數：94.7</span
+                >
+              </div>
+            </div>
+          </div>
+
+          <!-- 引言卡片 5 - 語氣強度 -->
+          <div
+            class="quote-card bg-white rounded-xl shadow-md p-6 md:p-8 border-t-4 border-tertiary-500 hover:shadow-xl transition-all duration-500"
+            data-categories="語氣強度,恐懼焦慮"
+          >
+            <div class="mb-4 flex flex-wrap gap-2">
+              <span
+                class="emotion-tag inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-tertiary-100 text-tertiary-800"
+              >
+                <i class="fas fa-bolt mr-1"></i>語氣強度
+              </span>
+              <span
+                class="emotion-tag inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800"
+              >
+                <i class="fas fa-exclamation-circle mr-1"></i>恐懼焦慮
+              </span>
+            </div>
+            <div class="mb-6">
+              <p class="text-neutral-700 text-lg mb-3">
+                「主管拍桌怒吼：『女生就應該懂得犧牲！妳穿短裙多拉些客戶，有什麼難的？』」
+              </p>
+              <p class="text-neutral-500 text-base italic">
+                「這種性別歧視言論算是家常便飯，達不到業績還會被懷疑能力與專業...」
+              </p>
+            </div>
+            <div class="mt-4 flex justify-between items-center text-sm">
+              <span class="font-medium text-neutral-400">外商券商</span>
+              <div class="flex items-center gap-2">
+                <span
+                  class="bg-tertiary-50 text-tertiary-700 font-semibold px-2 py-0.5 rounded"
+                  >NLP分數：94.1</span
+                >
+              </div>
+            </div>
+          </div>
+
+          <!-- 引言卡片 6 - 多重標籤 -->
+          <div
+            class="quote-card bg-white rounded-xl shadow-md p-6 md:p-8 border-t-4 border-green-500 hover:shadow-xl transition-all duration-500"
+            data-categories="被欺壓感,情緒爆點,語氣強度"
+          >
+            <div class="mb-4 flex flex-wrap gap-2">
+              <span
+                class="emotion-tag inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800"
+              >
+                <i class="fas fa-compress-alt mr-1"></i>被欺壓感
+              </span>
+              <span
+                class="emotion-tag inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary-100 text-primary-800"
+              >
+                <i class="fas fa-bomb mr-1"></i>情緒爆點
+              </span>
+              <span
+                class="emotion-tag inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-tertiary-100 text-tertiary-800"
+              >
+                <i class="fas fa-bolt mr-1"></i>語氣強度
+              </span>
+            </div>
+            <div class="mb-6">
+              <p class="text-neutral-700 text-lg mb-3">
+                「我親眼看到同事被逼到自己移轉客戶給管理層的親信，只因沒達成IPO責任額！」
+              </p>
+              <p class="text-neutral-500 text-base italic">
+                「這是一種變相剝削與懲罰，完全違背客戶權益與職場倫理，但卻是不成文規定...」
+              </p>
+            </div>
+            <div class="mt-4 flex justify-between items-center text-sm">
+              <span class="font-medium text-neutral-400">投顧顧問</span>
+              <div class="flex items-center gap-2">
+                <span
+                  class="bg-green-50 text-green-700 font-semibold px-2 py-0.5 rounded"
+                  >NLP分數：93.5</span
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 查看更多按鈕 -->
+        <div class="text-center mt-12">
+          <button
+            class="group relative px-8 py-4 bg-white text-neutral-700 border border-gray-200 font-medium rounded-xl transition duration-300 hover:bg-gray-50 hover:border-gray-300 hover:shadow-md"
+          >
+            <span class="relative z-10 flex items-center justify-center">
+              <i class="fas fa-plus-circle mr-2"></i>
+              查看更多心聲
+              <i
+                class="fas fa-chevron-down ml-2 transform group-hover:translate-y-1 transition-transform"
+              ></i>
+            </span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 情緒分析區塊 -->
+    <section
+      id="emotion-analysis"
+      class="py-16 md:py-24 bg-white relative overflow-hidden"
+    >
+      <!-- 波浪背景裝飾 -->
+      <div class="absolute top-0 left-0 w-full overflow-hidden">
+        <svg
+          class="w-full h-12 md:h-16 lg:h-24 transform rotate-180"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 1200 120"
+          preserveAspectRatio="none"
+        >
+          <path
+            d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z"
+            style="fill: #f9fafb"
+          ></path>
+        </svg>
+      </div>
+
+      <!-- 裝飾元素 -->
+      <div
+        class="absolute -top-20 -right-20 w-80 h-80 bg-primary-50 rounded-full filter blur-3xl opacity-30 -z-10"
+      ></div>
+      <div
+        class="absolute -bottom-20 -left-20 w-80 h-80 bg-tertiary-50 rounded-full filter blur-3xl opacity-30 -z-10"
+      ></div>
+
+      <div class="container mx-auto px-4 relative">
+        <div class="text-center max-w-3xl mx-auto mb-16">
+          <span
+            class="inline-block px-3 py-1 bg-tertiary-50 text-tertiary-700 font-medium text-sm rounded-full mb-4"
+          >
+            <i class="fas fa-brain mr-1.5"></i>深度分析
+          </span>
+          <h2
+            class="text-3xl md:text-4xl font-bold mb-4 text-neutral-800 leading-tight"
+          >
+            <span class="relative inline-block">
+              <span
+                class="absolute -bottom-1 left-0 w-full h-3 bg-tertiary-200 opacity-50 rounded"
+              ></span>
+              員工情緒深度剖析
+            </span>
+          </h2>
+          <p class="text-lg text-neutral-600 max-w-2xl mx-auto">
+            透過先進NLP模型從IPO責任額訴求中識別不同情緒模式及強度分布
+          </p>
+        </div>
+
+        <!-- 情緒分析互動圖表 -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+          <!-- 情緒圖表1：雷達圖 -->
+          <div
+            class="bg-white rounded-xl shadow-md overflow-hidden lg:col-span-2"
+          >
+            <div class="p-6">
+              <h3
+                class="text-xl font-bold text-neutral-800 flex items-center gap-3 mb-4"
+              >
+                <span
+                  class="w-10 h-10 rounded-full bg-tertiary-100 flex items-center justify-center text-tertiary-600"
+                >
+                  <i class="fas fa-chart-radar"></i>
+                </span>
+                員工情緒多維度分析
+              </h3>
+
+              <!-- 分群選擇器 -->
+              <div class="flex flex-wrap gap-2 mb-6">
+                <button
+                  class="group-select-btn active px-3 py-1 bg-tertiary-100 text-tertiary-800 rounded-lg text-sm hover:bg-tertiary-200 transition-colors"
+                >
+                  所有員工
+                </button>
+                <button
+                  class="group-select-btn px-3 py-1 bg-gray-100 text-gray-700 rounded-lg text-sm hover:bg-gray-200 transition-colors"
+                >
+                  營業員
+                </button>
+                <button
+                  class="group-select-btn px-3 py-1 bg-gray-100 text-gray-700 rounded-lg text-sm hover:bg-gray-200 transition-colors"
+                >
+                  理財專員
+                </button>
+                <button
+                  class="group-select-btn px-3 py-1 bg-gray-100 text-gray-700 rounded-lg text-sm hover:bg-gray-200 transition-colors"
+                >
+                  分析師
+                </button>
+                <button
+                  class="group-select-btn px-3 py-1 bg-gray-100 text-gray-700 rounded-lg text-sm hover:bg-gray-200 transition-colors"
+                >
+                  主管層級
+                </button>
+              </div>
+
+              <div class="aspect-[4/3] w-full" id="emotion-radar-chart">
+                <!-- 雷達圖將由JavaScript生成 -->
+              </div>
+            </div>
+          </div>
+
+          <!-- 情緒狀態分布 -->
+          <div class="bg-white rounded-xl shadow-md overflow-hidden">
+            <div class="p-6">
+              <h3
+                class="text-xl font-bold text-neutral-800 flex items-center gap-3 mb-4"
+              >
+                <span
+                  class="w-10 h-10 rounded-full bg-tertiary-100 flex items-center justify-center text-tertiary-600"
+                >
+                  <i class="fas fa-chart-bar"></i>
+                </span>
+                情緒狀態分布
+              </h3>
+
+              <div class="mb-4">
+                <div class="flex justify-between text-sm mb-1">
+                  <span class="text-neutral-600">經常感受到高壓與威脅</span>
+                  <span class="font-semibold text-tertiary-700">89%</span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-2">
+                  <div
+                    class="bg-tertiary-500 h-2 rounded-full shimmer"
+                    style="width: 89%"
+                  ></div>
+                </div>
+              </div>
+
+              <div class="mb-4">
+                <div class="flex justify-between text-sm mb-1">
+                  <span class="text-neutral-600">感到恐懼或常態性焦慮</span>
+                  <span class="font-semibold text-tertiary-700">76%</span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-2">
+                  <div
+                    class="bg-tertiary-500 h-2 rounded-full shimmer"
+                    style="width: 76%"
+                  ></div>
+                </div>
+              </div>
+
+              <div class="mb-4">
+                <div class="flex justify-between text-sm mb-1">
+                  <span class="text-neutral-600">曾被迫自掏腰包購買IPO</span>
+                  <span class="font-semibold text-tertiary-700">68%</span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-2">
+                  <div
+                    class="bg-tertiary-500 h-2 rounded-full shimmer"
+                    style="width: 68%"
+                  ></div>
+                </div>
+              </div>
+
+              <div class="mb-4">
+                <div class="flex justify-between text-sm mb-1">
+                  <span class="text-neutral-600">因工作壓力導致身心問題</span>
+                  <span class="font-semibold text-tertiary-700">54%</span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-2">
+                  <div
+                    class="bg-tertiary-500 h-2 rounded-full shimmer"
+                    style="width: 54%"
+                  ></div>
+                </div>
+              </div>
+
+              <div class="mb-4">
+                <div class="flex justify-between text-sm mb-1">
+                  <span class="text-neutral-600">曾考慮離職或轉換產業</span>
+                  <span class="font-semibold text-tertiary-700">92%</span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-2">
+                  <div
+                    class="bg-tertiary-500 h-2 rounded-full shimmer"
+                    style="width: 92%"
+                  ></div>
+                </div>
+              </div>
+
+              <div class="mt-8 pt-4 border-t">
+                <div class="flex items-center justify-between">
+                  <div class="text-sm text-neutral-600">平均壓力指數</div>
+                  <div class="flex items-end">
+                    <span class="text-3xl font-bold text-tertiary-600"
+                      >8.7</span
+                    >
+                    <span class="text-sm text-neutral-500 ml-1 mb-1">/10</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 關鍵詞雲圖 -->
+        <div
+          class="mt-16 max-w-6xl mx-auto relative bg-gradient-to-r from-tertiary-50 to-primary-50 rounded-2xl shadow-md p-8 overflow-hidden"
+        >
+          <h3 class="text-xl font-bold text-neutral-800 mb-6 text-center">
+            常見負面情緒關鍵詞
+          </h3>
+
+          <div class="flex flex-wrap justify-center gap-3 md:gap-4 py-4">
+            <span
+              class="keyword-tag text-3xl md:text-4xl font-bold text-red-600"
+              >責任額</span
+            >
+            <span
+              class="keyword-tag text-2xl md:text-3xl font-bold text-orange-600"
+              >壓力</span
+            >
+            <span
+              class="keyword-tag text-2xl md:text-3xl font-bold text-yellow-600"
+              >恐懼</span
+            >
+            <span
+              class="keyword-tag text-xl md:text-2xl font-bold text-green-600"
+              >威脅</span
+            >
+            <span
+              class="keyword-tag text-2xl md:text-3xl font-bold text-primary-600"
+              >逼迫</span
+            >
+            <span
+              class="keyword-tag text-xl md:text-2xl font-bold text-tertiary-600"
+              >焦慮</span
+            >
+            <span
+              class="keyword-tag text-lg md:text-xl font-bold text-secondary-600"
+              >離職</span
+            >
+            <span
+              class="keyword-tag text-2xl md:text-3xl font-bold text-blue-600"
+              >辱罵</span
+            >
+            <span
+              class="keyword-tag text-xl md:text-2xl font-bold text-indigo-600"
+              >自掏腰包</span
+            >
+            <span
+              class="keyword-tag text-lg md:text-xl font-bold text-purple-600"
+              >自殺</span
+            >
+            <span
+              class="keyword-tag text-xl md:text-2xl font-bold text-pink-600"
+              >貸款</span
+            >
+            <span class="keyword-tag text-lg md:text-xl font-bold text-rose-600"
+              >羞辱</span
+            >
+            <span class="keyword-tag text-xl md:text-2xl font-bold text-sky-600"
+              >威脅</span
+            >
+            <span class="keyword-tag text-lg md:text-xl font-bold text-teal-600"
+              >績效</span
+            >
+            <span
+              class="keyword-tag text-xl md:text-2xl font-bold text-amber-600"
+              >霸凌</span
+            >
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 報導大綱區塊 -->
+    <section
+      id="report"
+      class="py-16 md:py-24 bg-gray-50 relative overflow-hidden"
+    >
+      <!-- 波浪背景裝飾 -->
+      <div class="absolute top-0 left-0 w-full overflow-hidden">
+        <svg
+          class="w-full h-12 md:h-16 lg:h-24 transform rotate-180"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 1200 120"
+          preserveAspectRatio="none"
+        >
+          <path
+            d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z"
+            style="fill: #fff"
+          ></path>
+        </svg>
+      </div>
+
+      <!-- 裝飾元素 -->
+      <div
+        class="absolute top-40 right-10 w-72 h-72 bg-primary-100 rounded-full filter blur-3xl opacity-30 -z-10"
+      ></div>
+      <div
+        class="absolute bottom-40 left-10 w-72 h-72 bg-secondary-100 rounded-full filter blur-3xl opacity-30 -z-10"
+      ></div>
+
+      <div class="container mx-auto px-4 relative">
+        <div class="text-center max-w-3xl mx-auto mb-16">
+          <span
+            class="inline-block px-3 py-1 bg-primary-50 text-primary-700 font-medium text-sm rounded-full mb-4"
+          >
+            <i class="fas fa-newspaper mr-1.5"></i>深度報導素材
+          </span>
+          <h2
+            class="text-3xl md:text-4xl font-bold mb-4 text-neutral-800 leading-tight"
+          >
+            <span class="relative inline-block">
+              <span
+                class="absolute -bottom-1 left-0 w-full h-3 bg-primary-200 opacity-50 rounded"
+              ></span>
+              金融黑幕報導大綱
+            </span>
+          </h2>
+          <p class="text-lg text-neutral-600 max-w-2xl mx-auto">
+            根據數據分析與從業人員心聲，提供完整的IPO責任額制度黑幕報導架構
+          </p>
+        </div>
+
+        <!-- 報導大綱內容 -->
+        <div class="max-w-5xl mx-auto">
+          <!-- 大綱卡片 1：問題簡介 -->
+          <div
+            class="bg-white rounded-xl shadow-md p-6 md:p-8 mb-8 border-l-4 border-primary-500 hover:shadow-xl transition-all duration-500"
+          >
+            <div class="flex items-start mb-6">
+              <div
+                class="w-10 h-10 rounded-full bg-primary-100 flex items-center justify-center text-primary-600 mr-4 flex-shrink-0 mt-1"
+              >
+                <span class="font-bold">1</span>
+              </div>
+              <div>
+                <h3 class="text-xl font-bold text-neutral-800 mb-3">
+                  問題簡介：責任額制度的黑暗面
+                </h3>
+                <p class="text-neutral-600 leading-relaxed">
+                  揭露台灣金融業長期存在的IPO與ETF責任額制度，如何在表面光鮮的金融界背後，形成一個對員工施加巨大壓力的結構性問題。調查顯示，<span
+                    class="font-medium text-primary-700"
+                    >89%的受訪者</span
+                  >表示經常感受到來自責任額的高度壓力與威脅。
+                </p>
+              </div>
+            </div>
+            <!-- 建議報導角度 -->
+            <div class="bg-gray-50 rounded-lg p-4 ml-14">
+              <h4
+                class="text-sm font-semibold text-neutral-700 mb-2 flex items-center"
+              >
+                <i class="fas fa-lightbulb text-yellow-500 mr-2"></i
+                >建議報導角度
+              </h4>
+              <ul class="space-y-2 text-sm text-neutral-600">
+                <li class="flex items-start">
+                  <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                  <span
+                    >以真實案例開頭，描述一名金融從業人員因IPO責任額壓力而被迫自掏腰包的日常</span
+                  >
+                </li>
+                <li class="flex items-start">
+                  <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                  <span
+                    >引用數據說明這不是個案，而是業界普遍現象（調查顯示68%的員工曾被迫自掏腰包）</span
+                  >
+                </li>
+                <li class="flex items-start">
+                  <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                  <span
+                    >比較國際金融業慣例，台灣特有的"責任額"制度背後的歷史脈絡</span
+                  >
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- 大綱卡片 2：人性代價 -->
+          <div
+            class="bg-white rounded-xl shadow-md p-6 md:p-8 mb-8 border-l-4 border-red-500 hover:shadow-xl transition-all duration-500"
+          >
+            <div class="flex items-start mb-6">
+              <div
+                class="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center text-red-600 mr-4 flex-shrink-0 mt-1"
+              >
+                <span class="font-bold">2</span>
+              </div>
+              <div>
+                <h3 class="text-xl font-bold text-neutral-800 mb-3">
+                  人性代價：心理健康與職場霸凌
+                </h3>
+                <p class="text-neutral-600 leading-relaxed">
+                  深入探討責任額制度如何對金融從業人員的心理健康造成嚴重影響，從常態性焦慮到嚴重的抑鬱。調查數據顯示，<span
+                    class="font-medium text-red-700"
+                    >54%的受訪者</span
+                  >表示因工作壓力導致身心問題，甚至有個案因此而輕生。
+                </p>
+              </div>
+            </div>
+            <!-- 建議報導角度 -->
+            <div class="bg-gray-50 rounded-lg p-4 ml-14">
+              <h4
+                class="text-sm font-semibold text-neutral-700 mb-2 flex items-center"
+              >
+                <i class="fas fa-lightbulb text-yellow-500 mr-2"></i
+                >建議報導角度
+              </h4>
+              <ul class="space-y-2 text-sm text-neutral-600">
+                <li class="flex items-start">
+                  <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                  <span>匿名訪談精神科醫生，分享來自金融業患者的普遍症狀</span>
+                </li>
+                <li class="flex items-start">
+                  <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                  <span
+                    >具體描述職場霸凌的表現形式——公開羞辱、威脅、隱性懲罰等</span
+                  >
+                </li>
+                <li class="flex items-start">
+                  <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                  <span>從心理學角度分析長期處於高壓環境的心理影響</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- 大綱卡片 3：灰色銷售手法 -->
+          <div
+            class="bg-white rounded-xl shadow-md p-6 md:p-8 mb-8 border-l-4 border-yellow-500 hover:shadow-xl transition-all duration-500"
+          >
+            <div class="flex items-start mb-6">
+              <div
+                class="w-10 h-10 rounded-full bg-yellow-100 flex items-center justify-center text-yellow-600 mr-4 flex-shrink-0 mt-1"
+              >
+                <span class="font-bold">3</span>
+              </div>
+              <div>
+                <h3 class="text-xl font-bold text-neutral-800 mb-3">
+                  灰色銷售手法：自掏腰包與不當銷售
+                </h3>
+                <p class="text-neutral-600 leading-relaxed">
+                  調查多名金融從業人員如何被迫使用各種灰色地帶的手法達成責任額，包括自掏腰包、貸款購買、移轉客戶資源等。這些行為不僅對員工造成財務壓力，更可能涉及潛在的法規風險。
+                </p>
+              </div>
+            </div>
+            <!-- 建議報導角度 -->
+            <div class="bg-gray-50 rounded-lg p-4 ml-14">
+              <h4
+                class="text-sm font-semibold text-neutral-700 mb-2 flex items-center"
+              >
+                <i class="fas fa-lightbulb text-yellow-500 mr-2"></i
+                >建議報導角度
+              </h4>
+              <ul class="space-y-2 text-sm text-neutral-600">
+                <li class="flex items-start">
+                  <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                  <span
+                    >調查常見的"達標技巧"：親友代購、貸款投資、客戶分配不公等</span
+                  >
+                </li>
+                <li class="flex items-start">
+                  <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                  <span>訪談金融法規專家，分析這些行為可能違反的法規條文</span>
+                </li>
+                <li class="flex items-start">
+                  <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                  <span>揭露部分金融機構如何默許甚至鼓勵這些灰色手法</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- 大綱卡片 4：投資人權益 -->
+          <div
+            class="bg-white rounded-xl shadow-md p-6 md:p-8 mb-8 border-l-4 border-green-500 hover:shadow-xl transition-all duration-500"
+          >
+            <div class="flex items-start mb-6">
+              <div
+                class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center text-green-600 mr-4 flex-shrink-0 mt-1"
+              >
+                <span class="font-bold">4</span>
+              </div>
+              <div>
+                <h3 class="text-xl font-bold text-neutral-800 mb-3">
+                  投資人權益：市場扭曲與資訊不對稱
+                </h3>
+                <p class="text-neutral-600 leading-relaxed">
+                  分析責任額制度如何影響投資市場生態，導致金融從業人員可能為了達標而提供偏頗的投資建議，造成投資人權益受損。這種制度使真正的市場需求與供給關係被扭曲，最終受害的是不知情的投資大眾。
+                </p>
+              </div>
+            </div>
+            <!-- 建議報導角度 -->
+            <div class="bg-gray-50 rounded-lg p-4 ml-14">
+              <h4
+                class="text-sm font-semibold text-neutral-700 mb-2 flex items-center"
+              >
+                <i class="fas fa-lightbulb text-yellow-500 mr-2"></i
+                >建議報導角度
+              </h4>
+              <ul class="space-y-2 text-sm text-neutral-600">
+                <li class="flex items-start">
+                  <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                  <span
+                    >從具體IPO案例分析，責任額如何影響股票實際定價與分配</span
+                  >
+                </li>
+                <li class="flex items-start">
+                  <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                  <span>揭露"業績導向"與"客戶最佳利益"之間的矛盾</span>
+                </li>
+                <li class="flex items-start">
+                  <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                  <span>分析責任額制度對整體資本市場效率的負面影響</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- 大綱卡片 5：改革建議 -->
+          <div
+            class="bg-white rounded-xl shadow-md p-6 md:p-8 border-l-4 border-tertiary-500 hover:shadow-xl transition-all duration-500"
+          >
+            <div class="flex items-start mb-6">
+              <div
+                class="w-10 h-10 rounded-full bg-tertiary-100 flex items-center justify-center text-tertiary-600 mr-4 flex-shrink-0 mt-1"
+              >
+                <span class="font-bold">5</span>
+              </div>
+              <div>
+                <h3 class="text-xl font-bold text-neutral-800 mb-3">
+                  改革與未來：制度調整與監管建議
+                </h3>
+                <p class="text-neutral-600 leading-relaxed">
+                  探討國際金融業的績效評估模式，提出台灣金融業可能的改革方向。包含更健康的業績評估制度、加強內部申訴機制、建立匿名舉報系統等。調查顯示，<span
+                    class="font-medium text-tertiary-700"
+                    >92%的受訪者</span
+                  >希望看到這一制度的根本性改革。
+                </p>
+              </div>
+            </div>
+            <!-- 建議報導角度 -->
+            <div class="bg-gray-50 rounded-lg p-4 ml-14">
+              <h4
+                class="text-sm font-semibold text-neutral-700 mb-2 flex items-center"
+              >
+                <i class="fas fa-lightbulb text-yellow-500 mr-2"></i
+                >建議報導角度
+              </h4>
+              <ul class="space-y-2 text-sm text-neutral-600">
+                <li class="flex items-start">
+                  <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                  <span>訪談先進國家金融監管專家，介紹國際最佳實踐</span>
+                </li>
+                <li class="flex items-start">
+                  <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                  <span
+                    >採訪少數已採取改革措施的台灣金融機構，分享成功經驗</span
+                  >
+                </li>
+                <li class="flex items-start">
+                  <i class="fas fa-check-circle text-green-500 mt-1 mr-2"></i>
+                  <span
+                    >提出具體的政策建議，呼籲主管機關正視並解決這一行業痼疾</span
+                  >
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- 下載完整報告 -->
+        <div class="text-center mt-16">
+          <a
+            href="#"
+            class="group relative inline-flex items-center justify-center px-8 py-4 bg-gradient-to-r from-primary-600 to-tertiary-600 text-white font-medium rounded-xl transition duration-300 transform hover:scale-105 hover:shadow-lg overflow-hidden"
+          >
+            <span class="relative z-10 flex items-center justify-center">
+              <i class="fas fa-file-pdf mr-2"></i>
+              下載完整調查報告
+            </span>
+            <span
+              class="absolute top-0 left-0 w-full h-full opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/10"
+            ></span>
+          </a>
+        </div>
+      </div>
+
+      <!-- 波浪底部裝飾 -->
+      <div class="absolute bottom-0 left-0 w-full overflow-hidden leading-none">
+        <svg
+          class="w-full h-12 md:h-16 lg:h-24"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 1200 120"
+          preserveAspectRatio="none"
+        >
+          <path
+            d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z"
+            style="fill: #fff"
+          ></path>
+        </svg>
+      </div>
+    </section>
+
+    <!-- 改進建議區塊 -->
+    <section
+      id="recommendations"
+      class="py-16 md:py-24 bg-white relative overflow-hidden"
+    >
+      <!-- 裝飾元素 -->
+      <div
+        class="absolute -top-20 -right-20 w-80 h-80 bg-tertiary-50 rounded-full filter blur-3xl opacity-30 -z-10"
+      ></div>
+      <div
+        class="absolute -bottom-20 -left-20 w-80 h-80 bg-primary-50 rounded-full filter blur-3xl opacity-30 -z-10"
+      ></div>
+
+      <div class="container mx-auto px-4 relative">
+        <div class="text-center max-w-3xl mx-auto mb-16">
+          <span
+            class="inline-block px-3 py-1 bg-tertiary-50 text-tertiary-700 font-medium text-sm rounded-full mb-4"
+          >
+            <i class="fas fa-lightbulb mr-1.5"></i>解決方案
+          </span>
+          <h2
+            class="text-3xl md:text-4xl font-bold mb-4 text-neutral-800 leading-tight"
+          >
+            <span class="relative inline-block">
+              <span
+                class="absolute -bottom-1 left-0 w-full h-3 bg-tertiary-200 opacity-50 rounded"
+              ></span>
+              系統性改進建議
+            </span>
+          </h2>
+          <p class="text-lg text-neutral-600 max-w-2xl mx-auto">
+            根據從業人員反饋與國際最佳實踐，提出消除IPO責任額制度弊病的具體建議
+          </p>
+        </div>
+
+        <!-- 建議卡片區 -->
+        <div
+          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto"
+        >
+          <!-- 建議卡片 1 -->
+          <div
+            class="modern-card rounded-xl bg-white shadow-md p-6 border-t-4 border-primary-500 hover:shadow-xl transition-all duration-500"
+          >
+            <div class="mb-6 text-center">
+              <div
+                class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-primary-400 to-primary-600 text-white shadow-md mb-4"
+              >
+                <i class="fas fa-balance-scale text-2xl"></i>
+              </div>
+              <h3 class="text-xl font-bold text-neutral-800">監管改革</h3>
+            </div>
+            <ul class="space-y-3 text-neutral-600">
+              <li class="flex items-start">
+                <i
+                  class="fas fa-check-circle text-primary-500 mt-1 mr-2 flex-shrink-0"
+                ></i>
+                <span>金管會制定明確規範，禁止強制性IPO責任額下達</span>
+              </li>
+              <li class="flex items-start">
+                <i
+                  class="fas fa-check-circle text-primary-500 mt-1 mr-2 flex-shrink-0"
+                ></i>
+                <span>建立匿名舉報系統，保護檢舉人免於職場報復</span>
+              </li>
+              <li class="flex items-start">
+                <i
+                  class="fas fa-check-circle text-primary-500 mt-1 mr-2 flex-shrink-0"
+                ></i>
+                <span>定期對金融機構進行內部壓力文化稽核</span>
+              </li>
+              <li class="flex items-start">
+                <i
+                  class="fas fa-check-circle text-primary-500 mt-1 mr-2 flex-shrink-0"
+                ></i>
+                <span>設立明確的員工權益保護條款與申訴管道</span>
+              </li>
+            </ul>
+          </div>
+
+          <!-- 建議卡片 2 -->
+          <div
+            class="modern-card rounded-xl bg-white shadow-md p-6 border-t-4 border-secondary-500 hover:shadow-xl transition-all duration-500"
+          >
+            <div class="mb-6 text-center">
+              <div
+                class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-secondary-400 to-secondary-600 text-white shadow-md mb-4"
+              >
+                <i class="fas fa-building text-2xl"></i>
+              </div>
+              <h3 class="text-xl font-bold text-neutral-800">機構改革</h3>
+            </div>
+            <ul class="space-y-3 text-neutral-600">
+              <li class="flex items-start">
+                <i
+                  class="fas fa-check-circle text-secondary-500 mt-1 mr-2 flex-shrink-0"
+                ></i>
+                <span>重新設計績效評估制度，淡化IPO銷售量在考核中的比重</span>
+              </li>
+              <li class="flex items-start">
+                <i
+                  class="fas fa-check-circle text-secondary-500 mt-1 mr-2 flex-shrink-0"
+                ></i>
+                <span>建立更全面的員工評價指標，包含客戶滿意度等質化指標</span>
+              </li>
+              <li class="flex items-start">
+                <i
+                  class="fas fa-check-circle text-secondary-500 mt-1 mr-2 flex-shrink-0"
+                ></i>
+                <span>提供心理健康資源與支持系統，包括壓力管理培訓</span>
+              </li>
+              <li class="flex items-start">
+                <i
+                  class="fas fa-check-circle text-secondary-500 mt-1 mr-2 flex-shrink-0"
+                ></i>
+                <span>實行零容忍職場霸凌政策，明確違規後果</span>
+              </li>
+            </ul>
+          </div>
+
+          <!-- 建議卡片 3 -->
+          <div
+            class="modern-card rounded-xl bg-white shadow-md p-6 border-t-4 border-tertiary-500 hover:shadow-xl transition-all duration-500"
+          >
+            <div class="mb-6 text-center">
+              <div
+                class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-tertiary-400 to-tertiary-600 text-white shadow-md mb-4"
+              >
+                <i class="fas fa-users text-2xl"></i>
+              </div>
+              <h3 class="text-xl font-bold text-neutral-800">行業自律</h3>
+            </div>
+            <ul class="space-y-3 text-neutral-600">
+              <li class="flex items-start">
+                <i
+                  class="fas fa-check-circle text-tertiary-500 mt-1 mr-2 flex-shrink-0"
+                ></i>
+                <span>證券商公會制定行業自律規範，杜絕責任額濫用</span>
+              </li>
+              <li class="flex items-start">
+                <i
+                  class="fas fa-check-circle text-tertiary-500 mt-1 mr-2 flex-shrink-0"
+                ></i>
+                <span>建立跨機構良性競爭環境，避免惡性競爭損害員工福祉</span>
+              </li>
+              <li class="flex items-start">
+                <i
+                  class="fas fa-check-circle text-tertiary-500 mt-1 mr-2 flex-shrink-0"
+                ></i>
+                <span>定期發布責任額實踐報告，增加透明度</span>
+              </li>
+              <li class="flex items-start">
+                <i
+                  class="fas fa-check-circle text-tertiary-500 mt-1 mr-2 flex-shrink-0"
+                ></i>
+                <span>建立行業交流平台，分享健康績效管理的最佳實踐</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- 支持我們的行動 -->
+        <div
+          class="mt-20 max-w-5xl mx-auto bg-gradient-to-r from-primary-50 to-tertiary-50 rounded-2xl shadow-md overflow-hidden"
+        >
+          <div class="p-8 md:p-10">
+            <div class="text-center mb-8">
+              <h3 class="text-2xl font-bold text-neutral-800 mb-3">
+                支持我們的行動
+              </h3>
+              <p class="text-neutral-600 max-w-3xl mx-auto">
+                加入我們的倡議行動，一起推動金融業改革，終結IPO責任額的壓迫性制度。您的聲音至關重要！
+              </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <!-- 行動項目 1 -->
+              <div
+                class="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-all"
+              >
+                <div class="flex items-center mb-4">
+                  <div
+                    class="w-12 h-12 rounded-full bg-primary-100 flex items-center justify-center text-primary-600 mr-4"
+                  >
+                    <i class="fas fa-signature text-xl"></i>
+                  </div>
+                  <h4 class="font-bold text-lg text-neutral-800">簽署聯署書</h4>
+                </div>
+                <p class="text-neutral-600 mb-4 text-sm">
+                  加入我們的線上聯署，要求金管會正視並規範責任額制度的濫用問題。
+                </p>
+                <a
+                  href="#"
+                  class="inline-flex items-center text-primary-600 hover:text-primary-700 font-medium"
+                >
+                  <span>立即聯署</span>
+                  <i class="fas fa-arrow-right ml-2 text-sm"></i>
+                </a>
+              </div>
+
+              <!-- 行動項目 2 -->
+              <div
+                class="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-all"
+              >
+                <div class="flex items-center mb-4">
+                  <div
+                    class="w-12 h-12 rounded-full bg-secondary-100 flex items-center justify-center text-secondary-600 mr-4"
+                  >
+                    <i class="fas fa-share-nodes text-xl"></i>
+                  </div>
+                  <h4 class="font-bold text-lg text-neutral-800">
+                    分享你的經歷
+                  </h4>
+                </div>
+                <p class="text-neutral-600 mb-4 text-sm">
+                  匿名分享你在金融業的親身經歷，幫助我們收集更多證據與案例。
+                </p>
+                <a
+                  href="#"
+                  class="inline-flex items-center text-secondary-600 hover:text-secondary-700 font-medium"
+                >
+                  <span>提交經歷</span>
+                  <i class="fas fa-arrow-right ml-2 text-sm"></i>
+                </a>
+              </div>
+
+              <!-- 行動項目 3 -->
+              <div
+                class="bg-white rounded-xl p-6 shadow-sm hover:shadow-md transition-all"
+              >
+                <div class="flex items-center mb-4">
+                  <div
+                    class="w-12 h-12 rounded-full bg-tertiary-100 flex items-center justify-center text-tertiary-600 mr-4"
+                  >
+                    <i class="fas fa-bullhorn text-xl"></i>
+                  </div>
+                  <h4 class="font-bold text-lg text-neutral-800">成為發聲者</h4>
+                </div>
+                <p class="text-neutral-600 mb-4 text-sm">
+                  在社群媒體分享此網站，使用 #終結IPO制度暴力 標籤讓更多人關注。
+                </p>
+                <a
+                  href="#"
+                  class="inline-flex items-center text-tertiary-600 hover:text-tertiary-700 font-medium"
+                >
+                  <span>分享網站</span>
+                  <i class="fas fa-arrow-right ml-2 text-sm"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 頁腳區塊 -->
+    <footer class="bg-neutral-900 text-white py-12 relative">
+      <div class="container mx-auto px-4">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-8 md:gap-12">
+          <!-- 關於我們 -->
+          <div>
+            <div class="flex items-center gap-3 mb-4">
+              <div
+                class="w-10 h-10 rounded-lg bg-white/10 flex items-center justify-center backdrop-blur-sm"
+              >
+                <i class="fas fa-chart-line text-primary-400"></i>
+              </div>
+              <span class="text-xl font-bold">金融業心聲</span>
+            </div>
+            <p class="text-neutral-400 text-sm leading-relaxed mb-4">
+              本網站致力於揭露台灣金融業IPO責任額制度的黑暗面，為金融從業人員發聲，推動行業改革。
+            </p>
+            <div class="flex gap-3">
+              <a
+                href="#"
+                class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center hover:bg-primary-500/80 transition-colors"
+              >
+                <i class="fab fa-facebook-f text-sm"></i>
+              </a>
+              <a
+                href="#"
+                class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center hover:bg-primary-500/80 transition-colors"
+              >
+                <i class="fab fa-twitter text-sm"></i>
+              </a>
+              <a
+                href="#"
+                class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center hover:bg-primary-500/80 transition-colors"
+              >
+                <i class="fab fa-instagram text-sm"></i>
+              </a>
+              <a
+                href="#"
+                class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center hover:bg-primary-500/80 transition-colors"
+              >
+                <i class="fab fa-linkedin-in text-sm"></i>
+              </a>
+            </div>
+          </div>
+
+          <!-- 快速連結 -->
+          <div>
+            <h3 class="text-lg font-semibold mb-4">快速連結</h3>
+            <ul class="space-y-2 text-neutral-400">
+              <li>
+                <a
+                  href="#overview"
+                  class="hover:text-primary-300 transition-colors"
+                  >數據總覽</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#top-quotes"
+                  class="hover:text-primary-300 transition-colors"
+                  >高分語錄</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#emotion-analysis"
+                  class="hover:text-primary-300 transition-colors"
+                  >情緒分析</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#report"
+                  class="hover:text-primary-300 transition-colors"
+                  >報導大綱</a
+                >
+              </li>
+              <li>
+                <a
+                  href="#recommendations"
+                  class="hover:text-primary-300 transition-colors"
+                  >改進建議</a
+                >
+              </li>
+            </ul>
+          </div>
+
+          <!-- 資源 -->
+          <div>
+            <h3 class="text-lg font-semibold mb-4">相關資源</h3>
+            <ul class="space-y-2 text-neutral-400">
+              <li>
+                <a href="#" class="hover:text-primary-300 transition-colors"
+                  >完整調查報告</a
+                >
+              </li>
+              <li>
+                <a href="#" class="hover:text-primary-300 transition-colors"
+                  >檢舉信範本下載</a
+                >
+              </li>
+              <li>
+                <a href="#" class="hover:text-primary-300 transition-colors"
+                  >金融業職場權益指南</a
+                >
+              </li>
+              <li>
+                <a href="#" class="hover:text-primary-300 transition-colors"
+                  >心理健康資源</a
+                >
+              </li>
+              <li>
+                <a href="#" class="hover:text-primary-300 transition-colors"
+                  >法律諮詢管道</a
+                >
+              </li>
+            </ul>
+          </div>
+
+          <!-- 聯絡我們 -->
+          <div>
+            <h3 class="text-lg font-semibold mb-4">聯絡我們</h3>
+            <ul class="space-y-3 text-neutral-400">
+              <li class="flex items-start">
+                <i class="fas fa-envelope mt-1 mr-3 text-primary-400"></i>
+                <span>info@iporeform.tw</span>
+              </li>
+              <li class="flex items-start">
+                <i class="fas fa-phone-alt mt-1 mr-3 text-primary-400"></i>
+                <span>02-xxxx-xxxx</span>
+              </li>
+              <li class="flex items-start">
+                <i class="fas fa-map-marker-alt mt-1 mr-3 text-primary-400"></i>
+                <span>台北市信義區金融大道123號</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div
+          class="mt-12 pt-8 border-t border-neutral-800 text-center text-neutral-500 text-sm"
+        >
+          <p>
+            © 2025 金融業心聲. 保留所有權利。本網站所有內容僅供教育和參考目的。
+          </p>
+        </div>
+      </div>
+
+      <!-- 返回頂部按鈕 -->
+      <button
+        id="back-to-top"
+        class="fixed right-6 bottom-6 w-12 h-12 rounded-full bg-primary-600 text-white shadow-lg flex items-center justify-center opacity-0 invisible translate-y-10 transition-all duration-300 hover:bg-primary-700 focus:outline-none z-50"
+      >
+        <i class="fas fa-arrow-up"></i>
+      </button>
+    </footer>
+
+    <!-- 分享彈出視窗 -->
+    <div
+      id="share-modal"
+      class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden items-center justify-center"
+    >
+      <div
+        class="bg-white rounded-2xl shadow-xl max-w-md w-full mx-4 overflow-hidden"
+      >
+        <div class="p-6">
+          <div class="flex justify-between items-center mb-4">
+            <h3 class="text-xl font-bold text-neutral-800">分享揭露報告</h3>
+            <button
+              id="share-close"
+              class="w-8 h-8 flex items-center justify-center rounded-full bg-neutral-100 text-neutral-600 hover:bg-neutral-200"
+            >
+              <i class="fas fa-xmark"></i>
+            </button>
+          </div>
+          <p class="text-neutral-600 mb-6">
+            幫助我們擴大影響力，讓更多人了解金融業責任額真相
+          </p>
+
+          <div class="grid grid-cols-2 gap-3 mb-6">
+            <a
+              href="#"
+              class="share-link flex items-center gap-3 p-3 rounded-lg bg-[#1877F2]/10 hover:bg-[#1877F2]/20 text-[#1877F2] transition-colors"
+            >
+              <div
+                class="w-10 h-10 rounded-full bg-[#1877F2] text-white flex items-center justify-center"
+              >
+                <i class="fab fa-facebook-f"></i>
+              </div>
+              <span class="font-medium">Facebook</span>
+            </a>
+            <a
+              href="#"
+              class="share-link flex items-center gap-3 p-3 rounded-lg bg-[#1DA1F2]/10 hover:bg-[#1DA1F2]/20 text-[#1DA1F2] transition-colors"
+            >
+              <div
+                class="w-10 h-10 rounded-full bg-[#1DA1F2] text-white flex items-center justify-center"
+              >
+                <i class="fab fa-twitter"></i>
+              </div>
+              <span class="font-medium">Twitter</span>
+            </a>
+            <a
+              href="#"
+              class="share-link flex items-center gap-3 p-3 rounded-lg bg-[#0A66C2]/10 hover:bg-[#0A66C2]/20 text-[#0A66C2] transition-colors"
+            >
+              <div
+                class="w-10 h-10 rounded-full bg-[#0A66C2] text-white flex items-center justify-center"
+              >
+                <i class="fab fa-linkedin-in"></i>
+              </div>
+              <span class="font-medium">LinkedIn</span>
+            </a>
+            <a
+              href="#"
+              class="share-link flex items-center gap-3 p-3 rounded-lg bg-[#25D366]/10 hover:bg-[#25D366]/20 text-[#25D366] transition-colors"
+            >
+              <div
+                class="w-10 h-10 rounded-full bg-[#25D366] text-white flex items-center justify-center"
+              >
+                <i class="fab fa-whatsapp"></i>
+              </div>
+              <span class="font-medium">WhatsApp</span>
+            </a>
+          </div>
+
+          <div class="relative">
+            <label class="text-sm font-medium text-neutral-700 mb-1 block"
+              >複製連結</label
+            >
+            <div class="flex">
+              <input
+                type="text"
+                value="https://iporeform.tw"
+                readonly
+                class="block w-full rounded-l-lg border border-gray-300 bg-gray-50 px-3 py-2 text-sm text-gray-700 focus:border-primary-500 focus:outline-none"
+              />
+              <button
+                id="copy-link"
+                class="bg-primary-600 hover:bg-primary-700 text-white rounded-r-lg px-4 text-sm font-medium"
+              >
+                複製
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 彩蛋：自我保護提示 -->
+    <div
+      id="secret-content"
+      class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex-col items-center justify-center"
+    >
+      <div
+        class="bg-white rounded-2xl shadow-xl max-w-xl w-full mx-4 overflow-hidden"
+      >
+        <div class="p-6">
+          <div class="flex justify-between items-center mb-6">
+            <h3 class="text-xl font-bold text-red-600 flex items-center">
+              <i class="fas fa-shield-alt mr-2"></i>
+              檢舉人安全指南
+            </h3>
+            <button
+              id="secret-close"
+              class="w-8 h-8 flex items-center justify-center rounded-full bg-neutral-100 text-neutral-600 hover:bg-neutral-200"
+            >
+              <i class="fas fa-xmark"></i>
+            </button>
+          </div>
+
+          <div class="text-neutral-700 space-y-4">
+            <p>如果您計劃檢舉IPO責任額制度中的不當行為，請先保護自己的安全：</p>
+
+            <ul class="space-y-3 pl-5 list-disc">
+              <li>
+                使用<span class="font-medium text-red-600"
+                  >非公司裝置與網路</span
+                >瀏覽檢舉相關網站與發送檢舉郵件
+              </li>
+              <li>請勿在公司電腦或手機上儲存任何檢舉相關文件</li>
+              <li>發送檢舉信前，請使用全新的匿名電子郵件帳戶</li>
+              <li>避免直接與同事討論檢舉事宜，以免資訊外流</li>
+              <li>保留所有證據的備份，但存放在安全的私人位置</li>
+              <li>若遭受報復，立即記錄並聯繫勞工局或律師諮詢</li>
+            </ul>
+
+            <div class="bg-red-50 p-4 rounded-lg mt-4">
+              <p class="text-red-700 font-medium">
+                注意：根據《勞動基準法》與《勞工保險條例》，您有權檢舉違法行為且不受報復。如遭到不當處分，可向勞工局或金管會申訴。
+              </p>
+            </div>
+          </div>
+
+          <div class="mt-6 text-center">
+            <button
+              id="secret-understand"
+              class="px-5 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-lg text-sm font-medium transition-colors"
+            >
+              我了解並會保護自己
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 通知提示框 -->
+    <div
+      id="copy-toast"
+      class="fixed bottom-4 left-1/2 transform -translate-x-1/2 bg-neutral-800 text-white px-4 py-2 rounded-lg shadow-lg opacity-0 invisible transition-all duration-300"
+    >
+      <span>已複製到剪貼簿！</span>
+    </div>
+
+    <!-- 彩蛋觸發器 -->
+    <div id="secret-trigger" class="secret-trigger"></div>
+
+    <!-- JavaScript引用 -->
+    <script src="main.js"></script>
+  </body>
+</html>

@@ -35,11 +35,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // 閱讀進度條
   window.addEventListener("scroll", function () {
-    const windowHeight = window.innerHeight;
-    const documentHeight = document.documentElement.scrollHeight - windowHeight;
-    const scrollTop = window.scrollY;
-    const width = (scrollTop / documentHeight) * 100 + "%";
-    progressLine.style.width = width;
+    if (progressLine) {
+      const windowHeight = window.innerHeight;
+      const documentHeight =
+        document.documentElement.scrollHeight - windowHeight;
+      const scrollTop = window.scrollY;
+      const width = (scrollTop / documentHeight) * 100 + "%";
+      progressLine.style.width = width;
+    }
   });
 
   // 行動選單
@@ -424,200 +427,217 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 /**
- * 初始化數據視覺化 (「殘酷事實」區塊)
- * Waits for 'ipoDataLoaded' event from dataLoader.js or uses window.ipoProductData.
+ * 初始化數據視覺化功能
+ * 負責處理各種圖表和數據展示的初始化
  */
-function setupInsightPanelListener() {
-  console.log("Main.js: setupInsightPanelListener() called.");
-  const insightPanel = document.getElementById("insight-panel");
-  if (!insightPanel) {
-    console.warn(
-      "Main.js: Insight panel element not found, cannot initialize."
-    );
-    return;
+function initDataVisualization() {
+  console.log("初始化數據視覺化...");
+
+  // 雷達圖初始化
+  const radarChartEl = document.getElementById("radar-chart");
+  if (radarChartEl) {
+    const ctx = radarChartEl.getContext("2d");
+
+    new Chart(ctx, {
+      type: "radar",
+      data: {
+        labels: [
+          "被欺壓感",
+          "壓迫性敘述",
+          "恐懼焦慮",
+          "情緒爆點",
+          "語氣強度",
+          "無奈感",
+          "羞辱感",
+          "委屈沉默",
+        ],
+        datasets: [
+          {
+            label: "情緒指標平均值",
+            data: [9.6, 9.1, 8.7, 8.4, 8.2, 8.0, 7.1, 7.9],
+            backgroundColor: "rgba(14, 165, 233, 0.2)",
+            borderColor: "rgba(14, 165, 233, 0.8)",
+            pointBackgroundColor: "rgba(14, 165, 233, 1)",
+            pointBorderColor: "#fff",
+            pointHoverBackgroundColor: "#fff",
+            pointHoverBorderColor: "rgba(14, 165, 233, 1)",
+          },
+        ],
+      },
+      options: {
+        scales: {
+          r: {
+            angleLines: {
+              color: "rgba(200, 200, 200, 0.3)",
+            },
+            grid: {
+              color: "rgba(200, 200, 200, 0.3)",
+            },
+            pointLabels: {
+              font: {
+                size: 12,
+              },
+            },
+            suggestedMin: 0,
+            suggestedMax: 10,
+          },
+        },
+        plugins: {
+          legend: {
+            display: false,
+          },
+        },
+      },
+    });
   }
 
-  let dataProcessed = false; // Flag to prevent processing multiple times
+  // 情緒雷達圖
+  const emotionRadarChartEl = document.getElementById("emotion-radar-chart");
+  if (emotionRadarChartEl) {
+    const ctx = emotionRadarChartEl.getContext("2d");
 
-  const processDataForInsightPanel = (data) => {
-    if (dataProcessed) {
-      console.log(
-        "Main.js: Data for insight panel already processed, skipping."
-      );
-      return;
-    }
-    if (!data || data.length === 0) {
-      console.warn("Main.js: No data received for Insight Panel.");
-      insightPanel.innerHTML =
-        '<div class="text-yellow-300 p-4">注意：數據分析區無可用資料。</div>';
-      return;
-    }
-    console.log(
-      "Main.js: Processing data for Insight Panel, length:",
-      data.length
-    );
-
-    const parseMinguoDate = (minguoDateStr) => {
-      if (!minguoDateStr || !minguoDateStr.includes("/")) return null;
-      const parts = minguoDateStr.split("/");
-      if (parts.length < 3) return null;
-      const year = parseInt(parts[0], 10) + 1911;
-      const month = parseInt(parts[1], 10) - 1;
-      const day = parseInt(parts[2], 10);
-      if (isNaN(year) || isNaN(month) || isNaN(day)) return null;
-      try {
-        return new Date(year, month, day);
-      } catch (e) {
-        return null;
-      }
-    };
-    const getDurationDays = (periodStr) => {
-      if (!periodStr || !periodStr.includes("-") || periodStr.trim() === "-") {
-        const partsCheck = periodStr ? periodStr.split("-") : [];
-        if (
-          partsCheck.length < 2 ||
-          !partsCheck[0].trim() ||
-          !partsCheck[1].trim()
-        )
-          return 0;
-      }
-      const [startStr, endStr] = periodStr.split("-");
-      let startDate = parseMinguoDate(startStr.trim());
-      let endDate = parseMinguoDate(endStr.trim());
-      if (startDate && endStr.trim().split("/").length === 2) {
-        const startYearMinguo = startStr.trim().split("/")[0];
-        endDate = parseMinguoDate(startYearMinguo + "/" + endStr.trim());
-      }
-      if (!startDate || !endDate || endDate < startDate) return 0;
-      const diffTime = Math.abs(endDate - startDate);
-      return Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
-    };
-
-    let maxResp = 0,
-      totalResp = 0,
-      totalEntriesForAvgResp = 0;
-    let minDays = Infinity,
-      totalDays = 0,
-      totalEntriesForAvgDays = 0;
-    const monthCounts = {};
-    let dailyRespArray = [];
-    let peakAmt = 0,
-      peakDateInfo = "—";
-    data.forEach((item) => {
-      const respString = String(item.responsibility || "").trim();
-      const resp = parseFloat(respString);
-      if (!isNaN(resp)) {
-        if (resp > maxResp) maxResp = resp;
-        totalResp += resp;
-        totalEntriesForAvgResp++;
-      }
-      const period = String(item.period || "").trim();
-      const duration = getDurationDays(period);
-      if (duration > 0) {
-        if (duration < minDays) minDays = duration;
-        totalDays += duration;
-        totalEntriesForAvgDays++;
-        if (!isNaN(resp)) {
-          const dailyResp = resp / duration;
-          dailyRespArray.push(dailyResp);
-          if (dailyResp > peakAmt) {
-            peakAmt = dailyResp;
-            peakDateInfo = `${item.broker} ${item.product} (${period})`;
-          }
-        }
-        const startMinguoDate = period.split("-")[0].trim();
-        if (startMinguoDate && startMinguoDate.includes("/")) {
-          const monthPart = startMinguoDate.split("/")[1];
-          if (monthPart) {
-            const jsMonth = parseInt(monthPart, 10);
-            if (!isNaN(jsMonth))
-              monthCounts[jsMonth] = (monthCounts[jsMonth] || 0) + 1;
-          }
-        }
-      }
+    new Chart(ctx, {
+      type: "radar",
+      data: {
+        labels: [
+          "被欺壓感",
+          "壓迫性敘述",
+          "恐懼焦慮",
+          "情緒爆點",
+          "語氣強度",
+          "無奈感",
+          "羞辱感",
+          "委屈沉默",
+        ],
+        datasets: [
+          {
+            label: "所有員工",
+            data: [9.6, 9.1, 8.7, 8.4, 8.2, 8.0, 7.1, 7.9],
+            backgroundColor: "rgba(139, 92, 246, 0.2)",
+            borderColor: "rgba(139, 92, 246, 0.8)",
+            pointBackgroundColor: "rgba(139, 92, 246, 1)",
+            pointBorderColor: "#fff",
+            pointHoverBackgroundColor: "#fff",
+            pointHoverBorderColor: "rgba(139, 92, 246, 1)",
+          },
+        ],
+      },
+      options: {
+        scales: {
+          r: {
+            angleLines: {
+              color: "rgba(200, 200, 200, 0.3)",
+            },
+            grid: {
+              color: "rgba(200, 200, 200, 0.3)",
+            },
+            pointLabels: {
+              font: {
+                size: 12,
+              },
+            },
+            suggestedMin: 0,
+            suggestedMax: 10,
+          },
+        },
+      },
     });
-    const avgResp =
-      totalEntriesForAvgResp > 0 ? totalResp / totalEntriesForAvgResp : 0;
-    const ratioResp = avgResp > 0 ? maxResp / avgResp : 0;
-    const avgDays =
-      totalEntriesForAvgDays > 0 ? totalDays / totalEntriesForAvgDays : 0;
-    const cutPct = avgDays > 0 ? Math.max(0, ((30 - avgDays) / 30) * 100) : 0;
-    if (minDays === Infinity) minDays = 0;
-    let hellMonth = 0,
-      hellCount = 0;
-    for (const monthKey in monthCounts) {
-      if (monthCounts[monthKey] > hellCount) {
-        hellCount = monthCounts[monthKey];
-        hellMonth = parseInt(monthKey, 10);
-      }
+  }
+
+  // 類別分布圖
+  const categoriesChartEl = document.getElementById("categories-chart");
+  if (categoriesChartEl) {
+    const ctx = categoriesChartEl.getContext("2d");
+
+    new Chart(ctx, {
+      type: "pie",
+      data: {
+        labels: ["責任額壓力", "職場霸凌", "自掏腰包", "客戶權益"],
+        datasets: [
+          {
+            data: [38, 26, 22, 14],
+            backgroundColor: [
+              "rgba(239, 68, 68, 0.7)",
+              "rgba(59, 130, 246, 0.7)",
+              "rgba(245, 158, 11, 0.7)",
+              "rgba(16, 185, 129, 0.7)",
+            ],
+            borderColor: [
+              "rgba(239, 68, 68, 1)",
+              "rgba(59, 130, 246, 1)",
+              "rgba(245, 158, 11, 1)",
+              "rgba(16, 185, 129, 1)",
+            ],
+            borderWidth: 1,
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            position: "bottom",
+          },
+        },
+      },
+    });
+  }
+
+  // 進度條動畫
+  const progressBars = document.querySelectorAll(".progress-bar");
+  progressBars.forEach((bar) => {
+    const targetWidth = bar.getAttribute("data-width");
+    if (targetWidth) {
+      setTimeout(() => {
+        bar.style.width = targetWidth;
+      }, 300);
     }
-    const avgPerDay =
-      dailyRespArray.length > 0
-        ? dailyRespArray.reduce((a, b) => a + b, 0) / dailyRespArray.length
-        : 0;
-    const hrQuota = avgPerDay > 0 ? avgPerDay / 8 : 0;
-
-    const updateElementTextAndPrepareForAnimation = (
-      id,
-      value,
-      fractionDigits = 0
-    ) => {
-      const element = document.getElementById(id);
-      if (element) {
-        let textValue =
-          typeof value === "number"
-            ? value.toFixed(fractionDigits)
-            : String(value);
-        element.textContent = textValue;
-        if (element.classList.contains("counter"))
-          element.dataset.target = textValue;
-      } else {
-        console.warn(
-          `Main.js: Element with id '${id}' not found for insight panel.`
-        );
-      }
-    };
-    updateElementTextAndPrepareForAnimation("ins-maxResp", maxResp);
-    updateElementTextAndPrepareForAnimation("ins-avgResp", avgResp, 1);
-    updateElementTextAndPrepareForAnimation("ins-ratioResp", ratioResp, 1);
-    updateElementTextAndPrepareForAnimation("ins-avgDays", avgDays, 1);
-    updateElementTextAndPrepareForAnimation("ins-minDays", minDays);
-    updateElementTextAndPrepareForAnimation("ins-cutPct", cutPct);
-    updateElementTextAndPrepareForAnimation(
-      "ins-hellMonth",
-      hellMonth || "N/A"
-    );
-    updateElementTextAndPrepareForAnimation("ins-hellCount", hellCount);
-    updateElementTextAndPrepareForAnimation("ins-avgPerDay", avgPerDay, 1);
-    updateElementTextAndPrepareForAnimation("ins-hrQuota", hrQuota, 1);
-    updateElementTextAndPrepareForAnimation("ins-peakDate", peakDateInfo);
-    updateElementTextAndPrepareForAnimation("ins-peakAmt", peakAmt, 1);
-
-    console.log("Main.js: Insight panel data updated.");
-    dataProcessed = true; // Set flag
-    if (
-      window.animationsModule &&
-      typeof window.animationsModule.reobserveCounters === "function"
-    ) {
-      window.animationsModule.reobserveCounters(
-        insightPanel.querySelectorAll(".counter")
-      );
-    }
-  };
-
-  document.addEventListener("ipoDataLoaded", function (event) {
-    console.log("Main.js: Event 'ipoDataLoaded' received.");
-    processDataForInsightPanel(event.detail);
   });
 
-  // Optional: Attempt to process if data already exists and event was missed (e.g. script order)
-  // This should be used cautiously or if DOMContentLoaded order can be guaranteed for dataLoader first.
-  // setTimeout(() => {
-  //   if (!dataProcessed && window.ipoProductData) {
-  //      console.log("Main.js: Processing pre-existing window.ipoProductData for insight panel.");
-  //      processDataForInsightPanel(window.ipoProductData);
-  //   }
-  // }, 500); // Delay to give event listener a chance
+  // 在這裡添加原本在對話彩蛋函數
+  setupSecretDialog();
+}
+
+/**
+ * 原本的對話彩蛋功能實現
+ */
+function setupSecretDialog() {
+  const secretTrigger = document.getElementById("secret-trigger");
+  const secretContent = document.getElementById("secret-content");
+  const secretClose = document.getElementById("secret-close");
+  const secretUnderstand = document.getElementById("secret-understand");
+
+  if (secretTrigger && secretContent && secretClose && secretUnderstand) {
+    let secretClickCount = 0;
+
+    secretTrigger.addEventListener("click", function () {
+      secretClickCount++;
+
+      if (secretClickCount >= 3) {
+        secretContent.classList.remove("hidden");
+        secretContent.classList.add("flex");
+        secretClickCount = 0;
+      }
+    });
+
+    secretClose.addEventListener("click", function () {
+      secretContent.classList.add("hidden");
+      secretContent.classList.remove("flex");
+    });
+
+    secretUnderstand.addEventListener("click", function () {
+      secretContent.classList.add("hidden");
+      secretContent.classList.remove("flex");
+    });
+
+    // 鍵盤組合觸發彩蛋（Ctrl+Shift+X）
+    document.addEventListener("keydown", function (e) {
+      if (e.ctrlKey && e.shiftKey && e.key === "X") {
+        secretContent.classList.remove("hidden");
+        secretContent.classList.add("flex");
+      }
+    });
+  }
 }
 
 // 初始化移動裝置選單

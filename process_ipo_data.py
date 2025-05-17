@@ -1,110 +1,7 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-解析證券商基本資料並統計分支數量，
-並生成對應的簡稱庫 (branch_full_name → parent_company 映射)
-
-使用方式:
-  python parse_brokers.py 證券商基本資料.csv
-
-輸出檔案:
-  branch_counts.csv      分支統計結果 (parent_company, branch_count)
-  abbreviation_map.json  簡稱庫 (branch_full_name → parent_company)
-"""
-
 import pandas as pd
-import argparse
-import os
-import json
-import sys
 import re
 import datetime
 import numpy as np
-
-# 自訂母公司簡稱對照字典
-CUSTOM_ABBREV = {
-    "中國信託": "中信",
-    "臺灣企銀": "台企",
-    "台灣企銀": "台企",
-    "土地銀行": "土銀",
-    "臺銀證券": "臺銀",
-    "合作金庫": "合庫",
-    "彰化銀行": "彰銀",
-    "第一金": "第一證",
-    "統一證券": "統一",
-    "元富證券": "元富",
-    "台中銀行": "台中銀",
-    "兆豐證券": "兆豐",
-    "國泰證券": "國泰",
-    "群益金鼎": "群益",
-    "凱基證券": "凱基",
-    "華南永昌": "華南",
-    "富邦證券": "富邦",
-    "元大證券": "元大",
-    "永豐金": "永豐",
-    "玉山證券": "玉山",
-    "新光證券": "新光",
-    "陽信證券": "陽信",
-    "聯邦證券": "聯邦",
-    "康和證券": "康和",
-    "台新證券": "台新",
-    "國票證券": "國票",
-    "亞東證券": "亞東",
-    "致和證券": "致和",
-    "安泰證券": "安泰",
-    "福邦證券": "福邦",
-    "永全證券": "永全",
-    "大昌證券": "大昌",
-    "德信證券": "德信",
-    "福勝證券": "福勝",
-    "光和證券": "光和",
-    "新百王證券": "新百王",
-    "高橋證券": "高橋",
-    "美好證券": "美好",
-    "大展證券": "大展",
-    "富隆證券": "富隆",
-    "盈溢證券": "盈溢",
-    "寶盛證券": "寶盛",
-    "永興證券": "永興",
-    "日進證券": "日進",
-    "日茂證券": "日茂",
-    "犇亞證券": "犇亞",
-    "北城證券": "北城",
-    "石橋證券": "石橋",
-    "中農證券": "中農",
-    "口袋證券": "口袋",
-    "京城證券": "京城",
-    "宏遠證券": "宏遠",
-    "元大期貨": "元大",
-    "群益期貨": "群益",
-    "港商麥格理": "麥格理",
-    "台灣匯立": "匯立",
-    "美林": "美林",
-    "台灣摩根士丹利": "摩根士丹利",
-    "美商高盛": "高盛",
-    "港商野村": "野村",
-    "港商法國興業": "法國興業",
-    "花旗環球": "花旗",
-    "新加坡商瑞銀": "瑞銀",
-    "大和國泰": "大和國泰",
-    "法銀巴黎": "法銀巴黎",
-    "香港上海匯豐": "匯豐",
-    "摩根大通": "摩根大通"
-}
-
-def normalize_name(name):
-    """標準化名稱：移除多餘空格、統一分隔符"""
-    if not isinstance(name, str):
-        return str(name).strip()
-    return re.sub(r'\s+', ' ', name.replace('－', '-').strip())
-
-def extract_parent_name(full_name):
-    """從完整分行名稱提取母公司名稱"""
-    full_name = normalize_name(full_name)
-    # 分割符號：- 或 空格，僅分割一次
-    parts = re.split(r'[- ]', full_name, maxsplit=1)
-    parent = parts[0].strip()
-    return parent
 
 # 函數用於清理和解析時間戳
 def parse_timestamp(timestamp):
@@ -255,55 +152,15 @@ def score_entry(dialog, inner_thought):
     refined_dialog = dialog.replace("、", "，").strip() if dialog else ""
     refined_inner_thought = inner_thought.replace("、", "，").strip() if inner_thought else ""
     
+    # 提取關鍵詞或生成潤飾後對話/內心話
+    refined_dialog = refine_text(dialog, "dialog")
+    refined_inner_thought = refine_text(inner_thought, "thought")
+    
     # 濃縮金句
-    key_quote = ""
-    if "裙子" in combined_text and "短" in combined_text:
-        key_quote = "主管以性別歧視言論暗示女性應利用身體優勢"
-    elif "貸款" in combined_text and "買" in combined_text and "責任額" in combined_text:
-        key_quote = "主管鼓勵員工貸款購買商品達成責任額"
-    elif "移轉客戶" in combined_text:
-        key_quote = "主管威脅未達標者將移轉客戶資源"
-    elif "詐騙" in combined_text:
-        key_quote = "員工被迫使用不當銷售手法，感覺像詐騙集團"
-    elif "IPO" in combined_text and "自己買" in combined_text:
-        key_quote = "員工被迫自掏腰包購買IPO達成業績"
-    elif "使命必達" in combined_text:
-        key_quote = "主管以使命必達為由強制員工達成不合理目標"
-    elif "職場霸凌" in combined_text:
-        key_quote = "主管以言語暴力與威脅實施職場霸凌"
-    elif "犧牲自己" in combined_text:
-        key_quote = "主管暗示女性員工可為業績犧牲自己"
-    else:
-        # 從原文中提取濃縮金句
-        important_segments = re.findall(r'「[^」]+」|『[^』]+』|"[^"]+"', combined_text)
-        if important_segments:
-            key_quote = important_segments[0].strip('「」『』""')
-        else:
-            # 如果沒有引號內容，提取最強烈的句子
-            sentences = re.split(r'[。！？\n]', combined_text)
-            if sentences:
-                key_quote = max(sentences, key=len).strip()
-                if len(key_quote) > 30:
-                    key_quote = key_quote[:30] + "..."
+    key_quote = extract_key_quote(dialog, inner_thought)
     
     # 適合報導的爆點標題
-    headline = ""
-    if "性別歧視" in combined_text or "裙子" in combined_text:
-        headline = "金融業爆性別歧視：主管暗示女職員「利用身體特徵」達成業績"
-    elif "貸款" in combined_text and "IPO" in combined_text:
-        headline = "職場壓力驚人：金融從業人員被迫貸款購買IPO達標"
-    elif "使命必達" in combined_text and "IPO" in combined_text:
-        headline = "金融業「使命必達」文化下的員工苦痛：IPO責任額成無形枷鎖"
-    elif "客戶移轉" in combined_text:
-        headline = "金融業曝光威脅手段：未達責任額就移轉客戶資源"
-    elif "詐騙" in combined_text:
-        headline = "從業人員心聲：「我們像詐騙集團」揭露金融業銷售亂象"
-    elif "責任額" in combined_text and "壓力" in combined_text:
-        headline = "責任額壓力下的金融從業人員：每月都在買單過活"
-    elif "吃藥" in combined_text or "看醫生" in combined_text:
-        headline = "過度銷售壓力致金融從業人員心理健康亮紅燈"
-    else:
-        headline = "金融業IPO銷售壓力調查：員工被迫達成不合理責任額"
+    headline = generate_headline(dialog, inner_thought, scores)
     
     # 返回評分和其他資訊
     return {
@@ -315,155 +172,119 @@ def score_entry(dialog, inner_thought):
         "適合報導的爆點標題": headline
     }
 
-def main():
-    parser = argparse.ArgumentParser(
-        description='解析證券商基本資料並統計分支數量與生成簡稱庫',
-        formatter_class=argparse.RawTextHelpFormatter
-    )
-    parser.add_argument('csv_file', help='證券商基本資料 CSV 檔案路徑')
-    parser.add_argument('--output', '-o',
-                        default='branch_counts.csv',
-                        help='分支統計輸出 CSV 檔名')
-    parser.add_argument('--map', '-m',
-                        default='abbreviation_map.json',
-                        help='簡稱庫輸出 JSON 檔名')
-    args = parser.parse_args()
-
-    # 檢查輸入檔案是否存在
-    if not os.path.isfile(args.csv_file):
-        print(f"錯誤: 找不到檔案 {args.csv_file}", file=sys.stderr)
-        sys.exit(1)
-
-    try:
-        # 讀取 CSV，指定編碼並處理 '可能的 BOM
-        df = pd.read_csv(args.csv_file, encoding='utf-8-sig')
-    except Exception as e:
-        print(f"錯誤: 無法讀取 CSV 檔案 {args.csv_file}: {e}", file=sys.stderr)
-        sys.exit(1)
-
-    # 檢查是否有足夠欄位
-    if df.shape[1] < 2:
-        print("錯誤: CSV 檔案欄位不足，至少需要證券商名稱", file=sys.stderr)
-        sys.exit(1)
-
-    # 假設第二欄為證券商名稱
-    name_col = '證券商名稱'
-
-    # 清理數據：移除空值並標準化名稱
-    df = df.dropna(subset=[name_col])
-    df[name_col] = df[name_col].apply(normalize_name)
-
-    # 提取母公司名稱
-    df['parent_raw'] = df[name_col].apply(extract_parent_name)
-
-    # 套用自訂簡稱，找不到則保留原始名稱
-    df['parent_company'] = df['parent_raw'].apply(
-        lambda name: CUSTOM_ABBREV.get(name, name)
-    )
-
-    # 計算每個母公司的分支數量
-    counts = (
-        df['parent_company']
-        .value_counts()
-        .rename_axis('parent_company')
-        .reset_index(name='branch_count')
-        .sort_values(by=['branch_count', 'parent_company'], ascending=[False, True])
-    )
-
-    # 輸出分支統計 CSV
-    try:
-        counts.to_csv(args.output, index=False, encoding='utf-8-sig')
-        print(f"已將分支統計儲存至 {args.output}")
-    except Exception as e:
-        print(f"錯誤: 無法寫入 {args.output}: {e}", file=sys.stderr)
-        sys.exit(1)
-
-    # 生成簡稱庫：branch_full_name → parent_company
-    mapping = dict(
-        zip(
-            df[name_col],
-            df['parent_company']
-        )
-    )
-
-    # 輸出簡稱庫 JSON
-    try:
-        with open(args.map, 'w', encoding='utf-8') as f:
-            json.dump(mapping, f, ensure_ascii=False, indent=2)
-        print(f"已將簡稱庫儲存至 {args.map}")
-    except Exception as e:
-        print(f"錯誤: 無法寫入 {args.map}: {e}", file=sys.stderr)
-        sys.exit(1)
-
-    # 列印母公司簡稱列表
-    print("\n# 母公司簡稱列表 (依分支數量排序):")
-    for _, row in counts.iterrows():
-        print(f"- {row['parent_company']} ({row['branch_count']} 間)")
-
-    # 處理資料（假設CSV格式第一行是標題）
-    headers = ["時間戳記", "職場壓力話術／內部對話片段", "你內心真正想說的話"]
-    rows = []
+def refine_text(text, text_type):
+    """潤飾原始文本"""
+    if not text:
+        return ""
     
-    for line in data_lines:
-        parts = line.split(",", 2)  # 只分割前兩個逗號
-        if len(parts) >= 3:
-            rows.append(parts)
-        elif len(parts) == 2:
-            rows.append([parts[0], parts[1], ""])
+    # 簡單潤飾邏輯
+    refined = text.replace("、", "，").strip()
     
-    # 創建 DataFrame
-    df = pd.DataFrame(rows, columns=headers)
+    # 如果是特別長的文本，嘗試提取或總結
+    if len(refined) > 100:
+        if text_type == "dialog":
+            return extract_summary(refined, "主管以強制手段要求員工達成IPO責任額")
+        else:
+            return extract_summary(refined, "員工對不合理業績壓力的強烈不滿與反抗")
     
-    # 清理和處理資料
-    df = df.drop_duplicates()
-    df = df.dropna(how='all')
+    return refined
+
+def extract_summary(text, default_summary):
+    """從長文本中提取摘要"""
+    if not text:
+        return default_summary
     
-    # 格式化時間戳記
-    df["時間戳記"] = df["時間戳記"].apply(parse_timestamp)
+    # 嘗試找出最重要的句子
+    sentences = re.split(r'[。！？\n]', text)
+    sentences = [s.strip() for s in sentences if s.strip()]
     
-    # 重命名列名
-    df = df.rename(columns={
-        "時間戳記": "時間戳記",
-        "職場壓力話術／內部對話片段": "原始話術／內部對話",
-        "你內心真正想說的話": "原始內心話語"
-    })
+    if not sentences:
+        return default_summary
     
-    # 對每筆資料進行評分
-    results = []
-    for _, row in df.iterrows():
-        dialog = row["原始話術／內部對話"] if pd.notna(row["原始話術／內部對話"]) else ""
-        inner_thought = row["原始內心話語"] if pd.notna(row["原始內心話語"]) else ""
-        
-        scores = score_entry(dialog, inner_thought)
-        results.append({
-            "時間戳記": row["時間戳記"],
-            "原始話術／內部對話": dialog,
-            "原始內心話語": inner_thought,
-            **scores
-        })
+    # 關鍵詞權重
+    keywords = ["責任額", "貸款", "自己買", "IPO", "使命必達", "裙子", "犧牲", "移轉客戶", "約談", "考績", "資遣", "壓力"]
     
-    # 創建結果 DataFrame
-    result_df = pd.DataFrame(results)
+    # 找出包含最多關鍵詞的句子
+    best_sentence = max(sentences, key=lambda s: sum(1 for k in keywords if k in s))
     
-    # 設定欄位順序
-    column_order = [
-        "時間戳記", "原始話術／內部對話", "原始內心話語", "潤飾後話術", "潤飾後內心話語",
-        "無奈感 (1-10)", "被欺壓感 (1-10)", "羞辱感 (1-10)", "性別歧視感 (1-10)",
-        "侮辱性 (1-10)", "恐懼焦慮 (1-10)", "壓迫性敘述 (1-10)", "情緒爆點值 (1-10)",
-        "委屈沉默 (1-10)", "語氣強度 (1-10)", "NLP 總分 (1-100)",
-        "濃縮金句", "適合報導的爆點標題"
-    ]
-    result_df = result_df[column_order]
+    if len(best_sentence) > 50:
+        return best_sentence[:50] + "..."
     
-    # 輸出 CSV 檔案
-    result_df.to_csv("IPO.csv", index=False)
+    return best_sentence or default_summary
+
+def extract_key_quote(dialog, inner_thought):
+    """從對話和內心話中提取濃縮金句"""
+    combined_text = dialog + " " + inner_thought if inner_thought else dialog
     
-    # 生成 Markdown 報告
-    generate_markdown_report(result_df)
+    # 特殊關鍵詞檢測
+    if "裙子" in combined_text and "短" in combined_text:
+        return "主管以性別歧視言論暗示女性應利用身體優勢"
+    elif "貸款" in combined_text and "買" in combined_text and "責任額" in combined_text:
+        return "主管鼓勵員工貸款購買商品達成責任額"
+    elif "移轉客戶" in combined_text:
+        return "主管威脅未達標者將移轉客戶資源"
+    elif "詐騙" in combined_text:
+        return "員工被迫使用不當銷售手法，感覺像詐騙集團"
+    elif "IPO" in combined_text and "自己買" in combined_text:
+        return "員工被迫自掏腰包購買IPO達成業績"
+    elif "使命必達" in combined_text:
+        return "主管以使命必達為由強制員工達成不合理目標"
+    elif "職場霸凌" in combined_text:
+        return "主管以言語暴力與威脅實施職場霸凌"
+    elif "犧牲自己" in combined_text:
+        return "主管暗示女性員工可為業績犧牲自己"
     
-    print("分析完成，已輸出 IPO.csv 和 IPO.md 檔案")
+    # 從原文中提取濃縮金句
+    important_segments = re.findall(r'「[^」]+」|『[^』]+』|"[^"]+"', combined_text)
+    if important_segments:
+        key_quote = important_segments[0].strip('「」『』""')
+        if len(key_quote) > 30:
+            key_quote = key_quote[:30] + "..."
+        return key_quote
+    
+    # 如果沒有引號內容，提取最強烈的句子
+    sentences = re.split(r'[。！？\n]', combined_text)
+    sentences = [s.strip() for s in sentences if s.strip()]
+    if sentences:
+        key_sentence = max(sentences, key=len)
+        if len(key_sentence) > 30:
+            key_sentence = key_sentence[:30] + "..."
+        return key_sentence
+    
+    return "金融業銷售壓力下的職場言語暴力"
+
+def generate_headline(dialog, inner_thought, scores):
+    """生成適合報導的爆點標題"""
+    combined_text = dialog + " " + inner_thought if inner_thought else dialog
+    
+    # 根據文本內容和得分生成標題
+    if "性別歧視" in combined_text or "裙子" in combined_text:
+        return "金融業爆性別歧視：主管暗示女職員「利用身體特徵」達成業績"
+    elif "貸款" in combined_text and "IPO" in combined_text:
+        return "職場壓力驚人：金融從業人員被迫貸款購買IPO達標"
+    elif "使命必達" in combined_text and "IPO" in combined_text:
+        return "金融業「使命必達」文化下的員工苦痛：IPO責任額成無形枷鎖"
+    elif "客戶移轉" in combined_text:
+        return "金融業曝光威脅手段：未達責任額就移轉客戶資源"
+    elif "詐騙" in combined_text:
+        return "從業人員心聲：「我們像詐騙集團」揭露金融業銷售亂象"
+    elif "責任額" in combined_text and "壓力" in combined_text:
+        return "責任額壓力下的金融從業人員：每月都在買單過活"
+    elif "吃藥" in combined_text or "看醫生" in combined_text:
+        return "過度銷售壓力致金融從業人員心理健康亮紅燈"
+    
+    # 如果沒有明確的主題，根據情緒得分生成通用標題
+    if scores["被欺壓感 (1-10)"] >= 8:
+        return "金融業IPO銷售文化調查：員工在權力不對等下的職場壓迫"
+    elif scores["羞辱感 (1-10)"] >= 8:
+        return "金融業職場暴力：銷售壓力下的公開羞辱與言語霸凌"
+    elif scores["恐懼焦慮 (1-10)"] >= 8:
+        return "恐懼與焦慮：金融從業人員在IPO責任額壓力下的心理重擔"
+    else:
+        return "金融業IPO銷售壓力調查：員工被迫達成不合理責任額"
 
 def generate_markdown_report(df):
+    """生成Markdown報告"""
     # 計算基本統計數據
     total_entries = len(df)
     avg_score = round(df["NLP 總分 (1-100)"].mean(), 1)
@@ -546,17 +367,145 @@ def generate_markdown_report(df):
     markdown_content += f"""
 ## 🕵️‍♂️ 深度洞察與報導建議  
 1. **職場權力話術模板**：{power_pattern}  
+
 2. **內心反差剖析**：{inner_contrast}  
+
 3. **核心痛點統整**：{core_pain}  
+
 4. **後續追蹤報導角度**：  
    - {follow_up_angles[0]}  
    - {follow_up_angles[1]}  
    - {follow_up_angles[2]}  
 """
     
+    return markdown_content
+
+# 讀取和處理數據
+def process_data(data_text):
+    lines = data_text.strip().split('\n')
+    
+    # 尋找標題行
+    header_found = False
+    headers = []
+    data_lines = []
+    
+    for line in lines:
+        if not header_found and "時間戳記" in line:
+            headers = line.split(',')
+            header_found = True
+            continue
+        
+        if header_found and line.strip():
+            data_lines.append(line)
+    
+    # 如果找不到標題行，使用預設標題
+    if not header_found:
+        headers = ["時間戳記", "職場壓力話術／內部對話片段", "你內心真正想說的話"]
+    
+    # 處理數據行
+    rows = []
+    for line in data_lines:
+        # 處理逗號在引號中的情況
+        if line.count('"') >= 2:
+            parts = []
+            in_quotes = False
+            current_part = ""
+            
+            for char in line:
+                if char == '"':
+                    in_quotes = not in_quotes
+                    continue
+                
+                if char == ',' and not in_quotes:
+                    parts.append(current_part)
+                    current_part = ""
+                else:
+                    current_part += char
+            
+            parts.append(current_part)  # 添加最後一部分
+            
+            # 確保有三個部分
+            while len(parts) < 3:
+                parts.append("")
+            
+            rows.append(parts[:3])  # 只取前三個部分
+        else:
+            parts = line.split(',', 2)  # 只分割前兩個逗號
+            if len(parts) >= 3:
+                rows.append(parts[:3])
+            elif len(parts) == 2:
+                rows.append([parts[0], parts[1], ""])
+    
+    # 創建 DataFrame
+    df = pd.DataFrame(rows, columns=headers[:3])
+    
+    # 重命名列名以匹配目標格式
+    df = df.rename(columns={
+        headers[0]: "時間戳記",
+        headers[1]: "原始話術／內部對話",
+        headers[2]: "原始內心話語"
+    })
+    
+    # 確保所有必要的列都存在
+    for col in ["時間戳記", "原始話術／內部對話", "原始內心話語"]:
+        if col not in df.columns:
+            df[col] = ""
+    
+    # 清理和處理資料
+    df = df.drop_duplicates()
+    df = df.dropna(how='all')
+    
+    # 格式化時間戳記
+    df["時間戳記"] = df["時間戳記"].apply(parse_timestamp)
+    
+    return df
+
+def main():
+    # 範例數據
+    data_text = """時間戳記,職場壓力話術／內部對話片段,你內心真正想說的話
+2025/5/16 08:52:49,妳裙子穿得比別人短，責任額跟其他男生一樣不覺得愧疚嗎？你是女生要會利用自己優勢，女生怎麼可能賣不出去，是妳要不要而已你知道方法的。,去死吧"""
+    
+    # 處理數據
+    df = process_data(data_text)
+    
+    # 對每筆資料進行評分
+    results = []
+    for _, row in df.iterrows():
+        dialog = row["原始話術／內部對話"] if pd.notna(row["原始話術／內部對話"]) else ""
+        inner_thought = row["原始內心話語"] if pd.notna(row["原始內心話語"]) else ""
+        
+        scores = score_entry(dialog, inner_thought)
+        results.append({
+            "時間戳記": row["時間戳記"],
+            "原始話術／內部對話": dialog,
+            "原始內心話語": inner_thought,
+            **scores
+        })
+    
+    # 創建結果 DataFrame
+    result_df = pd.DataFrame(results)
+    
+    # 設定欄位順序
+    column_order = [
+        "時間戳記", "原始話術／內部對話", "原始內心話語", "潤飾後話術", "潤飾後內心話語",
+        "無奈感 (1-10)", "被欺壓感 (1-10)", "羞辱感 (1-10)", "性別歧視感 (1-10)",
+        "侮辱性 (1-10)", "恐懼焦慮 (1-10)", "壓迫性敘述 (1-10)", "情緒爆點值 (1-10)",
+        "委屈沉默 (1-10)", "語氣強度 (1-10)", "NLP 總分 (1-100)",
+        "濃縮金句", "適合報導的爆點標題"
+    ]
+    result_df = result_df[column_order]
+    
+    # 輸出 CSV 檔案
+    result_df.to_csv("IPO.csv", index=False)
+    
+    # 生成 Markdown 報告內容
+    markdown_content = generate_markdown_report(result_df)
+    
     # 輸出 Markdown 檔案
     with open("IPO.md", "w", encoding="utf-8") as f:
         f.write(markdown_content)
+    
+    print("分析完成，已輸出 IPO.csv 和 IPO.md 檔案")
 
-if __name__ == '__main__':
-    main()
+if __name__ == "__main__":
+    main() 
