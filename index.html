@@ -375,6 +375,37 @@
       </div>
     </section>
 
+    <!-- IPO營業員心聲集結區 -->
+    <div id="testimony-section-container"></div>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        fetch("partials/testimony-section/testimony-section.html")
+          .then((response) => response.text())
+          .then((html) => {
+            document.getElementById("testimony-section-container").innerHTML =
+              html;
+            // 初始化心聲卡片功能
+            if (typeof initCardFlip === "function") {
+              initCardFlip();
+            }
+            if (typeof initTabFiltering === "function") {
+              initTabFiltering();
+            }
+            if (typeof initEasterEgg === "function") {
+              initEasterEgg();
+            }
+          })
+          .catch((error) => {
+            console.error("載入營業員心聲區塊時出錯:", error);
+            document.getElementById("testimony-section-container").innerHTML =
+              '<div class="text-red-500 p-4 bg-white rounded-lg shadow-card">載入營業員心聲區塊時出錯，請重新整理頁面。</div>';
+          });
+      });
+    </script>
+
+    <!-- 彩蛋區域 - 由JS載入 -->
+    <div id="easter-egg-container"></div>
+
     <!-- 事件時間軸 -->
     <div id="timeline-section" class="relative z-10">
       <section id="timeline" class="py-20 px-6 bg-white">
@@ -788,12 +819,12 @@
                   <p
                     class="italic text-neutral-600 text-sm mb-2 leading-relaxed"
                   >
-                    「募集期間一律禁假，沒達標就繼續禁假一個月。」<br />
-                    「孕婦產假也要扛責任額，照樣分配、不准請假。」<br />
-
-                    <strong class="text-primary-dark"
-                      >但凡會呼吸的，都要有責任額！</strong
-                    >
+                    「募集期間一律禁假，沒達標就禁公出一個月在公司call客。」<br />
+                    「喪假、產假也要分配責任額，照樣要扛，不准說不行。」<br />
+                    「沒達標的下午到協理辦公室 call 客」<br />
+                    <strong class="text-primary-dark">
+                      能呼吸就要扛責任額，沒達就準備被關進電話牢！
+                    </strong>
                   </p>
                   <p class="text-right text-neutral-500 text-xs">
                     — 基層營業員的心聲
@@ -1304,6 +1335,9 @@
       <!-- <div id="labor-template"></div> -->
     </div>
 
+    <!-- 自定義心聲卡片樣式 -->
+    <link rel="stylesheet" href="css/testimony-cards.css" />
+
     <!-- JavaScript -->
     <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/responsive/2.4.0/js/dataTables.responsive.min.js"></script>
@@ -1318,9 +1352,9 @@
     <script src="js/tableUtil.js"></script>
     <script src="js/enhancedDataTable.js"></script>
     <script src="js/enhancedTable.js"></script>
-    <script src="js/mobileOptimizations.js"></script>
     <!-- 主程序入口點必須最後加載 -->
     <script src="js/shareModal.js"></script>
+    <script src="js/testimony-cards.js"></script>
     <script src="js/app.js"></script>
 
     <script>

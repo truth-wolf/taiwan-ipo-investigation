@@ -35,11 +35,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // 閱讀進度條
   window.addEventListener("scroll", function () {
-    const windowHeight = window.innerHeight;
-    const documentHeight = document.documentElement.scrollHeight - windowHeight;
-    const scrollTop = window.scrollY;
-    const width = (scrollTop / documentHeight) * 100 + "%";
-    progressLine.style.width = width;
+    if (progressLine) {
+      const windowHeight = window.innerHeight;
+      const documentHeight =
+        document.documentElement.scrollHeight - windowHeight;
+      const scrollTop = window.scrollY;
+      const width = (scrollTop / documentHeight) * 100 + "%";
+      progressLine.style.width = width;
+    }
   });
 
   // 行動選單
@@ -423,202 +426,568 @@ document.addEventListener("DOMContentLoaded", function () {
   initMobileOptimization();
 });
 
-/**
- * 初始化數據視覺化 (「殘酷事實」區塊)
- * Waits for 'ipoDataLoaded' event from dataLoader.js or uses window.ipoProductData.
- */
-function setupInsightPanelListener() {
-  console.log("Main.js: setupInsightPanelListener() called.");
-  const insightPanel = document.getElementById("insight-panel");
-  if (!insightPanel) {
-    console.warn(
-      "Main.js: Insight panel element not found, cannot initialize."
-    );
-    return;
+// 全局變量來存儲圖表實例
+let radarChart = null;
+let categoriesChart = null;
+let emotionRadarChart = null;
+
+function initDataVisualization() {
+  try {
+    console.log("正在初始化數據視覺化...");
+
+    // 清理現有圖表實例
+    if (radarChart) {
+      radarChart.destroy();
+      radarChart = null;
+    }
+    if (categoriesChart) {
+      categoriesChart.destroy();
+      categoriesChart = null;
+    }
+    if (emotionRadarChart) {
+      emotionRadarChart.destroy();
+      emotionRadarChart = null;
+    }
+
+    // 雷達圖
+    const radarChartEl = document.getElementById("radar-chart");
+    if (radarChartEl && radarChartEl.getContext) {
+      const radarCtx = radarChartEl.getContext("2d");
+
+      // 使用 Chart.js 建立雷達圖
+      radarChart = new Chart(radarCtx, {
+        type: "radar",
+        data: {
+          labels: ["壓迫", "焦慮", "無奈", "羞辱", "憤怒"],
+          datasets: [
+            {
+              label: "IPO 心理影響",
+              data: [8, 7, 9, 6, 8],
+              fill: true,
+              backgroundColor: "rgba(255, 99, 132, 0.2)",
+              borderColor: "rgb(255, 99, 132)",
+              pointBackgroundColor: "rgb(255, 99, 132)",
+              pointBorderColor: "#fff",
+              pointHoverBackgroundColor: "#fff",
+              pointHoverBorderColor: "rgb(255, 99, 132)",
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          elements: {
+            line: {
+              borderWidth: 3,
+            },
+          },
+          plugins: {
+            legend: {
+              display: true,
+              position: "bottom",
+            },
+          },
+        },
+      });
+    } else {
+      console.warn("找不到雷達圖畫布元素或無法獲取繪圖上下文");
+    }
+
+    // 類別圖表
+    const categoriesChartEl = document.getElementById("categories-chart");
+    if (categoriesChartEl && categoriesChartEl.getContext) {
+      const categoriesCtx = categoriesChartEl.getContext("2d");
+
+      // 使用 Chart.js 建立橫條圖
+      categoriesChart = new Chart(categoriesCtx, {
+        type: "bar",
+        data: {
+          labels: ["券商", "銀行", "保險", "金控", "其他"],
+          datasets: [
+            {
+              label: "回報案例數",
+              data: [35, 28, 15, 12, 5],
+              backgroundColor: [
+                "rgba(255, 99, 132, 0.5)",
+                "rgba(54, 162, 235, 0.5)",
+                "rgba(255, 206, 86, 0.5)",
+                "rgba(75, 192, 192, 0.5)",
+                "rgba(153, 102, 255, 0.5)",
+              ],
+              borderColor: [
+                "rgba(255, 99, 132, 1)",
+                "rgba(54, 162, 235, 1)",
+                "rgba(255, 206, 86, 1)",
+                "rgba(75, 192, 192, 1)",
+                "rgba(153, 102, 255, 1)",
+              ],
+              borderWidth: 1,
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          indexAxis: "y",
+          plugins: {
+            legend: {
+              display: false,
+            },
+          },
+          scales: {
+            x: {
+              beginAtZero: true,
+            },
+          },
+        },
+      });
+    } else {
+      console.warn("找不到類別圖表畫布元素或無法獲取繪圖上下文");
+    }
+
+    // 情緒雷達圖
+    const emotionRadarChartEl = document.getElementById("emotion-radar-chart");
+    if (emotionRadarChartEl && emotionRadarChartEl.getContext) {
+      const emotionRadarCtx = emotionRadarChartEl.getContext("2d");
+
+      emotionRadarChart = new Chart(emotionRadarCtx, {
+        type: "radar",
+        data: {
+          labels: [
+            "無奈感",
+            "被欺壓感",
+            "羞辱感",
+            "性別歧視感",
+            "侮辱性",
+            "恐懼焦慮",
+            "壓迫性",
+            "情緒爆點",
+            "委屈沉默",
+            "語氣強度",
+          ],
+          datasets: [
+            {
+              label: "情緒指標分析",
+              data: [8, 9, 7, 3, 7, 8, 9, 8, 8, 8],
+              fill: true,
+              backgroundColor: "rgba(75, 192, 192, 0.2)",
+              borderColor: "rgb(75, 192, 192)",
+              pointBackgroundColor: "rgb(75, 192, 192)",
+              pointBorderColor: "#fff",
+              pointHoverBackgroundColor: "#fff",
+              pointHoverBorderColor: "rgb(75, 192, 192)",
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          elements: {
+            line: {
+              borderWidth: 2,
+            },
+          },
+          plugins: {
+            legend: {
+              display: true,
+              position: "bottom",
+            },
+          },
+        },
+      });
+    } else {
+      console.warn("找不到情緒雷達圖畫布元素或無法獲取繪圖上下文");
+    }
+
+    console.log("數據視覺化初始化完成！");
+  } catch (error) {
+    console.error("數據視覺化初始化失敗：", error);
   }
+}
 
-  let dataProcessed = false; // Flag to prevent processing multiple times
+// 在頁面卸載時清理圖表實例
+window.addEventListener("beforeunload", () => {
+  if (radarChart) radarChart.destroy();
+  if (categoriesChart) categoriesChart.destroy();
+  if (emotionRadarChart) emotionRadarChart.destroy();
+});
 
-  const processDataForInsightPanel = (data) => {
-    if (dataProcessed) {
-      console.log(
-        "Main.js: Data for insight panel already processed, skipping."
-      );
-      return;
+// 金融業內部對話資料庫
+const dialogueDatabase = [
+  {
+    timestamp: "2025-05-15T10:20:44",
+    originalQuote:
+      "最常聽到的是：「這責任額不高啦，大家都做得到了，就差你了」、「你這樣年終可能不保喔」，還有一句幾乎每次IPO都會聽到的：「錢自己準備好，必要的話就信貸一下，不然這季怎麼過？」",
+    innerThought:
+      "深感被當作業績工具而非專業人士，壓力巨大至影響身心健康，渴望尊嚴與合理工作環境，呼籲停止剝削。",
+    refinedQuote:
+      "主管以「責任額不高、大家都做到、影響年終、自己信貸、不夠努力、不做就滾、剝奪客戶」等話術施壓。",
+    pressureScore: 10,
+    anxietyScore: 9,
+    intensityScore: 9,
+    nlpScore: 80,
+    keyQuote: "我想好好工作，不想靠信貸生存；我想被當作人看，而不是業績工具。",
+  },
+  {
+    timestamp: "2025-05-15T11:23:39",
+    originalQuote:
+      "主管在他的私人辦公室對某同事大吼：不然你去告我啊！你這麼厲害你去告嘛！？全辦公室都聽得到的聲音，只因為同事去爭取被移轉出去的客戶的權益",
+    innerThought: "主管過分，IPO事件後稍收斂，仍暗示別惹事否則不好過。",
+    refinedQuote: "主管辦公室大吼「不然你去告我啊！」，全辦公室聽聞。",
+    pressureScore: 9,
+    anxietyScore: 7,
+    intensityScore: 8,
+    nlpScore: 74,
+    keyQuote: "「不然你去告我啊！」主管囂張跋扈，事後仍暗示報復。",
+  },
+  {
+    timestamp: "2025-05-15T11:25:29",
+    originalQuote: "業績做不到年底考績怎麼打？最近要做行員適評性，乖一點吧！",
+    innerThought: "銀行非保險公司，別逼賣保險。主管靠奉承上位，沒實力請閉嘴。",
+    refinedQuote: "「業績做不到，考績怎麼打？乖一點！」主管以考績威脅。",
+    pressureScore: 8,
+    anxietyScore: 7,
+    intensityScore: 7,
+    nlpScore: 68,
+    keyQuote: "「業績做不到，考績怎麼打？乖一點！」主管以考績威脅。",
+  },
+  {
+    timestamp: "2025-05-15T11:25:55",
+    originalQuote: "其他人都做得到，你為什麼做不到，那你要檢討自己的問題嘛！",
+    innerThought: "恐嚇話語如擠壓氣球，壓力過大會爆開。",
+    refinedQuote: "「別人都做到，你為何做不到？檢討自己！」主管施壓。",
+    pressureScore: 8,
+    anxietyScore: 7,
+    intensityScore: 7,
+    nlpScore: 68,
+    keyQuote: "「別人都做到，你為何做不到？檢討自己！」主管施壓。",
+  },
+  {
+    timestamp: "2025-05-15T11:28:10",
+    originalQuote:
+      "1.我沒有要你買！我要你去行銷！ 2.大家都做到了，為什麼你現在都還沒做到？ （一直以約談的名義實則逼到讓你自己買，因為沒有直接說出要你買，所以持續老神在在）",
+    innerThought:
+      "拒絕被逼自購，薪水微薄是來賺錢非買工作。投資應你情我願，而非強迫推銷，花錢買卡無意義。",
+    refinedQuote:
+      "主管表面喊行銷，實則逼員工自購：「大家都做到，你為何還沒？」",
+    pressureScore: 9,
+    anxietyScore: 8,
+    intensityScore: 8,
+    nlpScore: 77,
+    keyQuote: "主管表面喊行銷，實則逼員工自購：「大家都做到，你為何還沒？」",
+  },
+];
+
+// 增強的彩蛋功能
+document.addEventListener("DOMContentLoaded", function () {
+  // 獲取彩蛋相關元素
+  const secretTrigger = document.getElementById("secret-trigger");
+  const moodTrigger = document.getElementById("mood-trigger");
+  const easterEggDialog = document.getElementById("easter-egg-dialog");
+  const easterEggClose = document.getElementById("easter-egg-close");
+  const easterEggLoading = document.getElementById("easter-egg-loading");
+  const easterEggMessage = document.getElementById("easter-egg-message");
+  const quoteText = document.getElementById("quote-text");
+  const innerThoughtText = document.getElementById("inner-thought-text");
+  const pressureScore = document.getElementById("pressure-score");
+  const anxietyScore = document.getElementById("anxiety-score");
+  const intensityScore = document.getElementById("intensity-score");
+  const nlpScore = document.getElementById("nlp-score");
+  const prevButton = document.getElementById("easter-egg-prev");
+  const nextButton = document.getElementById("easter-egg-next");
+  const understandButton = document.getElementById("easter-egg-understand");
+  const moodParticles = document.getElementById("mood-particles");
+
+  let currentDialogueIndex = 0;
+  let clickCount = 0;
+  let dialogueShown = false;
+  let secretTimeoutId = null;
+
+  // 隱藏彩蛋觸發計數
+  const triggerEasterEgg = () => {
+    clickCount++;
+
+    if (secretTimeoutId) {
+      clearTimeout(secretTimeoutId);
     }
-    if (!data || data.length === 0) {
-      console.warn("Main.js: No data received for Insight Panel.");
-      insightPanel.innerHTML =
-        '<div class="text-yellow-300 p-4">注意：數據分析區無可用資料。</div>';
-      return;
-    }
-    console.log(
-      "Main.js: Processing data for Insight Panel, length:",
-      data.length
-    );
 
-    const parseMinguoDate = (minguoDateStr) => {
-      if (!minguoDateStr || !minguoDateStr.includes("/")) return null;
-      const parts = minguoDateStr.split("/");
-      if (parts.length < 3) return null;
-      const year = parseInt(parts[0], 10) + 1911;
-      const month = parseInt(parts[1], 10) - 1;
-      const day = parseInt(parts[2], 10);
-      if (isNaN(year) || isNaN(month) || isNaN(day)) return null;
-      try {
-        return new Date(year, month, day);
-      } catch (e) {
-        return null;
+    secretTimeoutId = setTimeout(() => {
+      if (clickCount >= 5) {
+        showMoodTrigger();
       }
-    };
-    const getDurationDays = (periodStr) => {
-      if (!periodStr || !periodStr.includes("-") || periodStr.trim() === "-") {
-        const partsCheck = periodStr ? periodStr.split("-") : [];
-        if (
-          partsCheck.length < 2 ||
-          !partsCheck[0].trim() ||
-          !partsCheck[1].trim()
-        )
-          return 0;
-      }
-      const [startStr, endStr] = periodStr.split("-");
-      let startDate = parseMinguoDate(startStr.trim());
-      let endDate = parseMinguoDate(endStr.trim());
-      if (startDate && endStr.trim().split("/").length === 2) {
-        const startYearMinguo = startStr.trim().split("/")[0];
-        endDate = parseMinguoDate(startYearMinguo + "/" + endStr.trim());
-      }
-      if (!startDate || !endDate || endDate < startDate) return 0;
-      const diffTime = Math.abs(endDate - startDate);
-      return Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
-    };
+      clickCount = 0;
+    }, 3000);
 
-    let maxResp = 0,
-      totalResp = 0,
-      totalEntriesForAvgResp = 0;
-    let minDays = Infinity,
-      totalDays = 0,
-      totalEntriesForAvgDays = 0;
-    const monthCounts = {};
-    let dailyRespArray = [];
-    let peakAmt = 0,
-      peakDateInfo = "—";
-    data.forEach((item) => {
-      const respString = String(item.responsibility || "").trim();
-      const resp = parseFloat(respString);
-      if (!isNaN(resp)) {
-        if (resp > maxResp) maxResp = resp;
-        totalResp += resp;
-        totalEntriesForAvgResp++;
-      }
-      const period = String(item.period || "").trim();
-      const duration = getDurationDays(period);
-      if (duration > 0) {
-        if (duration < minDays) minDays = duration;
-        totalDays += duration;
-        totalEntriesForAvgDays++;
-        if (!isNaN(resp)) {
-          const dailyResp = resp / duration;
-          dailyRespArray.push(dailyResp);
-          if (dailyResp > peakAmt) {
-            peakAmt = dailyResp;
-            peakDateInfo = `${item.broker} ${item.product} (${period})`;
-          }
-        }
-        const startMinguoDate = period.split("-")[0].trim();
-        if (startMinguoDate && startMinguoDate.includes("/")) {
-          const monthPart = startMinguoDate.split("/")[1];
-          if (monthPart) {
-            const jsMonth = parseInt(monthPart, 10);
-            if (!isNaN(jsMonth))
-              monthCounts[jsMonth] = (monthCounts[jsMonth] || 0) + 1;
-          }
-        }
-      }
-    });
-    const avgResp =
-      totalEntriesForAvgResp > 0 ? totalResp / totalEntriesForAvgResp : 0;
-    const ratioResp = avgResp > 0 ? maxResp / avgResp : 0;
-    const avgDays =
-      totalEntriesForAvgDays > 0 ? totalDays / totalEntriesForAvgDays : 0;
-    const cutPct = avgDays > 0 ? Math.max(0, ((30 - avgDays) / 30) * 100) : 0;
-    if (minDays === Infinity) minDays = 0;
-    let hellMonth = 0,
-      hellCount = 0;
-    for (const monthKey in monthCounts) {
-      if (monthCounts[monthKey] > hellCount) {
-        hellCount = monthCounts[monthKey];
-        hellMonth = parseInt(monthKey, 10);
-      }
-    }
-    const avgPerDay =
-      dailyRespArray.length > 0
-        ? dailyRespArray.reduce((a, b) => a + b, 0) / dailyRespArray.length
-        : 0;
-    const hrQuota = avgPerDay > 0 ? avgPerDay / 8 : 0;
-
-    const updateElementTextAndPrepareForAnimation = (
-      id,
-      value,
-      fractionDigits = 0
-    ) => {
-      const element = document.getElementById(id);
-      if (element) {
-        let textValue =
-          typeof value === "number"
-            ? value.toFixed(fractionDigits)
-            : String(value);
-        element.textContent = textValue;
-        if (element.classList.contains("counter"))
-          element.dataset.target = textValue;
-      } else {
-        console.warn(
-          `Main.js: Element with id '${id}' not found for insight panel.`
-        );
-      }
-    };
-    updateElementTextAndPrepareForAnimation("ins-maxResp", maxResp);
-    updateElementTextAndPrepareForAnimation("ins-avgResp", avgResp, 1);
-    updateElementTextAndPrepareForAnimation("ins-ratioResp", ratioResp, 1);
-    updateElementTextAndPrepareForAnimation("ins-avgDays", avgDays, 1);
-    updateElementTextAndPrepareForAnimation("ins-minDays", minDays);
-    updateElementTextAndPrepareForAnimation("ins-cutPct", cutPct);
-    updateElementTextAndPrepareForAnimation(
-      "ins-hellMonth",
-      hellMonth || "N/A"
-    );
-    updateElementTextAndPrepareForAnimation("ins-hellCount", hellCount);
-    updateElementTextAndPrepareForAnimation("ins-avgPerDay", avgPerDay, 1);
-    updateElementTextAndPrepareForAnimation("ins-hrQuota", hrQuota, 1);
-    updateElementTextAndPrepareForAnimation("ins-peakDate", peakDateInfo);
-    updateElementTextAndPrepareForAnimation("ins-peakAmt", peakAmt, 1);
-
-    console.log("Main.js: Insight panel data updated.");
-    dataProcessed = true; // Set flag
-    if (
-      window.animationsModule &&
-      typeof window.animationsModule.reobserveCounters === "function"
-    ) {
-      window.animationsModule.reobserveCounters(
-        insightPanel.querySelectorAll(".counter")
-      );
+    if (clickCount >= 10 && !dialogueShown) {
+      showEasterEggDialog();
     }
   };
 
-  document.addEventListener("ipoDataLoaded", function (event) {
-    console.log("Main.js: Event 'ipoDataLoaded' received.");
-    processDataForInsightPanel(event.detail);
-  });
+  // 顯示心情觸發器
+  const showMoodTrigger = () => {
+    moodTrigger.style.opacity = "1";
+    moodTrigger.style.transform = "scale(1)";
 
-  // Optional: Attempt to process if data already exists and event was missed (e.g. script order)
-  // This should be used cautiously or if DOMContentLoaded order can be guaranteed for dataLoader first.
-  // setTimeout(() => {
-  //   if (!dataProcessed && window.ipoProductData) {
-  //      console.log("Main.js: Processing pre-existing window.ipoProductData for insight panel.");
-  //      processDataForInsightPanel(window.ipoProductData);
-  //   }
-  // }, 500); // Delay to give event listener a chance
-}
+    // 為了吸引注意力，添加一些輕微振動
+    moodTrigger.animate(
+      [
+        { transform: "scale(1) rotate(-5deg)" },
+        { transform: "scale(1.1) rotate(5deg)" },
+        { transform: "scale(1) rotate(0deg)" },
+      ],
+      {
+        duration: 500,
+        iterations: 3,
+      }
+    );
+  };
+
+  // 顯示彩蛋對話框
+  const showEasterEggDialog = () => {
+    dialogueShown = true;
+    easterEggDialog.classList.remove("hidden");
+    easterEggDialog.classList.add("flex");
+
+    // 模擬載入
+    setTimeout(() => {
+      easterEggLoading.classList.add("hidden");
+      easterEggMessage.classList.remove("hidden");
+      updateDialogueContent(currentDialogueIndex);
+    }, 1000);
+
+    // 動畫效果
+    const dialogBox = easterEggDialog.querySelector(".bg-white");
+    dialogBox.animate(
+      [
+        { transform: "translateY(50px) scale(0.9)", opacity: 0 },
+        { transform: "translateY(0) scale(1)", opacity: 1 },
+      ],
+      {
+        duration: 300,
+        easing: "ease-out",
+      }
+    );
+  };
+
+  // 隱藏彩蛋對話框
+  const hideEasterEggDialog = () => {
+    const dialogBox = easterEggDialog.querySelector(".bg-white");
+
+    dialogBox.animate(
+      [
+        { transform: "translateY(0) scale(1)", opacity: 1 },
+        { transform: "translateY(20px) scale(0.95)", opacity: 0 },
+      ],
+      {
+        duration: 200,
+        easing: "ease-in",
+      }
+    ).onfinish = () => {
+      easterEggDialog.classList.add("hidden");
+      easterEggDialog.classList.remove("flex");
+      easterEggMessage.classList.add("hidden");
+      easterEggLoading.classList.remove("hidden");
+    };
+  };
+
+  // 更新對話內容
+  const updateDialogueContent = (index) => {
+    const dialogue = dialogueDatabase[index];
+
+    // 動態展現對話文字效果
+    quoteText.textContent = "";
+    innerThoughtText.textContent = "";
+
+    // 重設評分
+    pressureScore.textContent = "";
+    anxietyScore.textContent = "";
+    intensityScore.textContent = "";
+    nlpScore.textContent = "";
+
+    // 逐字顯示引述
+    typeText(quoteText, dialogue.refinedQuote, 30, () => {
+      // 完成後顯示內心想法
+      typeText(innerThoughtText, dialogue.innerThought, 30, () => {
+        // 評分動畫
+        animateCounter(pressureScore, dialogue.pressureScore);
+        animateCounter(anxietyScore, dialogue.anxietyScore);
+        animateCounter(intensityScore, dialogue.intensityScore);
+        animateCounter(nlpScore, dialogue.nlpScore);
+      });
+    });
+  };
+
+  // 文字打字機效果
+  const typeText = (element, text, speed, callback) => {
+    let i = 0;
+
+    const typing = () => {
+      if (i < text.length) {
+        element.textContent += text.charAt(i);
+        i++;
+        setTimeout(typing, speed);
+      } else if (callback) {
+        callback();
+      }
+    };
+
+    typing();
+  };
+
+  // 數字計數動畫
+  const animateCounter = (element, target) => {
+    let start = 0;
+    const duration = 1500;
+    const startTime = performance.now();
+
+    const updateCounter = (timestamp) => {
+      const elapsed = timestamp - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const easeProgress = 1 - Math.pow(1 - progress, 3); // Cubic ease-out
+
+      const currentValue = Math.floor(easeProgress * target);
+      element.textContent = currentValue;
+
+      if (progress < 1) {
+        requestAnimationFrame(updateCounter);
+      } else {
+        element.textContent = target;
+      }
+    };
+
+    requestAnimationFrame(updateCounter);
+  };
+
+  // 生成粒子效果
+  const createParticles = (mood) => {
+    moodParticles.classList.remove("hidden");
+    moodParticles.innerHTML = "";
+
+    let particleCount = 30;
+    let colors = ["#FFD700", "#FF6B6B", "#4ECDC4"];
+
+    if (mood === "angry") {
+      colors = ["#FF4136", "#FF851B", "#FFDC00"];
+    } else if (mood === "sad") {
+      colors = ["#0074D9", "#7FDBFF", "#39CCCC"];
+    }
+
+    for (let i = 0; i < particleCount; i++) {
+      const particle = document.createElement("div");
+      particle.classList.add("particle");
+
+      // 隨機化粒子屬性
+      const size = Math.random() * 15 + 5;
+      const x = Math.random() * window.innerWidth;
+      const y = Math.random() * window.innerHeight;
+      const speed = Math.random() * 3 + 1;
+      const angle = Math.random() * 360;
+      const rotation = Math.random() * 360;
+      const colorIndex = Math.floor(Math.random() * colors.length);
+
+      particle.style.width = `${size}px`;
+      particle.style.height = `${size}px`;
+      particle.style.left = `${x}px`;
+      particle.style.top = `${y}px`;
+      particle.style.backgroundColor = colors[colorIndex];
+      particle.style.transform = `rotate(${rotation}deg)`;
+
+      // 添加粒子動畫
+      particle.animate(
+        [
+          { transform: `translate(0, 0) rotate(${rotation}deg)`, opacity: 1 },
+          {
+            transform: `translate(${Math.cos(angle) * 100}px, ${
+              -Math.sin(angle) * 100 - 100
+            }px) rotate(${rotation + 360}deg)`,
+            opacity: 0,
+          },
+        ],
+        {
+          duration: 2000 + Math.random() * 1000,
+          easing: "cubic-bezier(0.1, 0.8, 0.1, 1)",
+        }
+      ).onfinish = () => {
+        particle.remove();
+
+        // 如果所有粒子都完成，隱藏容器
+        if (moodParticles.children.length === 0) {
+          moodParticles.classList.add("hidden");
+        }
+      };
+
+      moodParticles.appendChild(particle);
+    }
+  };
+
+  // 事件監聽
+  if (secretTrigger) {
+    secretTrigger.addEventListener("click", triggerEasterEgg);
+  }
+
+  if (moodTrigger) {
+    moodTrigger.addEventListener("click", () => {
+      const moods = ["happy", "angry", "sad"];
+      const randomMood = moods[Math.floor(Math.random() * moods.length)];
+      createParticles(randomMood);
+    });
+  }
+
+  if (easterEggClose) {
+    easterEggClose.addEventListener("click", hideEasterEggDialog);
+  }
+
+  if (understandButton) {
+    understandButton.addEventListener("click", hideEasterEggDialog);
+  }
+
+  if (prevButton) {
+    prevButton.addEventListener("click", () => {
+      currentDialogueIndex =
+        (currentDialogueIndex - 1 + dialogueDatabase.length) %
+        dialogueDatabase.length;
+      updateDialogueContent(currentDialogueIndex);
+    });
+  }
+
+  if (nextButton) {
+    nextButton.addEventListener("click", () => {
+      currentDialogueIndex =
+        (currentDialogueIndex + 1) % dialogueDatabase.length;
+      updateDialogueContent(currentDialogueIndex);
+    });
+  }
+
+  // 添加CSS樣式
+  const style = document.createElement("style");
+  style.textContent = `
+    .particle {
+      position: absolute;
+      border-radius: 50%;
+      opacity: 0.8;
+      pointer-events: none;
+    }
+    
+    .secret-trigger {
+      position: fixed;
+      bottom: 5px;
+      right: 5px;
+      width: 10px;
+      height: 10px;
+      cursor: pointer;
+      z-index: 9999;
+    }
+    
+    @keyframes glow {
+      0%, 100% { box-shadow: 0 0 5px rgba(255, 215, 0, 0.5); }
+      50% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.8); }
+    }
+  `;
+  document.head.appendChild(style);
+
+  // 初始化圖表和其他UI
+  initDataVisualization();
+});
 
 // 初始化移動裝置選單
 function initMobileNav() {

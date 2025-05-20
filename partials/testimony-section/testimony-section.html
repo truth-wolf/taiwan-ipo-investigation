@@ -1,0 +1,360 @@
+      // 設置結果消息
+      const responses = [
+        "「你是在跟我開玩笑嗎？所有人都能達成，就你做不到？看來你根本不適合這份工作。」",
+        "「不要再找藉口了！客戶不買？那是因為你沒有足夠用心！其他同事都做得到，為什麼你不行？」",
+        "「你知道不達標的後果吧？我可以直接把你的績效打0分。你自己想清楚吧。」",
+        "「好吧，看來你真的不想好好表現。我會在下次會議上特別提醒大家你的『優異表現』。」"
+      ];
+      
+      resultMessage.textContent = responses[Math.floor(Math.random() * responses.length)];
+    });
+  });
+  
+  // 顯示互動彈出視窗
+  function showInteractionPopup() {
+    interactionPopup.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+    
+    // 重置視窗狀態
+    interactionResult.classList.add('hidden');
+    document.querySelectorAll('.response-option').forEach(option => {
+      option.style.display = 'block';
+    });
+    
+    // 隨機設置主管的問題
+    const questions = [
+      "「這個月責任額是300萬，你現在還差250萬。你打算如何解決？」",
+      "「你到現在還沒達標，知道這會影響整個分公司的績效吧？」",
+      "「其他同事都已完成80%了，只有你還在原地踏步，你覺得這樣合理嗎？」",
+      "「客戶不願意買？那是你的事，不是公司的事。你必須想辦法。」"
+    ];
+    
+    document.getElementById('interaction-message').textContent = questions[Math.floor(Math.random() * questions.length)];
+  }
+}
+
+// 添加淡入動畫類
+document.addEventListener('DOMContentLoaded', function() {
+  const fadeElements = document.querySelectorAll('.animate-fade-in-up');
+  
+  // 為每個元素添加基本樣式
+  fadeElements.forEach((el, index) => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(20px)';
+    el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+    el.style.animationDelay = (0.1 * index) + 's';
+  });
+  
+  // 使用Intersection Observer來觸發動畫
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        setTimeout(() => {
+          entry.target.style.opacity = '1';
+          entry.target.style.transform = 'translateY(0)';
+        }, parseFloat(entry.target.style.animationDelay) * 1000);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, {
+    threshold: 0.1
+  });
+  
+  // 觀察所有需要淡入的元素
+  fadeElements.forEach(el => {
+    observer.observe(el);
+  });
+});
+
+// 為卡片添加視差效果
+document.addEventListener('mousemove', function(e) {
+  const cards = document.querySelectorAll('.testimony-card');
+  
+  cards.forEach(card => {
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    
+    if (x > 0 && x < rect.width && y > 0 && y < rect.height) {
+      const xOffset = (x / rect.width - 0.5) * 10;
+      const yOffset = (y / rect.height - 0.5) * 10;
+      
+      card.style.transform = `translateY(-5px) rotateX(${yOffset}deg) rotateY(${xOffset}deg)`;
+      card.style.boxShadow = `${xOffset * -1}px ${yOffset * -1}px 20px rgba(0, 0, 0, 0.1)`;
+    } else {
+      card.style.transform = 'translateY(-5px)';
+      card.style.boxShadow = '0 10px 30px rgba(0, 0, 0, 0.12)';
+    }
+  });
+});
+
+// 添加額外CSS樣式
+const styleElement = document.createElement('style');
+styleElement.textContent = `
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.animate-fade-in-up.visible {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.testimony-card {
+  perspective: 1000px;
+  height: 400px;
+}
+
+.testimony-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: left;
+  transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transform-style: preserve-3d;
+}
+
+.testimony-card.flipped .testimony-card-inner {
+  transform: rotateY(180deg);
+}
+
+.testimony-card-front,
+.testimony-card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  display: flex;
+  flex-direction: column;
+  border-radius: 0.75rem;
+  overflow: hidden;
+}
+
+.testimony-card-back {
+  transform: rotateY(180deg);
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+}
+
+.shadow-glass-strong {
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+}
+
+.testimony-card-content {
+  flex: 1;
+  overflow-y: auto;
+  max-height: 200px;
+}
+
+.testimony-card-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.testimony-card-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.testimony-card-content::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+}
+
+.testimony-tab.active {
+  background-color: #0ea5e9;
+  color: white;
+  border-color: #0ea5e9;
+  box-shadow: 0 4px 10px rgba(14, 165, 233, 0.3);
+}
+
+.nlp-metric-value {
+  transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transform: scale(0.8);
+}
+
+.nlp-metric-value.animated {
+  transform: scale(1);
+}
+
+#interaction-popup {
+  transition: opacity 0.3s ease;
+}
+
+.response-option {
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.response-option:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(14, 165, 233, 0.15);
+  border-color: #0ea5e9;
+}
+
+@media (max-width: 768px) {
+  .testimony-card {
+    height: auto;
+    min-height: 400px;
+  }
+  
+  .testimony-card-content {
+    max-height: 150px;
+  }
+  
+  .nlp-heatmap-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+`;
+
+document.head.appendChild(styleElement);
+</script>
+
+<!-- 自定義追加CSS以增強體驗 -->
+<style>
+/* 卡片翻轉特效 */
+.testimony-card .testimony-card-inner {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease;
+}
+
+.testimony-card:hover .testimony-card-inner {
+  box-shadow: 0 12px 30px rgba(14, 165, 233, 0.15);
+}
+
+.testimony-card.flipped .testimony-card-inner {
+  box-shadow: 0 15px 35px rgba(14, 165, 233, 0.2);
+}
+
+/* 標籤效果 */
+.testimony-tab {
+  position: relative;
+  overflow: hidden;
+}
+
+.testimony-tab::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to right, transparent 0%, rgba(255, 255, 255, 0.4) 50%, transparent 100%);
+  transform: translateX(-100%);
+  transition: transform 0.6s;
+}
+
+.testimony-tab:hover::after {
+  transform: translateX(100%);
+}
+
+/* 動畫效果 */
+@keyframes float-slow {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-15px);
+  }
+}
+
+.easter-egg-option {
+  animation: float-slow 6s ease-in-out infinite;
+  animation-delay: calc(var(--index, 0) * 0.5s);
+  transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.easter-egg-option:nth-child(1) { --index: 1; }
+.easter-egg-option:nth-child(2) { --index: 2; }
+.easter-egg-option:nth-child(3) { --index: 3; }
+.easter-egg-option:nth-child(4) { --index: 4; }
+
+/* 情緒指標動畫 */
+.nlp-metric-value {
+  overflow: hidden;
+  position: relative;
+}
+
+.nlp-metric-value::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transform: translateX(-100%);
+}
+
+.nlp-metric-value.animated::before {
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* 響應式調整 */
+@media (max-width: 640px) {
+  .testimony-section {
+    padding: 3rem 0;
+  }
+  
+  .testimony-cards {
+    grid-template-columns: 1fr;
+  }
+  
+  .easter-egg-options {
+    grid-template-columns: 1fr;
+  }
+  
+  .nlp-heatmap-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* 深色模式支援 */
+@media (prefers-color-scheme: dark) {
+  .glass-card {
+    background: rgba(30, 41, 59, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  .testimony-card-front {
+    background: rgba(30, 41, 59, 0.7);
+    color: #e2e8f0;
+  }
+  
+  .testimony-tab {
+    background: rgba(30, 41, 59, 0.8);
+    color: #e2e8f0;
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+  
+  .testimony-tab.active {
+    background-color: #0ea5e9;
+    color: white;
+  }
+}
+</style>

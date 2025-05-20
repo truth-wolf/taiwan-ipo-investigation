@@ -1,0 +1,687 @@
+/* 心聲卡片區樣式 */
+.testimony-section {
+  position: relative;
+  overflow: hidden;
+  transition: background-color 0.5s ease;
+  padding: 5rem 0;
+  background: linear-gradient(135deg, #f8fafc 0%, #e0f2fe 100%);
+}
+
+/* 卡片樣式 */
+.testimony-card {
+  position: relative;
+  height: 400px;
+  perspective: 1000px;
+  transition: all 0.3s ease;
+  will-change: transform;
+  margin-bottom: 2rem;
+}
+
+.testimony-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transform-style: preserve-3d;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  border-radius: 0.75rem;
+}
+
+.testimony-card.flipped .testimony-card-inner {
+  transform: rotateY(180deg);
+}
+
+.testimony-card-front,
+.testimony-card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.testimony-card-front {
+  background-color: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.testimony-card-back {
+  background-color: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transform: rotateY(180deg);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.testimony-card-header {
+  flex-shrink: 0;
+  padding: 1.5rem 1.5rem 0.75rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.testimony-card-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1.5rem;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.1) transparent;
+}
+
+.testimony-card-content::-webkit-scrollbar {
+  width: 4px;
+}
+
+.testimony-card-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.testimony-card-content::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+}
+
+.testimony-card-actions {
+  flex-shrink: 0;
+  padding: 0.75rem 1.5rem 1.5rem;
+  text-align: center;
+}
+
+.testimony-card-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 1.25rem;
+  background-color: #e23e57;
+  color: white;
+  border-radius: 9999px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  border: none;
+  cursor: pointer;
+}
+
+.testimony-card-button:hover {
+  background-color: #c1292e;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(226, 62, 87, 0.3);
+}
+
+.testimony-card-button i {
+  margin-right: 0.5rem;
+}
+
+/* 標籤篩選樣式 */
+.testimony-tabs {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.testimony-tab {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 1.25rem;
+  background-color: white;
+  color: #404040;
+  border: 1px solid #e6e6e6;
+  border-radius: 9999px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.testimony-tab::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to right, transparent 0%, rgba(255, 255, 255, 0.4) 50%, transparent 100%);
+  transform: translateX(-100%);
+  transition: transform 0.6s;
+}
+
+.testimony-tab:hover {
+  border-color: #e23e57;
+  color: #e23e57;
+}
+
+.testimony-tab:hover::after {
+  transform: translateX(100%);
+}
+
+.testimony-tab.active {
+  background-color: #e23e57;
+  color: white;
+  border-color: #e23e57;
+  box-shadow: 0 4px 10px rgba(226, 62, 87, 0.3);
+}
+
+/* 情緒指標分析樣式 */
+.nlp-heatmap-container {
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  background-color: white;
+  padding: 2rem;
+}
+
+.nlp-heatmap-container:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+}
+
+.nlp-heatmap-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+}
+
+.nlp-metric-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border-radius: 12px;
+  padding: 1.5rem;
+  background-color: #f7f7f7;
+  text-align: center;
+}
+
+.nlp-metric-card:hover {
+  transform: translateY(-5px) scale(1.03);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.nlp-metric-value {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #e23e57;
+  margin-bottom: 0.5rem;
+  transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transform: scale(0.8);
+  position: relative;
+  overflow: hidden;
+}
+
+.nlp-metric-value.animated {
+  transform: scale(1);
+}
+
+.nlp-metric-value::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transform: translateX(-100%);
+}
+
+.nlp-metric-value.animated::before {
+  animation: shimmer 2s infinite;
+}
+
+.nlp-metric-label {
+  font-size: 0.875rem;
+  color: #737373;
+}
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* 互動彩蛋樣式 */
+.easter-egg-container {
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  background-color: white;
+}
+
+.easter-egg-container:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+}
+
+.easter-egg-scenario {
+  border-left: 4px solid #e23e57;
+}
+
+.easter-egg-options {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+.easter-egg-option {
+  transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  animation: float-slow 6s ease-in-out infinite;
+  animation-delay: calc(var(--index, 0) * 0.5s);
+}
+
+.easter-egg-option:nth-child(1) { --index: 1; }
+.easter-egg-option:nth-child(2) { --index: 2; }
+.easter-egg-option:nth-child(3) { --index: 3; }
+.easter-egg-option:nth-child(4) { --index: 4; }
+
+.easter-egg-option::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to right, transparent 0%, rgba(255, 255, 255, 0.4) 50%, transparent 100%);
+  transform: translateX(-100%);
+  transition: transform 0.6s;
+}
+
+.easter-egg-option:hover::after {
+  transform: translateX(100%);
+}
+
+.easter-egg-option:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
+}
+
+.easter-egg-result {
+  transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.easter-egg-result.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* 報導大綱樣式 */
+.report-outline-container {
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  background-color: white;
+  padding: 2rem;
+}
+
+.report-outline-container:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+}
+
+.report-outline-section {
+  margin-bottom: 1.5rem;
+  transition: transform 0.3s ease;
+}
+
+.report-outline-section:hover {
+  transform: translateY(-3px);
+}
+
+.report-outline-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #404040;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+}
+
+.report-outline-title i {
+  color: #e23e57;
+  margin-right: 0.75rem;
+}
+
+.report-outline-item {
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f0f0f0;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.report-outline-item:hover {
+  transform: translateX(5px);
+}
+
+.report-outline-quote {
+  position: relative;
+  padding: 1.5rem;
+  background-color: #f8fafc;
+  border-radius: 12px;
+  margin-top: 1.5rem;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  overflow: hidden;
+}
+
+.report-outline-quote:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+}
+
+.report-outline-quote::before {
+  content: """;
+  position: absolute;
+  top: -30px;
+  left: -10px;
+  font-size: 100px;
+  font-family: Georgia, serif;
+  color: rgba(0, 0, 0, 0.05);
+  line-height: 1;
+}
+
+/* 顯示更多按鈕 */
+.testimony-more-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 2rem;
+  background-color: transparent;
+  color: #e23e57;
+  border: 2px solid #e23e57;
+  border-radius: 9999px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  margin: 2rem auto;
+}
+
+.testimony-more-button:hover {
+  background-color: #e23e57;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(226, 62, 87, 0.2);
+}
+
+.testimony-more-button i {
+  margin-right: 0.5rem;
+}
+
+/* 響應式調整 */
+@media (max-width: 768px) {
+  .testimony-card {
+    height: auto;
+    min-height: 440px;
+  }
+  
+  .testimony-card-content {
+    max-height: 150px;
+  }
+  
+  .nlp-heatmap-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .easter-egg-options {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .testimony-section {
+    padding: 3rem 0;
+  }
+  
+  .testimony-cards {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* 卡片視差效果 */
+@media (min-width: 1024px) {
+  .testimony-card {
+    transform-style: preserve-3d;
+    transition: transform 0.2s ease;
+  }
+}
+
+/* 動畫效果 */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.animate-fade-in-up.visible {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+@keyframes float-slow {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-15px);
+  }
+}
+
+/* 彩蛋互動視窗樣式 */
+#interaction-popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.85);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+#interaction-popup.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.interaction-content {
+  max-width: 500px;
+  width: 90%;
+  background: white;
+  border-radius: 16px;
+  overflow: hidden;
+  position: relative;
+}
+
+.interaction-header {
+  background: #e23e57;
+  color: white;
+  padding: 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.interaction-header h3 {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.interaction-close {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.25rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+}
+
+.interaction-close:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.interaction-body {
+  padding: 1.5rem;
+}
+
+.interaction-message {
+  font-size: 1.125rem;
+  margin-bottom: 1.5rem;
+  line-height: 1.5;
+}
+
+.response-options {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.75rem;
+}
+
+.response-option {
+  padding: 1rem;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.response-option::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to right, transparent 0%, rgba(255, 255, 255, 0.4) 50%, transparent 100%);
+  transform: translateX(-100%);
+  transition: transform 0.6s;
+}
+
+.response-option:hover::after {
+  transform: translateX(100%);
+}
+
+.response-option:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(14, 165, 233, 0.15);
+  border-color: #0ea5e9;
+}
+
+.interaction-result {
+  display: none;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.3s ease;
+}
+
+.interaction-actions {
+  margin-top: 1.5rem;
+  display: flex;
+  justify-content: center;
+}
+
+.interaction-reset {
+  padding: 0.75rem 1.5rem;
+  background: #e23e57;
+  color: white;
+  border: none;
+  border-radius: 9999px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.interaction-reset:hover {
+  background: #c1292e;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(226, 62, 87, 0.3);
+}
+
+/* 玻璃效果卡片 */
+.glass-card {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+}
+
+.shadow-glass-strong {
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+}
+
+/* 深色模式支援 */
+@media (prefers-color-scheme: dark) {
+  .glass-card {
+    background: rgba(30, 41, 59, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  .testimony-card-front {
+    background: rgba(30, 41, 59, 0.7);
+    color: #e2e8f0;
+  }
+  
+  .testimony-card-back {
+    background: rgba(30, 41, 59, 0.7);
+    color: #e2e8f0;
+  }
+  
+  .testimony-tab {
+    background: rgba(30, 41, 59, 0.8);
+    color: #e2e8f0;
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+  
+  .testimony-tab.active {
+    background-color: #e23e57;
+    color: white;
+    border-color: #e23e57;
+  }
+  
+  .nlp-metric-card {
+    background-color: rgba(30, 41, 59, 0.5);
+  }
+  
+  .nlp-metric-label {
+    color: #cbd5e1;
+  }
+  
+  .report-outline-item {
+    border-bottom-color: #334155;
+  }
+  
+  .report-outline-quote {
+    background-color: rgba(30, 41, 59, 0.5);
+  }
+}

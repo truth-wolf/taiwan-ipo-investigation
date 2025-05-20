@@ -13,6 +13,7 @@
 
 // 全局變數
 let csvData = [];
+let branchCountsMap = {}; // 新增：用於儲存券商分點數量
 let dataTable = null;
 let productTableInitialized = false;
 
@@ -52,7 +53,7 @@ function initEnhancedDataTable() {
     let pollerIntervalId;
 
     const executeMainLogic = function () {
-      // 主要邏輯實現
+      // 這是原始在DOMContentLoaded中，並且在表格檢查通過後的邏輯
       fetch("ipo_broker_product.csv")
         .then((response) => {
           if (!response.ok) throw new Error(`HTTP 錯誤：${response.status}`);
@@ -65,21 +66,13 @@ function initEnhancedDataTable() {
             complete: function (results) {
               console.log("CSV解析完成，列數:", results.data.length);
               csvData = results.data.slice(1); // 移除標題行
-              window.csvData = csvData; // 提供給其他模組使用
+              window.csvData = csvData; // 提供給 enhancedTable.js 使用
 
               initClassicTable(csvData);
               initFilters(csvData);
               if (window.innerWidth >= 768) {
                 prepareProductTableContainer();
                 initViewButtons();
-                // 初始化完成後自動切換到產品視圖
-                setTimeout(() => {
-                  initProductTable(csvData);
-                  toggleTableView("product");
-                }, 100);
-              } else {
-                // 手機版初始化
-                createMobileViewToggle();
               }
               initDataVisualizations(csvData);
               generateKeyInsights();
@@ -205,10 +198,10 @@ function initClassicTable(data) {
       lengthMenu: "每頁 _MENU_ 筆",
       info: "顯示第 _START_ 至 _END_ 筆結果，共 _TOTAL_ 筆",
       paginate: {
-        first: "<i class='fas fa-angle-double-left'></i>",
-        last: "<i class='fas fa-angle-double-right'></i>",
-        next: "<i class='fas fa-angle-right'></i>",
-        previous: "<i class='fas fa-angle-left'></i>",
+        first: "第一頁",
+        last: "最後一頁",
+        next: "下一頁",
+        previous: "上一頁",
       },
       zeroRecords: "沒有找到匹配的記錄",
       infoEmpty: "沒有記錄",
@@ -236,8 +229,6 @@ function initClassicTable(data) {
         const firstRow = $("#csv-table tbody tr:first-child");
         firstRow.addClass("bg-primary bg-opacity-10");
       }
-
-      // 添加總計資訊
       addTotalInformation(data);
     },
     dom: '<"top"<"filter-controls"fl><"view-buttons">>rtip',
@@ -796,20 +787,102 @@ function sortProductTable(columnIndex) {
 }
 
 // 添加總計信息
-function addTotalInformation(data) {
-  const totalAmount = data.reduce((sum, item) => sum + parseInt(item[2]), 0);
+function addTotalInformation(data, currentBranchCountsMap) {
+  if (
+    !currentBranchCountsMap ||
+    Object.keys(currentBranchCountsMap).length === 0
+  ) {
+    console.error("無法計算總責任額：券商分點數據未提供或為空。");
+    const existingInfoOnError = document.querySelector(".table-info");
+    if (existingInfoOnError) existingInfoOnError.remove();
+    const infoElementError = document.createElement("div");
+    infoElementError.className = "table-info mt-4 text-red-500";
+    infoElementError.innerHTML = `無法計算加權總責任額，券商分點數據缺失。`;
+    const tableWrapperError =
+      document.querySelector(".classic-view-table") ||
+      document.querySelector(".overflow-x-auto");
+    if (tableWrapperError) {
+      tableWrapperError.parentNode.insertBefore(
+        infoElementError,
+        tableWrapperError.nextSibling
+      );
+    }
+    return;
+  }
+
+  let weightedTotalAmount = 0;
+  let formulaParts = [];
+  let missingBrokers = new Set();
+  const BOLD_BROKER_STYLE = "font-weight: bold; color: #333;"; // 用於公式中的券商名稱加粗
+
+  data.forEach((item) => {
+    const brokerName = item[0] ? item[0].trim() : "未知券商";
+    const responsibilityAmount = parseInt(item[2], 10);
+
+    if (isNaN(responsibilityAmount)) return;
+
+    let branchCount = 0;
+    let matchedBrokerName = brokerName; // 用於記錄實際匹配上的券商名稱 (可能包含 "證券")
+
+    if (currentBranchCountsMap.hasOwnProperty(brokerName)) {
+      branchCount = currentBranchCountsMap[brokerName];
+    } else {
+      const simplifiedBrokerName = brokerName
+        .replace(new RegExp("證券$"), "")
+        .trim(); // 修正正規表達式
+      if (currentBranchCountsMap.hasOwnProperty(simplifiedBrokerName)) {
+        branchCount = currentBranchCountsMap[simplifiedBrokerName];
+        matchedBrokerName = simplifiedBrokerName; // 更新為簡化後的名稱
+      } else {
+        missingBrokers.add(brokerName);
+      }
+    }
+
+    const weightedAmount = responsibilityAmount * branchCount * 30;
+    weightedTotalAmount += weightedAmount;
+    if (branchCount > 0) {
+      // 在公式中，使用 item[0] (原始券商名) 來顯示，但基於 matchedBrokerName 找分點數
+      formulaParts.push(
+        `${responsibilityAmount.toLocaleString()} (來自 ${
+          item[0]
+        }) * ${branchCount}分點 * 30人/分點`
+      );
+    }
+  });
+
+  if (missingBrokers.size > 0) {
+    console.error(
+      "下列券商未在 branch_counts.csv 中找到對應的分點數，其責任額未被加權計入總額:",
+      Array.from(missingBrokers).join(", ")
+    );
+  }
+
   const uniqueBrokers = [...new Set(data.map((item) => item[0]))];
   const uniqueProducts = [...new Set(data.map((item) => item[1]))];
 
-  // 移除可能已存在的表格信息元素
   const existingInfo = document.querySelector(".table-info");
   if (existingInfo) existingInfo.remove();
 
   const infoElement = document.createElement("div");
   infoElement.className = "table-info mt-4";
+
+  let formulaString =
+    "計算公式: Σ (各券商個別責任額 * 對應券商分點數 * 30人/分點)\n"; // 使用 \n 代表換行
+  formulaString += `加權總責任額 = ${formulaParts.join(" + ")}`;
+  if (missingBrokers.size > 0) {
+    formulaString += `\n\n注意：券商 (${Array.from(missingBrokers).join(
+      ", "
+    )}) 未找到分點數據，其責任額貢獻按0計算。`;
+  }
+
   infoElement.innerHTML = `
     <div class="flex flex-col md:flex-row md:justify-between text-neutral-600">
-      <span>總責任額: <strong class="text-primary-dark">${totalAmount.toLocaleString()}</strong> 萬元</span>
+      <span title="${formulaString
+        .replace(/"/g, "&quot;")
+        .replace(
+          /\n/g,
+          "&#10;"
+        )}">加權總責任額: <strong class="text-primary-dark">${weightedTotalAmount.toLocaleString()}</strong> 萬元</span>
       <span>券商數量: <strong class="text-primary-dark">${
         uniqueBrokers.length
       }</strong></span>
@@ -829,17 +902,18 @@ function addTotalInformation(data) {
     tableWrapper.parentNode.insertBefore(infoElement, tableWrapper.nextSibling);
   }
 
-  // 新增：總額顯示/隱藏的控制
   const showTotalsCheckbox = document.getElementById("show-totals");
   if (showTotalsCheckbox) {
-    // 確保總計信息預設顯示
     infoElement.style.display = showTotalsCheckbox.checked ? "block" : "none";
 
-    // 重新綁定事件監聽器，確保始終與最新的總計信息元素保持一致
-    showTotalsCheckbox.addEventListener("change", function () {
-      const totalInfoElement = document.querySelector(".table-info");
-      if (totalInfoElement) {
-        totalInfoElement.style.display = this.checked ? "block" : "none";
+    const newCheckbox = showTotalsCheckbox.cloneNode(true);
+    showTotalsCheckbox.parentNode.replaceChild(newCheckbox, showTotalsCheckbox);
+    newCheckbox.checked = showTotalsCheckbox.checked;
+
+    newCheckbox.addEventListener("change", function () {
+      const currentTotalInfoElement = document.querySelector(".table-info");
+      if (currentTotalInfoElement) {
+        currentTotalInfoElement.style.display = this.checked ? "block" : "none";
       }
     });
   }
