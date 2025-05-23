@@ -1458,9 +1458,13 @@
         const menuToggle = document.querySelector(".menu-toggle");
         const mobileMenu = document.querySelector(".mobile-menu");
         const menuClose = document.querySelector(".menu-close");
-        const menuLinks = document.querySelectorAll(".mobile-menu a");
+        const menuLinks = document.querySelectorAll(".mobile-menu .menu-item");
+        const menuPanel = document.querySelector(
+          ".mobile-menu > div:last-child"
+        );
+        const hamburgerLines = document.querySelectorAll(".hamburger-line");
 
-        if (!menuToggle || !mobileMenu) {
+        if (!menuToggle || !mobileMenu || !menuPanel) {
           console.log("漢堡包菜單元素未找到，稍後重試...");
           return;
         }
@@ -1471,13 +1475,39 @@
           mobileMenu.classList.remove("hidden");
           mobileMenu.classList.add("flex");
           document.body.style.overflow = "hidden";
+
+          // 漢堡包按鈕動畫轉換為X
+          hamburgerLines.forEach((line, index) => {
+            if (index === 0) {
+              line.style.transform = "rotate(45deg) translate(6px, 6px)";
+            } else if (index === 1) {
+              line.style.opacity = "0";
+            } else if (index === 2) {
+              line.style.transform = "rotate(-45deg) translate(6px, -6px)";
+            }
+          });
+
+          // 添加滑入動畫
+          setTimeout(() => {
+            menuPanel.style.transform = "translateX(0)";
+          }, 10);
         });
 
         // 關閉菜單
         const closeMenu = function () {
-          mobileMenu.classList.add("hidden");
-          mobileMenu.classList.remove("flex");
-          document.body.style.overflow = "";
+          menuPanel.style.transform = "translateX(100%)";
+
+          // 重置漢堡包按鈕動畫
+          hamburgerLines.forEach((line) => {
+            line.style.transform = "";
+            line.style.opacity = "";
+          });
+
+          setTimeout(() => {
+            mobileMenu.classList.add("hidden");
+            mobileMenu.classList.remove("flex");
+            document.body.style.overflow = "";
+          }, 500);
         };
 
         if (menuClose) {
@@ -1487,13 +1517,16 @@
         // 點擊菜單項目後關閉菜單
         menuLinks.forEach((link) => {
           link.addEventListener("click", function () {
-            setTimeout(closeMenu, 300); // 延遲關閉讓動畫完成
+            setTimeout(closeMenu, 200); // 延遲關閉讓點擊動畫完成
           });
         });
 
         // 點擊背景關閉菜單
         mobileMenu.addEventListener("click", function (e) {
-          if (e.target === mobileMenu) {
+          if (
+            e.target === mobileMenu ||
+            e.target.classList.contains("bg-gradient-to-br")
+          ) {
             closeMenu();
           }
         });

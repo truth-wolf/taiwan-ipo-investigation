@@ -782,6 +782,16 @@ function addTotalInformation(data, currentBranchCountsMap) {
     )}) 未找到分點數據，其責任額貢獻按0計算。`;
   }
 
+  // 計算單位轉換和顯示格式
+  let displayAmount, displayUnit;
+  if (weightedTotalAmount >= 10000) {
+    displayAmount = (weightedTotalAmount / 10000).toFixed(1);
+    displayUnit = "億";
+  } else {
+    displayAmount = weightedTotalAmount.toLocaleString();
+    displayUnit = "萬";
+  }
+
   infoElement.innerHTML = `
     <div class="flex flex-col md:flex-row md:justify-between text-neutral-600">
       <span title="${formulaString
@@ -789,7 +799,7 @@ function addTotalInformation(data, currentBranchCountsMap) {
         .replace(
           /\n/g,
           "&#10;"
-        )}">加權總責任額: <strong class="text-primary-dark">${weightedTotalAmount.toLocaleString()}</strong> 萬元</span>
+        )}">加權總責任額: <strong class="text-primary-dark">${displayAmount}</strong> ${displayUnit}元</span>
       <span>券商數量: <strong class="text-primary-dark">${
         uniqueBrokers.length
       }</strong></span>

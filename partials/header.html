@@ -12,76 +12,265 @@
       </a>
 
       <div class="hidden md:flex items-center space-x-8">
-        <a href="#overview" class="hover:text-primary-light transition-colors"
+        <a
+          href="#overview"
+          class="nav-link text-neutral-700 hover:text-primary transition-colors font-medium"
           >調查概述</a
         >
-        <a href="#timeline" class="hover:text-primary-light transition-colors"
+        <a
+          href="#timeline"
+          class="nav-link text-neutral-700 hover:text-primary transition-colors font-medium"
           >事件時間軸</a
         >
-        <a href="#data" class="hover:text-primary-light transition-colors"
+        <a
+          href="#data"
+          class="nav-link text-neutral-700 hover:text-primary transition-colors font-medium"
           >責任額數據</a
         >
-        <a href="#impact" class="hover:text-primary-light transition-colors"
+        <a
+          href="#impact"
+          class="nav-link text-neutral-700 hover:text-primary transition-colors font-medium"
           >影響分析</a
         >
-        <a href="#actions" class="hover:text-primary-light transition-colors"
+        <a
+          href="#actions"
+          class="nav-link text-neutral-700 hover:text-primary transition-colors font-medium"
           >檢舉範本</a
         >
+
+        <button
+          id="share-btn"
+          class="p-3 rounded-full bg-primary text-white hover:bg-primary-dark transition-colors shadow-sm hover:shadow-md"
+        >
+          <i class="fas fa-share-alt"></i>
+        </button>
       </div>
 
       <div class="flex items-center space-x-4">
-        <button
-          class="menu-toggle md:hidden block p-2 rounded-full bg-neutral-200 text-neutral-700 hover:bg-neutral-300 transition-colors"
-        >
-          <i class="fas fa-bars"></i>
+        <!-- 手機版漢堡包按鈕 -->
+        <button class="menu-toggle md:hidden relative group">
+          <div
+            class="w-10 h-10 rounded-xl bg-white/95 backdrop-blur-md shadow-md border border-neutral-200/30 flex items-center justify-center transition-all duration-300 group-hover:shadow-lg group-hover:scale-105"
+          >
+            <div class="w-5 h-5 flex flex-col justify-center items-center">
+              <span
+                class="hamburger-line block w-4 h-0.5 bg-neutral-600 transition-all duration-300 ease-out group-hover:bg-primary"
+              ></span>
+              <span
+                class="hamburger-line block w-4 h-0.5 bg-neutral-600 mt-1 transition-all duration-300 ease-out group-hover:bg-primary"
+              ></span>
+              <span
+                class="hamburger-line block w-4 h-0.5 bg-neutral-600 mt-1 transition-all duration-300 ease-out group-hover:bg-primary"
+              ></span>
+            </div>
+          </div>
         </button>
       </div>
     </div>
   </nav>
 
-  <!-- 行動選單 -->
-  <div
-    class="mobile-menu fixed inset-0 bg-black bg-opacity-90 z-50 hidden flex-col items-center justify-center"
-  >
-    <button class="menu-close absolute top-6 right-6 text-white text-xl">
-      <i class="fas fa-times"></i>
-    </button>
+  <!-- 手機版滑出菜單 -->
+  <div class="mobile-menu fixed inset-0 z-50 hidden">
+    <!-- 背景遮罩 -->
+    <div
+      class="absolute inset-0 bg-gradient-to-br from-black/40 via-black/60 to-black/80 backdrop-blur-md"
+    ></div>
 
-    <div class="flex flex-col items-center space-y-8">
-      <a
-        href="#overview"
-        class="text-white text-2xl hover:text-primary-light transition-colors"
-        >調查概述</a
+    <!-- 菜單面板 -->
+    <div
+      class="absolute top-0 right-0 h-full w-96 max-w-[90vw] bg-white/95 backdrop-blur-xl shadow-2xl transform translate-x-full transition-transform duration-500 ease-out border-l border-neutral-200/30"
+    >
+      <!-- 菜單標頭 -->
+      <div
+        class="relative p-8 bg-gradient-to-br from-white to-neutral-50 border-b border-neutral-100"
       >
-      <a
-        href="#timeline"
-        class="text-white text-2xl hover:text-primary-light transition-colors"
-        >事件時間軸</a
-      >
-      <a
-        href="#data"
-        class="text-white text-2xl hover:text-primary-light transition-colors"
-        >責任額數據</a
-      >
-      <a
-        href="#impact"
-        class="text-white text-2xl hover:text-primary-light transition-colors"
-        >影響分析</a
-      >
-      <a
-        href="#actions"
-        class="text-white text-2xl hover:text-primary-light transition-colors"
-        >檢舉範本</a
-      >
-    </div>
+        <div class="flex items-center justify-between">
+          <div class="flex items-center space-x-4">
+            <div
+              class="w-10 h-10 bg-gradient-to-br from-primary to-primary-dark rounded-xl shadow-lg flex items-center justify-center"
+            >
+              <i class="fas fa-search text-white text-sm"></i>
+            </div>
+            <div>
+              <span class="text-neutral-800 font-bold text-lg">導航菜單</span>
+              <p class="text-xs text-neutral-500 mt-0.5">
+                快速跳轉到感興趣的內容
+              </p>
+            </div>
+          </div>
+          <button
+            class="menu-close w-10 h-10 rounded-xl bg-neutral-100 hover:bg-neutral-200 flex items-center justify-center text-neutral-600 hover:text-neutral-800 transition-all duration-200 hover:scale-105"
+          >
+            <i class="fas fa-times text-sm"></i>
+          </button>
+        </div>
+      </div>
 
-    <div class="mt-12 flex space-x-4">
-      <button
-        id="mobile-share-btn"
-        class="p-3 rounded-full bg-white text-neutral-800"
+      <!-- 菜單項目 -->
+      <div
+        class="p-6 space-y-1 overflow-y-auto"
+        style="height: calc(100vh - 200px)"
       >
-        <i class="fas fa-share-alt"></i>
-      </button>
+        <a
+          href="#overview"
+          class="menu-item group flex items-center p-5 rounded-2xl text-neutral-700 hover:bg-gradient-to-r hover:from-primary/8 hover:to-primary/4 hover:text-primary transition-all duration-300 hover:shadow-sm"
+        >
+          <div
+            class="w-12 h-12 rounded-xl bg-gradient-to-br from-neutral-100 to-neutral-50 border border-neutral-200 flex items-center justify-center mr-4 group-hover:border-primary/20 group-hover:from-primary/10 group-hover:to-primary/5 transition-all duration-300"
+          >
+            <i
+              class="fas fa-file-alt text-neutral-500 group-hover:text-primary transition-colors duration-300"
+            ></i>
+          </div>
+          <div class="flex-1">
+            <span class="font-semibold text-base">調查概述</span>
+            <p
+              class="text-sm text-neutral-500 group-hover:text-primary/70 transition-colors duration-300"
+            >
+              深度報告核心內容
+            </p>
+          </div>
+          <div
+            class="w-8 h-8 rounded-lg bg-neutral-100 group-hover:bg-primary/10 flex items-center justify-center transition-all duration-300"
+          >
+            <i
+              class="fas fa-chevron-right text-xs text-neutral-400 group-hover:text-primary group-hover:translate-x-0.5 transition-all duration-300"
+            ></i>
+          </div>
+        </a>
+
+        <a
+          href="#timeline"
+          class="menu-item group flex items-center p-5 rounded-2xl text-neutral-700 hover:bg-gradient-to-r hover:from-primary/8 hover:to-primary/4 hover:text-primary transition-all duration-300 hover:shadow-sm"
+        >
+          <div
+            class="w-12 h-12 rounded-xl bg-gradient-to-br from-neutral-100 to-neutral-50 border border-neutral-200 flex items-center justify-center mr-4 group-hover:border-primary/20 group-hover:from-primary/10 group-hover:to-primary/5 transition-all duration-300"
+          >
+            <i
+              class="fas fa-clock text-neutral-500 group-hover:text-primary transition-colors duration-300"
+            ></i>
+          </div>
+          <div class="flex-1">
+            <span class="font-semibold text-base">事件時間軸</span>
+            <p
+              class="text-sm text-neutral-500 group-hover:text-primary/70 transition-colors duration-300"
+            >
+              關鍵發展歷程
+            </p>
+          </div>
+          <div
+            class="w-8 h-8 rounded-lg bg-neutral-100 group-hover:bg-primary/10 flex items-center justify-center transition-all duration-300"
+          >
+            <i
+              class="fas fa-chevron-right text-xs text-neutral-400 group-hover:text-primary group-hover:translate-x-0.5 transition-all duration-300"
+            ></i>
+          </div>
+        </a>
+
+        <a
+          href="#data"
+          class="menu-item group flex items-center p-5 rounded-2xl text-neutral-700 hover:bg-gradient-to-r hover:from-primary/8 hover:to-primary/4 hover:text-primary transition-all duration-300 hover:shadow-sm"
+        >
+          <div
+            class="w-12 h-12 rounded-xl bg-gradient-to-br from-neutral-100 to-neutral-50 border border-neutral-200 flex items-center justify-center mr-4 group-hover:border-primary/20 group-hover:from-primary/10 group-hover:to-primary/5 transition-all duration-300"
+          >
+            <i
+              class="fas fa-chart-bar text-neutral-500 group-hover:text-primary transition-colors duration-300"
+            ></i>
+          </div>
+          <div class="flex-1">
+            <span class="font-semibold text-base">責任額數據</span>
+            <p
+              class="text-sm text-neutral-500 group-hover:text-primary/70 transition-colors duration-300"
+            >
+              詳細數據分析
+            </p>
+          </div>
+          <div
+            class="w-8 h-8 rounded-lg bg-neutral-100 group-hover:bg-primary/10 flex items-center justify-center transition-all duration-300"
+          >
+            <i
+              class="fas fa-chevron-right text-xs text-neutral-400 group-hover:text-primary group-hover:translate-x-0.5 transition-all duration-300"
+            ></i>
+          </div>
+        </a>
+
+        <a
+          href="#impact"
+          class="menu-item group flex items-center p-5 rounded-2xl text-neutral-700 hover:bg-gradient-to-r hover:from-primary/8 hover:to-primary/4 hover:text-primary transition-all duration-300 hover:shadow-sm"
+        >
+          <div
+            class="w-12 h-12 rounded-xl bg-gradient-to-br from-neutral-100 to-neutral-50 border border-neutral-200 flex items-center justify-center mr-4 group-hover:border-primary/20 group-hover:from-primary/10 group-hover:to-primary/5 transition-all duration-300"
+          >
+            <i
+              class="fas fa-exclamation-triangle text-neutral-500 group-hover:text-primary transition-colors duration-300"
+            ></i>
+          </div>
+          <div class="flex-1">
+            <span class="font-semibold text-base">影響分析</span>
+            <p
+              class="text-sm text-neutral-500 group-hover:text-primary/70 transition-colors duration-300"
+            >
+              多方影響評估
+            </p>
+          </div>
+          <div
+            class="w-8 h-8 rounded-lg bg-neutral-100 group-hover:bg-primary/10 flex items-center justify-center transition-all duration-300"
+          >
+            <i
+              class="fas fa-chevron-right text-xs text-neutral-400 group-hover:text-primary group-hover:translate-x-0.5 transition-all duration-300"
+            ></i>
+          </div>
+        </a>
+
+        <a
+          href="#actions"
+          class="menu-item group flex items-center p-5 rounded-2xl text-neutral-700 hover:bg-gradient-to-r hover:from-primary/8 hover:to-primary/4 hover:text-primary transition-all duration-300 hover:shadow-sm"
+        >
+          <div
+            class="w-12 h-12 rounded-xl bg-gradient-to-br from-neutral-100 to-neutral-50 border border-neutral-200 flex items-center justify-center mr-4 group-hover:border-primary/20 group-hover:from-primary/10 group-hover:to-primary/5 transition-all duration-300"
+          >
+            <i
+              class="fas fa-file-signature text-neutral-500 group-hover:text-primary transition-colors duration-300"
+            ></i>
+          </div>
+          <div class="flex-1">
+            <span class="font-semibold text-base">檢舉範本</span>
+            <p
+              class="text-sm text-neutral-500 group-hover:text-primary/70 transition-colors duration-300"
+            >
+              實用檢舉工具
+            </p>
+          </div>
+          <div
+            class="w-8 h-8 rounded-lg bg-neutral-100 group-hover:bg-primary/10 flex items-center justify-center transition-all duration-300"
+          >
+            <i
+              class="fas fa-chevron-right text-xs text-neutral-400 group-hover:text-primary group-hover:translate-x-0.5 transition-all duration-300"
+            ></i>
+          </div>
+        </a>
+      </div>
+
+      <!-- 菜單底部 -->
+      <div
+        class="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-white to-neutral-50 border-t border-neutral-100"
+      >
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm font-medium text-neutral-700">分享調查報告</p>
+            <p class="text-xs text-neutral-500">讓更多人了解真相</p>
+          </div>
+          <button
+            id="mobile-share-btn"
+            class="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary to-primary-dark text-white shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 flex items-center justify-center group"
+          >
+            <i
+              class="fas fa-share-alt group-hover:scale-110 transition-transform duration-300"
+            ></i>
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 </header>
