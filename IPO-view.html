@@ -1,0 +1,1402 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>揭露營業員血汗IPO - 可視化報告</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Noto+Sans+TC:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Inter", "Noto Sans TC", sans-serif;
+        background-color: #f3f4f6;
+      }
+      .hero-section {
+        background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
+          url("https://placehold.co/1200x400/4A5568/E2E8F0?text=金融市場迷霧");
+        background-size: cover;
+        background-position: center;
+      }
+      .stat-card {
+        background-color: white;
+        border-radius: 0.75rem;
+        padding: 1.5rem;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+          0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+      .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+          0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      }
+      .table-loss {
+        color: #22c55e;
+        font-weight: 600;
+      }
+      .table-gain {
+        color: #ef4444;
+        font-weight: 600;
+      }
+      .table-neutral {
+        color: #6b7280;
+      }
+      th,
+      td {
+        padding: 0.75rem 1rem;
+        text-align: left;
+        border-bottom: 1px solid #e5e7eb;
+      }
+      thead th {
+        background-color: #f9fafb;
+        font-weight: 600;
+        color: #374151;
+      }
+      .chart-container {
+        background-color: white;
+        padding: 1.5rem;
+        border-radius: 0.75rem;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+          0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        position: relative;
+        height: 400px;
+      }
+      .section-title {
+        font-size: 1.875rem;
+        font-weight: 600;
+        color: #1f2937;
+        margin-bottom: 1.5rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid #d1d5db;
+      }
+      .content-box {
+        background-color: white;
+        padding: 1.5rem;
+        border-radius: 0.75rem;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+          0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        margin-bottom: 3rem;
+      }
+      .simulation-input {
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid #d1d5db;
+        border-radius: 0.375rem;
+        margin-bottom: 1rem;
+      }
+      .simulation-button {
+        background-color: #ef4444;
+        color: white;
+        padding: 0.75rem 1.5rem;
+        border-radius: 0.375rem;
+        font-weight: 600;
+        transition: background-color 0.3s ease;
+      }
+      .simulation-button:hover {
+        background-color: #dc2626;
+      }
+      .simulation-result-item {
+        margin-bottom: 0.75rem;
+        font-size: 1rem;
+      }
+      .simulation-result-item strong {
+        color: #1f2937;
+      }
+      .loss-emphasis {
+        color: #22c55e;
+        font-weight: bold;
+        font-size: 1.1em;
+      }
+      .gain-emphasis {
+        color: #ef4444;
+        font-weight: bold;
+        font-size: 1.1em;
+      }
+      .pressure-quote {
+        font-style: italic;
+        color: #4b5563;
+        border-left: 4px solid #ef4444;
+        padding-left: 1rem;
+        margin: 1rem 0;
+        background-color: #fef2f2;
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
+        border-radius: 0.25rem;
+      }
+      .broker-monologue {
+        font-style: italic;
+        color: #71717a;
+        border-left: 4px solid #facc15;
+        padding-left: 1rem;
+        margin: 1rem 0;
+        background-color: #fffbeb;
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
+        border-radius: 0.25rem;
+      }
+      .forced-choice-options p {
+        margin-bottom: 0.5rem;
+        padding: 0.5rem;
+        border: 1px dashed #d1d5db;
+        border-radius: 0.25rem;
+        background-color: #f9fafb;
+      }
+      .broker-statement-table {
+        font-size: 0.875rem;
+        line-height: 1.25rem;
+      }
+      .broker-statement-table th,
+      .broker-statement-table td {
+        padding: 0.5rem;
+      }
+
+      @keyframes sad-pulse-animation {
+        0% {
+          color: #ef4444;
+          opacity: 0.7;
+          transform: scale(1);
+        }
+        50% {
+          color: #dc2626;
+          opacity: 1;
+          transform: scale(1.03);
+        }
+        100% {
+          color: #ef4444;
+          opacity: 0.7;
+          transform: scale(1);
+        }
+      }
+      .sad-text-effect {
+        animation: sad-pulse-animation 1.8s infinite ease-in-out;
+      }
+      .final-loss-figure {
+        font-size: 1.5rem;
+        font-weight: bold;
+      }
+      .experience-button {
+        background-color: #8b5cf6;
+        color: white;
+        padding: 1rem 2rem;
+        border-radius: 0.5rem;
+        font-weight: 600;
+        font-size: 1.25rem;
+        transition: all 0.3s ease;
+        display: block;
+        width: 100%;
+        text-align: center;
+        margin: 1.5rem 0;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      }
+      .experience-button:hover {
+        background-color: #7c3aed;
+        transform: translateY(-2px);
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+      }
+      .experience-button:active {
+        transform: translateY(0);
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .animate-fade-in {
+        animation: fadeIn 0.5s ease forwards;
+      }
+      .chart-wrapper {
+        width: 100%;
+        height: 100%;
+        max-height: 360px;
+        position: relative;
+      }
+    </style>
+  </head>
+  <body class="antialiased">
+    <section
+      class="hero-section text-white py-16 px-4 sm:px-6 lg:px-8 rounded-b-xl shadow-lg"
+    >
+      <div class="max-w-4xl mx-auto text-center">
+        <h1 class="text-4xl sm:text-5xl font-bold mb-4">揭露營業員血汗IPO</h1>
+        <p class="text-xl sm:text-2xl mb-2">
+          責任額制度下的投資悲歌與市場現形記
+        </p>
+        <p class="text-md text-gray-200">
+          數據揭示壓力下的潛在虧損，正視從業人員困境
+        </p>
+      </div>
+    </section>
+
+    <main class="container mx-auto p-4 sm:p-6 lg:p-8">
+      <section id="introduction" class="content-box">
+        <h2 class="section-title">制度背景：何謂「營業員血汗責任額」？</h2>
+        <div class="space-y-3 text-gray-700 leading-relaxed">
+          <p>
+            台灣金融市場，尤其ETF發行熱潮中，「營業員責任額」引發廣泛討論。此制度要求金融機構營業員達成IPO或ETF的銷售配額。為達標，營業員承受巨大壓力，甚至可能被迫<strong
+              class="text-red-600"
+              >自掏腰包認購</strong
+            >，承擔潛在財務風險。
+          </p>
+          <p>
+            此制度不僅影響營業員，亦可能導致人為需求、市場波動加劇、產品同質化及銷售合規風險等問題。
+          </p>
+        </div>
+      </section>
+
+      <section id="key-findings" class="content-box">
+        <h2 class="section-title">關鍵發現：不能說的秘密</h2>
+        <div class="space-y-2 text-gray-700 leading-relaxed">
+          <p>
+            <strong class="text-red-700">系統性被欺壓：</strong
+            >營業員普遍感受高度壓力，問題已非個案。
+          </p>
+          <p>
+            <strong class="text-red-700">管理手段常態化：</strong
+            >主管慣用情緒勒索、威脅扣績效等方式施壓。
+          </p>
+          <p>
+            <strong class="text-red-700">無奈的選擇：</strong
+            >多數營業員被迫自購，甚至貸款買單，形成惡性循環。
+          </p>
+          <p>
+            <strong class="text-red-700">心理健康警訊：</strong
+            >失眠、焦慮等心理問題普遍，部分需醫療協助。
+          </p>
+        </div>
+      </section>
+
+      <section id="broker-statement-section" class="content-box">
+        <h2 class="section-title">
+          警示：營業員被迫承擔之潛在虧損 (模擬內部檢討單)
+        </h2>
+        <p class="text-gray-600 mb-4">
+          以下模擬展示在莫須有的責任額壓力下，營業員可能被迫動用大額資金（此處模擬每檔隨機
+          <strong class="text-red-600">30萬至600萬</strong>
+          元）認購多檔IPO。假設皆於上市首日以<strong class="text-red-500"
+            >最低價</strong
+          >含淚賣出，這份「內部檢討單」揭示了驚人的潛在虧損。
+        </p>
+        <div class="overflow-x-auto">
+          <table
+            class="min-w-full divide-y divide-gray-200 broker-statement-table"
+          >
+            <thead class="bg-gray-100">
+              <tr>
+                <th
+                  class="px-2 py-2 text-left text-xs font-medium text-gray-600 uppercase tracking-wider"
+                >
+                  股票名稱
+                </th>
+                <th
+                  class="px-2 py-2 text-left text-xs font-medium text-gray-600 uppercase tracking-wider"
+                >
+                  募集價 (元)
+                </th>
+                <th
+                  class="px-2 py-2 text-left text-xs font-medium text-gray-600 uppercase tracking-wider"
+                >
+                  首日最低 (元)
+                </th>
+                <th
+                  class="px-2 py-2 text-left text-xs font-medium text-gray-600 uppercase tracking-wider"
+                >
+                  模擬認購額 (元)
+                </th>
+                <th
+                  class="px-2 py-2 text-left text-xs font-medium text-gray-600 uppercase tracking-wider"
+                >
+                  可購股數
+                </th>
+                <th
+                  class="px-2 py-2 text-left text-xs font-medium text-gray-600 uppercase tracking-wider"
+                >
+                  買入手續費 (元)
+                </th>
+                <th
+                  class="px-2 py-2 text-left text-xs font-medium text-gray-600 uppercase tracking-wider"
+                >
+                  賣出手續費+稅 (元)
+                </th>
+                <th
+                  class="px-2 py-2 text-left text-xs font-medium text-gray-600 uppercase tracking-wider"
+                >
+                  實際成本 (元)
+                </th>
+                <th
+                  class="px-2 py-2 text-left text-xs font-medium text-gray-600 uppercase tracking-wider"
+                >
+                  賣出價值 (元)
+                </th>
+                <th
+                  class="px-2 py-2 text-left text-xs font-medium text-gray-600 uppercase tracking-wider"
+                >
+                  單檔虧損 (元)
+                </th>
+              </tr>
+            </thead>
+            <tbody
+              id="broker-loss-statement-body"
+              class="bg-white divide-y divide-gray-200"
+            >
+              <tr>
+                <td colspan="10" class="text-center p-4 text-gray-500">
+                  隊長單資料生成中...
+                </td>
+              </tr>
+            </tbody>
+            <tfoot class="bg-gray-100">
+              <tr>
+                <td
+                  colspan="9"
+                  class="px-2 py-2 text-right text-sm font-semibold text-gray-700"
+                >
+                  總計潛在虧損：
+                </td>
+                <td
+                  id="broker-total-loss"
+                  class="px-2 py-2 text-right text-sm font-bold text-green-600"
+                >
+                  0 元
+                </td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+        <p class="mt-4 text-xs text-gray-500">
+          *
+          此為虛構的內部檢討單，旨在揭示制度性風險。實際虧損將依個別IPO表現及被迫認購金額而異。虧損以綠色表示(紅漲綠跌)。
+        </p>
+      </section>
+
+      <section id="simulation-section" class="content-box">
+        <h2 class="section-title">營業員壓力情境模擬</h2>
+        <p class="text-gray-600 mb-2">
+          「客戶沒買就自己買！」、「你不做，後面多的是人想做！」...
+          這些話語是否似曾相識？
+        </p>
+        <p class="text-gray-600 mb-4">
+          親身體驗營業員在主管明示暗示、業績壓力下，被迫承擔責任額的典型情境。點擊下方按鈕，親自體驗若被迫隨機認購IPO，並於上市首日或凹單後以最低價含淚賣出，可能面臨的財務與心理壓力。
+        </p>
+
+        <button id="runSimulationBtn" class="experience-button">
+          直接體驗「責任額壓力」
+        </button>
+
+        <div
+          id="simulationResult"
+          class="mt-6 p-4 border border-gray-200 rounded-md bg-gray-50 hidden"
+        >
+          <h3 class="text-xl font-semibold text-gray-800 mb-3">
+            壓力鍋下的模擬結果:
+          </h3>
+        </div>
+      </section>
+
+      <section id="investigation-summary" class="content-box">
+        <h2 class="section-title">「血汗責任額」調查摘要</h2>
+        <div class="space-y-3 text-gray-700 leading-relaxed">
+          <p>
+            <strong>調查背景：</strong
+            >彙整多方營業員真實經歷，揭示責任額制度如何從激勵變質為剝削。
+          </p>
+          <ul class="list-disc list-inside space-y-1 pl-4 text-sm">
+            <li>
+              <strong>被迫自購：</strong
+              >主管明示或暗示「自己想辦法」，甚至鼓勵貸款達標。
+            </li>
+            <li>
+              <strong>威脅恐嚇：</strong
+              >「不做就滾」、「客戶轉走」等言語成為管理日常。
+            </li>
+            <li>
+              <strong>惡性循環：</strong
+              >為獲取「回單」，券商強迫營業員達標，壓力層層轉嫁。
+            </li>
+            <li>
+              <strong>制度缺失：</strong
+              >責任額缺乏法源，操作不透明，獎懲標準模糊。
+            </li>
+          </ul>
+          <h3 class="text-lg font-semibold text-gray-800 mt-3 mb-1">
+            營業員心聲：「只想被當人看」
+          </h3>
+          <ul class="list-disc list-inside space-y-1 pl-4 text-sm">
+            <li>情緒勒索、公開羞辱、利益分配不均、心理健康危機頻傳。</li>
+            <li>
+              「不是在等待改變，我們就是改變的力量」——越來越多營業員勇敢發聲。
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <section id="key-stats" class="mb-12">
+        <h2 class="text-3xl font-semibold text-gray-800 mb-6 text-center">
+          核心數據總覽
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div class="stat-card text-center">
+            <h3 class="text-xl font-semibold text-gray-700 mb-2">
+              上市當日破發機率
+            </h3>
+            <p
+              id="stats-breakeven-day1"
+              class="text-4xl font-bold text-green-600"
+            >
+              --%
+            </p>
+            <p class="text-sm text-gray-500">IPO價格低於募集價</p>
+          </div>
+          <div class="stat-card text-center">
+            <h3 class="text-xl font-semibold text-gray-700 mb-2">
+              一個月後破發機率
+            </h3>
+            <p
+              id="stats-breakeven-month1"
+              class="text-4xl font-bold text-green-600"
+            >
+              --%
+            </p>
+            <p class="text-sm text-gray-500">IPO價格低於募集價</p>
+          </div>
+          <div class="stat-card text-center">
+            <h3 class="text-xl font-semibold text-gray-700 mb-2">
+              平均當日潛虧(破發股)
+            </h3>
+            <p
+              id="stats-avg-loss-day1"
+              class="text-4xl font-bold text-green-600"
+            >
+              --%
+            </p>
+            <p class="text-sm text-gray-500">若上市當日破發</p>
+          </div>
+          <div class="stat-card text-center">
+            <h3 class="text-xl font-semibold text-gray-700 mb-2">
+              平均月後潛虧(破發股)
+            </h3>
+            <p
+              id="stats-avg-loss-month1"
+              class="text-4xl font-bold text-green-600"
+            >
+              --%
+            </p>
+            <p class="text-sm text-gray-500">若一個月後破發</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="data-table-section" class="content-box">
+        <h2 class="section-title">IPO 詳細數據與潛在虧損分析</h2>
+        <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+              <tr>
+                <th
+                  scope="col"
+                  class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                >
+                  股票名稱
+                </th>
+                <th
+                  scope="col"
+                  class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                >
+                  上市日
+                </th>
+                <th
+                  scope="col"
+                  class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                >
+                  募集價格(元)
+                </th>
+                <th
+                  scope="col"
+                  class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                >
+                  掛牌當天最低(元)
+                </th>
+                <th
+                  scope="col"
+                  class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                >
+                  掛牌月後最低(元)
+                </th>
+                <th
+                  scope="col"
+                  class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                >
+                  當日潛在虧損(元/股)
+                </th>
+                <th
+                  scope="col"
+                  class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                >
+                  當日潛在虧損率(%)
+                </th>
+                <th
+                  scope="col"
+                  class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                >
+                  月後潛在虧損(元/股)
+                </th>
+                <th
+                  scope="col"
+                  class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                >
+                  月後潛在虧損率(%)
+                </th>
+              </tr>
+            </thead>
+            <tbody
+              id="ipo-table-body"
+              class="divide-y divide-gray-200 bg-white"
+            >
+              <tr>
+                <td colspan="9" class="text-center p-8 text-gray-500">
+                  IPO 資料載入中...
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="mt-4 text-xs text-gray-500">
+          *
+          潛在虧損是以募集價認購，於當日或一個月內最低點賣出計算的最大可能損失。紅漲綠跌：正值顯示為綠色(跌)，負值顯示為紅色(漲)。
+        </p>
+      </section>
+
+      <section id="charts-section" class="mb-12">
+        <h2 class="text-3xl font-semibold text-gray-800 mb-6 text-center">
+          視覺化圖表分析
+        </h2>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <div class="chart-container">
+            <h3 class="text-xl font-semibold text-gray-700 mb-4 text-center">
+              IPO 破發機率分析
+            </h3>
+            <div class="chart-wrapper">
+              <canvas id="breakevenPieChart"></canvas>
+            </div>
+          </div>
+          <div class="chart-container">
+            <h3 class="text-xl font-semibold text-gray-700 mb-4 text-center">
+              一個月後潛在報酬率分佈
+            </h3>
+            <div class="chart-wrapper">
+              <canvas id="lossDistributionBarChart"></canvas>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="market-disruption" class="content-box">
+        <h2 class="section-title">責任額制度如何擾亂市場？</h2>
+        <div class="space-y-3 text-gray-700 leading-relaxed">
+          <p>
+            營業員IPO責任額制度，除對從業人員造成壓力，其對整體市場的潛在影響亦不容忽視：扭曲供需、上市初期不穩定、資源錯配與產品同質化、損害投資者信任、以及引發道德風險與合規壓力。
+          </p>
+          <p>
+            長遠來看，此制度若無適當規範，可能侵蝕市場健康，對監理亦帶來挑戰。
+          </p>
+        </div>
+      </section>
+
+      <footer class="text-center py-8 mt-8 border-t border-gray-300">
+        <p class="text-gray-700">
+          &copy; <span id="currentYear"></span> IPO血汗責任額觀察報告.
+          資料僅供參考，不構成投資建議。
+        </p>
+        <p class="text-sm text-gray-500 mt-1">
+          期望透過數據揭露，喚起對從業人員處境與市場健康的重視。
+        </p>
+      </footer>
+    </main>
+
+    <script>
+      // --- Global Variables ---
+      let allIpoData = [];
+      let breakevenPieChartInstance = null;
+      let lossDistributionBarChartInstance = null;
+      const CSV_FILE_PATH = "IPO-最低價格.csv";
+
+      const EXTENDED_PRESSURE_QUOTES = [
+        "這責任額不高啦，大家都做得到了，就差你了",
+        "你這樣年終可能不保喔",
+        "錢自己準備好，必要的話就信貸一下，不然這季怎麼過？",
+        "某某上次達不到就是因為不夠努力，人家XX就自己買了 300 萬，你們連一半都不到，是怎樣？",
+        "你們不想做就講，我可以叫新人來頂，現在一堆人搶這個位置",
+        "沒做到，對不起其他有做到的同事，所以要移轉你的客戶補償給其他人",
+        "IPO未達標就是拿資源不做事，0%跟99%一樣是都未達標，未達100%就抽走你的前五大客戶",
+        "其他人都做得到，你為什麼做不到，那你要檢討自己的問題嘛！",
+        "我沒有要你買！我要你去行銷！",
+        "連30萬都沒有辦法自己做IPO 要我借你錢嗎？",
+        "我不相信你IPO連10萬都騙不到，拿著你營業員的名片會騙不到10嗎？如果騙不到，表示這個行業不適合你，請你可以考慮離開",
+        "公司就是被你們拖累的",
+        "公司不養冗員",
+        "做不到就移轉客戶",
+        "你沒做到的話，工作還要不要",
+        "使命必達",
+        "業務領獎金，就該要做到公司的任務，IPo是公司的重要任務，要想辦法達成. 客戶關係好，就拜託客戶買.反正就是要達到目標",
+        "這檔責任額沒做到，要補在下一檔",
+        "做不到就要檢討為什麼別人做得到你做不到？",
+        "妳裙子穿得比別人短，責任額跟其他男生一樣不覺得愧疚嗎",
+        "你是女生要會利用自己優勢",
+        "女生怎麼可能賣不出去是妳要不要而已你知道方法的",
+        "上面壓下來的目標，我不管你用什麼方法，一定要達到！",
+        "客戶不買？那你就自己想辦法處理掉這些額度，不然影響到團隊績效，你知道後果",
+        "聽說隔壁組的某某某，這次又自己掏腰包了，年輕人要多學習啊！",
+        "這是機會，公司給的資源，要好好把握，不要不識抬舉！",
+        "落實call客，總公司追蹤每位同仁的進度",
+        "達500萬不追蹤",
+        "針對落後同仁，客戶名單移轉",
+        "適當人力調整",
+        "做不到就回家睡覺",
+        "達不到目標就抽走客戶；變相要求加班",
+      ];
+
+      const BROKER_INNER_MONOLOGUES = [
+        "說真的，我已經很久沒有覺得自己是個正常工作的人了...我們只是希望這個行業能把人當人看，而不是一個可以隨時補上責任額的數字產出機器。",
+        "我想好好工作，不想靠信貸生存；我想被當作人看，而不是一個被逼買單的業績工具。",
+        "每次IPO來的時候，大家都要先確認自己準備了多少錢，不是幫客戶選好產品，而是先確保自己可以補多少洞。",
+        "你們看到的是回單跟總銷數字，但你們有看到我們每天為了那些數字，壓力大到吃不下睡不著的樣子嗎？",
+        "我領$30,000的薪水，怎麼我不賣IPO就欠你50萬了？？這是證券還是黑道，每個月都來跟我收保護費...",
+        "我們薪水很少，平常事務工作也是花體力花精力賺錢來的！我是來賺錢的！不是來買工作的！",
+        "我從業30幾年，第一次感覺自己是詐騙集團...",
+        "拜託 我們不是24小時工作機器人誒，無時無刻都在情緒勒索...",
+        "每天需要吃藥睡覺,恐慌焦慮的情緒時常伴隨，我知道情緒生病了，證券業也生病了...",
+        "賺到的錢都拿去買銀行IPO和基金了，股市大跌全都套牢了",
+        "看似光鮮亮麗的證券營業員，好像賺很多，實則虧不少，我們有苦難言...",
+        "我是來上班賺錢的不是花錢買工作的",
+        "我自掏腰包全買100%，讓主管櫃管在總公司得到表揚...還要被主管貶到豬狗不如...是叫我去死嗎😭",
+        "壓力並不會成為動力只會成為你的病。然後你把這些壞情緒帶回家裡也直接影響到家庭變得心力交瘁，然後推薦的ETF檔檔破發愧對信任自己的客戶朋友...",
+        "找不到客戶就自己買一買，反正xx天後就可以出場了...這個體制真的生病了",
+        "底薪三萬，房租一萬五，吃飯一萬，交通雜支五千...這張單下去，這個月又要吃土了...還要被當賊一樣防著客戶跑掉，我真的好累...",
+        "又來了，又是這種垃圾商品，客戶不賠死才怪...但我能怎麼辦？不扛嗎？明天就叫我滾蛋了...",
+        "算了，買吧，買了至少還有工作...吧？只是心好痛，對不起客戶，也對不起自己多年的專業...",
+      ];
+
+      // 交易成本常數 - 營業員自掏腰包
+      const BROKER_BUY_FEE_RATE = (0.1425 * 0.6) / 100; // 0.1425% * 0.6 = 0.0855%
+      const BROKER_SELL_FEE_RATE = (0.1425 * 0.6) / 100; // 0.0855%
+      const TAX_RATE = 0.1 / 100; // 0.1%
+
+      // 隨機策略選擇（當日賣出 vs 凹單）
+      const STRATEGY_TYPES = ["當日賣出", "凹單月底賣出"];
+
+      // --- Utility Functions ---
+      function formatNumber(num, decimals = 0) {
+        if (typeof num !== "number" || isNaN(num)) return "-";
+        return num.toLocaleString("zh-TW", {
+          minimumFractionDigits: decimals,
+          maximumFractionDigits: decimals,
+        });
+      }
+
+      // 紅漲綠跌 - 調整表格顏色
+      function getPriceClass(value) {
+        if (typeof value !== "number" || isNaN(value)) return "table-neutral";
+        return value > 0
+          ? "table-loss" // 虧損 - 綠色
+          : value < 0
+          ? "table-gain" // 獲利 - 紅色
+          : "table-neutral";
+      }
+
+      // 紅漲綠跌 - 調整百分比顏色
+      function getPriceClassPercent(value) {
+        if (typeof value !== "number" || isNaN(value)) return "table-neutral";
+        return value < 0
+          ? "table-loss" // 虧損 - 綠色 (百分比為負)
+          : value > 0
+          ? "table-gain" // 獲利 - 紅色 (百分比為正)
+          : "table-neutral";
+      }
+
+      // 計算買入手續費
+      function calculateBuyFee(price, quantity) {
+        return Math.max(20, price * quantity * BROKER_BUY_FEE_RATE); // 最低手續費20元
+      }
+
+      // 計算賣出手續費與稅金
+      function calculateSellFeeAndTax(price, quantity) {
+        const fee = Math.max(20, price * quantity * BROKER_SELL_FEE_RATE); // 最低手續費20元
+        const tax = price * quantity * TAX_RATE;
+        return fee + tax;
+      }
+
+      // 隨機選擇IPO
+      function getRandomIpo() {
+        if (!allIpoData || allIpoData.length === 0) return null;
+        // 選擇有正常價格資料的IPO
+        const validIpos = allIpoData.filter(
+          (ipo) =>
+            ipo.subPrice > 0 && !isNaN(ipo.dayLow) && !isNaN(ipo.monthLow)
+        );
+        if (validIpos.length === 0) return null;
+
+        return validIpos[Math.floor(Math.random() * validIpos.length)];
+      }
+
+      // --- CSV Parsing and Data Processing ---
+      async function loadAndProcessData() {
+        try {
+          const response = await fetch(CSV_FILE_PATH);
+          if (!response.ok) {
+            throw new Error(
+              `HTTP error! status: ${response.status} while fetching ${CSV_FILE_PATH}`
+            );
+          }
+          const csvText = await response.text();
+          const parsedData = parseCSV(csvText);
+
+          allIpoData = parsedData
+            .map((item) => {
+              const subPrice = parseFloat(item["募集價格"]);
+              const dayLow = parseFloat(item["掛牌當天最低"]);
+              const monthLow = parseFloat(item["掛盤後一個月最低"]);
+
+              if (
+                isNaN(subPrice) ||
+                isNaN(dayLow) ||
+                isNaN(monthLow) ||
+                subPrice <= 0
+              ) {
+                console.warn(
+                  "Skipping invalid data row (after parsing attempt):",
+                  item
+                );
+                return null;
+              }
+
+              const lossDay1Amount = subPrice - dayLow;
+              const lossDay1Percent = ((dayLow - subPrice) / subPrice) * 100;
+              const lossMonth1Amount = subPrice - monthLow;
+              const lossMonth1Percent =
+                ((monthLow - subPrice) / subPrice) * 100;
+
+              return {
+                name: item["股票名稱"] ? item["股票名稱"].trim() : "N/A",
+                date: item["上市日"] ? item["上市日"].trim() : "N/A",
+                subPrice,
+                dayLow,
+                monthLow,
+                lossDay1Amount,
+                lossDay1Percent,
+                lossMonth1Amount,
+                lossMonth1Percent,
+              };
+            })
+            .filter((item) => item !== null);
+
+          if (allIpoData.length === 0) {
+            console.error(
+              "No valid IPO data loaded. Check CSV format and headers."
+            );
+            displayErrorMessage(
+              "未能從CSV檔案載入有效的IPO資料。請檢查檔案格式、欄位名稱 (如：募集價格, 掛牌當天最低, 掛盤後一個月最低, 股票名稱, 上市日) 是否正確。"
+            );
+            return;
+          }
+
+          populateTable(allIpoData);
+          calculateAndDisplayStats(allIpoData);
+          createOrUpdateCharts(allIpoData);
+          displayBrokerLossStatement(allIpoData);
+        } catch (error) {
+          console.error("Error loading or processing IPO data:", error);
+          displayErrorMessage(
+            `載入IPO資料時發生錯誤: ${error.message}。請確認 '${CSV_FILE_PATH}' 檔案存在且格式正確。`
+          );
+        }
+      }
+
+      function parseCSV(csvText) {
+        const lines = csvText.trim().split(/\r?\n/);
+        if (lines.length < 2) return [];
+
+        const headers = lines[0].split(",").map((header) => header.trim());
+        const data = [];
+
+        for (let i = 1; i < lines.length; i++) {
+          const values = lines[i].split(",");
+          if (
+            values.length !== headers.length ||
+            lines[i].trim() === "" ||
+            values.every((v) => v.trim() === "")
+          ) {
+            console.warn(`Skipping malformed CSV line ${i + 1}: ${lines[i]}`);
+            continue;
+          }
+          const entry = {};
+          headers.forEach((header, index) => {
+            entry[header] = values[index] ? values[index].trim() : "";
+          });
+          data.push(entry);
+        }
+        return data;
+      }
+
+      function displayErrorMessage(message) {
+        const tableBody = document.getElementById("ipo-table-body");
+        if (tableBody) {
+          tableBody.innerHTML = `<tr><td colspan="9" class="text-center p-8 text-red-500 font-semibold">${message}</td></tr>`;
+        }
+        const simulationResultDiv = document.getElementById("simulationResult");
+        if (simulationResultDiv) {
+          simulationResultDiv.innerHTML = `<p class="text-red-500 font-semibold">${message}</p>`;
+          simulationResultDiv.classList.remove("hidden");
+        }
+      }
+
+      // --- DOM Manipulation and Display ---
+      function populateTable(data) {
+        const tableBody = document.getElementById("ipo-table-body");
+        if (!tableBody) return;
+        tableBody.innerHTML = "";
+
+        if (data.length === 0) {
+          tableBody.innerHTML = `<tr><td colspan="9" class="text-center p-8 text-gray-500">沒有可顯示的IPO資料。</td></tr>`;
+          return;
+        }
+
+        data.forEach((item) => {
+          const row = tableBody.insertRow();
+          row.innerHTML = `
+                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-700">${
+                  item.name
+                }</td>
+                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">${
+                  item.date
+                }</td>
+                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500 text-right">${formatNumber(
+                  item.subPrice
+                )}</td>
+                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500 text-right">${formatNumber(
+                  item.dayLow
+                )}</td>
+                <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500 text-right">${formatNumber(
+                  item.monthLow
+                )}</td>
+                <td class="whitespace-nowrap px-3 py-4 text-sm text-right ${getPriceClass(
+                  item.lossDay1Amount
+                )}">${formatNumber(item.lossDay1Amount)}</td>
+                <td class="whitespace-nowrap px-3 py-4 text-sm text-right ${getPriceClassPercent(
+                  item.lossDay1Percent
+                )}">${formatNumber(item.lossDay1Percent, 1)}%</td>
+                <td class="whitespace-nowrap px-3 py-4 text-sm text-right ${getPriceClass(
+                  item.lossMonth1Amount
+                )}">${formatNumber(item.lossMonth1Amount)}</td>
+                <td class="whitespace-nowrap px-3 py-4 text-sm text-right ${getPriceClassPercent(
+                  item.lossMonth1Percent
+                )}">${formatNumber(item.lossMonth1Percent, 1)}%</td>
+            `;
+        });
+      }
+
+      function populateIpoSelect(data) {
+        const ipoSelect = document.getElementById("ipoSelect");
+        if (!ipoSelect) return;
+        ipoSelect.innerHTML = '<option value="">請選擇一個IPO進行模擬</option>';
+
+        // Use all IPO data for the selection
+        const sourceForSelect = data;
+
+        if (sourceForSelect.length === 0) {
+          ipoSelect.innerHTML =
+            '<option value="">無可用IPO資料進行模擬</option>';
+          document.getElementById("runSimulationBtn").disabled = true; // Disable button if no IPOs
+          return;
+        }
+        document.getElementById("runSimulationBtn").disabled = false;
+
+        sourceForSelect.forEach((ipo, index) => {
+          // Use the actual index from the allIpoData array
+          const option = document.createElement("option");
+          option.value = index; // Use index as the value
+          option.textContent = `${ipo.name} (募集價: ${formatNumber(
+            ipo.subPrice,
+            2
+          )}, 首日最低: ${formatNumber(ipo.dayLow, 2)})`;
+          ipoSelect.appendChild(option);
+        });
+      }
+
+      // --- Statistics Calculation ---
+      function calculateAndDisplayStats(data) {
+        const totalIPOs = data.length;
+        if (totalIPOs === 0) {
+          document.getElementById("stats-breakeven-day1").textContent = `N/A`;
+          document.getElementById("stats-breakeven-month1").textContent = `N/A`;
+          document.getElementById("stats-avg-loss-day1").textContent = `N/A`;
+          document.getElementById("stats-avg-loss-month1").textContent = `N/A`;
+          return;
+        }
+
+        const brokeDay1Count = data.filter((d) => d.dayLow < d.subPrice).length;
+        const brokeMonth1Count = data.filter(
+          (d) => d.monthLow < d.subPrice
+        ).length;
+
+        document.getElementById(
+          "stats-breakeven-day1"
+        ).textContent = `${formatNumber(
+          (brokeDay1Count / totalIPOs) * 100,
+          1
+        )}%`;
+        document.getElementById(
+          "stats-breakeven-month1"
+        ).textContent = `${formatNumber(
+          (brokeMonth1Count / totalIPOs) * 100,
+          1
+        )}%`;
+
+        const lossesDay1Percent = data
+          .filter((d) => d.dayLow < d.subPrice)
+          .map((d) => d.lossDay1Percent);
+        const avgLossDay1 =
+          lossesDay1Percent.length > 0
+            ? lossesDay1Percent.reduce((a, b) => a + b, 0) /
+              lossesDay1Percent.length
+            : 0;
+        document.getElementById(
+          "stats-avg-loss-day1"
+        ).textContent = `${formatNumber(avgLossDay1, 1)}%`;
+
+        const lossesMonth1Percent = data
+          .filter((d) => d.monthLow < d.subPrice)
+          .map((d) => d.lossMonth1Percent);
+        const avgLossMonth1 =
+          lossesMonth1Percent.length > 0
+            ? lossesMonth1Percent.reduce((a, b) => a + b, 0) /
+              lossesMonth1Percent.length
+            : 0;
+        document.getElementById(
+          "stats-avg-loss-month1"
+        ).textContent = `${formatNumber(avgLossMonth1, 1)}%`;
+      }
+
+      // --- Chart Creation ---
+      function createOrUpdateCharts(data) {
+        const totalIPOs = data.length;
+        if (totalIPOs === 0) return;
+
+        const brokeDay1Count = data.filter((d) => d.dayLow < d.subPrice).length;
+        const brokeMonth1Count = data.filter(
+          (d) => d.monthLow < d.subPrice
+        ).length;
+
+        const breakevenPieCtx = document
+          .getElementById("breakevenPieChart")
+          ?.getContext("2d");
+        if (!breakevenPieCtx) return;
+        if (breakevenPieChartInstance) {
+          breakevenPieChartInstance.destroy();
+        }
+
+        // 紅漲綠跌 - 調整圖表顏色
+        breakevenPieChartInstance = new Chart(breakevenPieCtx, {
+          type: "pie",
+          data: {
+            labels: [
+              "上市當日破發",
+              "上市當日未破發",
+              "一個月後破發",
+              "一個月後未破發",
+            ],
+            datasets: [
+              {
+                label: "IPO破發統計",
+                data: [
+                  brokeDay1Count,
+                  totalIPOs - brokeDay1Count,
+                  brokeMonth1Count,
+                  totalIPOs - brokeMonth1Count,
+                ],
+                backgroundColor: [
+                  "rgba(34, 197, 94, 0.8)", // Green-500 (破發 - 綠色)
+                  "rgba(239, 68, 68, 0.7)", // Red-500 (未破發 - 紅色)
+                  "rgba(22, 163, 74, 0.9)", // Green-600 (破發 - 深綠色)
+                  "rgba(220, 38, 38, 0.8)", // Red-600 (未破發 - 深紅色)
+                ],
+                borderColor: ["#FFFFFF"],
+                borderWidth: 2,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { position: "top" },
+              tooltip: {
+                callbacks: {
+                  label: function (context) {
+                    let label = context.label || "";
+                    if (label) {
+                      label += ": ";
+                    }
+                    if (context.parsed !== null) {
+                      label += `${context.parsed} 檔 (${formatNumber(
+                        (context.parsed / totalIPOs) * 100,
+                        1
+                      )}%)`;
+                    }
+                    return label;
+                  },
+                },
+              },
+            },
+          },
+        });
+
+        const lossDistributionCtx = document
+          .getElementById("lossDistributionBarChart")
+          ?.getContext("2d");
+        if (!lossDistributionCtx) return;
+        const lossMonth1Percentages = data
+          .map((d) => d.lossMonth1Percent)
+          .filter((p) => !isNaN(p));
+        const simpleBinLabels = [
+          "虧損 >10%",
+          "虧損 5-10%",
+          "虧損 0-5%",
+          "獲利 0-5%",
+          "獲利 5-10%",
+          "獲利 >10%",
+        ];
+        const simpleBinCounts = Array(simpleBinLabels.length).fill(0);
+
+        lossMonth1Percentages.forEach((p) => {
+          if (p < -10) simpleBinCounts[0]++;
+          else if (p < -5) simpleBinCounts[1]++;
+          else if (p < 0) simpleBinCounts[2]++;
+          else if (p <= 5) simpleBinCounts[3]++;
+          else if (p <= 10) simpleBinCounts[4]++;
+          else simpleBinCounts[5]++;
+        });
+
+        if (lossDistributionBarChartInstance) {
+          lossDistributionBarChartInstance.destroy();
+        }
+
+        // 紅漲綠跌 - 調整圖表顏色
+        lossDistributionBarChartInstance = new Chart(lossDistributionCtx, {
+          type: "bar",
+          data: {
+            labels: simpleBinLabels,
+            datasets: [
+              {
+                label: "IPO數量 (一個月後潛在報酬率)",
+                data: simpleBinCounts,
+                backgroundColor: [
+                  "rgba(22, 163, 74, 0.8)", // Green-600 (虧損>10% - 深綠色)
+                  "rgba(34, 197, 94, 0.7)", // Green-500 (虧損5-10% - 綠色)
+                  "rgba(134, 239, 172, 0.7)", // Green-300 (虧損0-5% - 淺綠色)
+                  "rgba(252, 165, 165, 0.7)", // Red-300 (獲利0-5% - 淺紅色)
+                  "rgba(239, 68, 68, 0.7)", // Red-500 (獲利5-10% - 紅色)
+                  "rgba(220, 38, 38, 0.8)", // Red-600 (獲利>10% - 深紅色)
+                ],
+                borderColor: ["#FFFFFF"],
+                borderWidth: 1,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              y: {
+                beginAtZero: true,
+                title: { display: true, text: "IPO 數量" },
+              },
+              x: { title: { display: true, text: "一個月後潛在報酬率區間" } },
+            },
+            plugins: { legend: { display: false } },
+          },
+        });
+      }
+
+      function displayBrokerLossStatement(data) {
+        const statementBody = document.getElementById(
+          "broker-loss-statement-body"
+        );
+        const totalLossEl = document.getElementById("broker-total-loss");
+        if (!statementBody || !totalLossEl) return;
+
+        statementBody.innerHTML = ""; // Clear previous content
+        let overallTotalLoss = 0;
+
+        if (data.length === 0) {
+          statementBody.innerHTML = `<tr><td colspan="10" class="text-center p-4 text-gray-500">沒有IPO資料可供模擬隊長單。</td></tr>`;
+          totalLossEl.textContent = "0 元";
+          return;
+        }
+
+        // 顯示最多10筆IPO數據
+        const dataToShow = data
+          .filter((ipo) => ipo.subPrice > 0 && !isNaN(ipo.dayLow))
+          .slice(0, Math.min(data.length, 10));
+
+        dataToShow.forEach((ipo) => {
+          if (ipo.subPrice <= 0) return; // 跳過無效價格
+
+          // 隨機認購金額 (30萬-600萬)
+          const randomSubscriptionAmount =
+            Math.floor(Math.random() * (6000000 - 300000 + 1)) + 300000;
+          const sharesToBuy = Math.floor(
+            randomSubscriptionAmount / ipo.subPrice
+          );
+
+          if (sharesToBuy === 0) return; // 不足以買一股
+
+          // 計算實際成本與賣出價值
+          const actualCost = sharesToBuy * ipo.subPrice;
+          const buyFee = calculateBuyFee(ipo.subPrice, sharesToBuy);
+          const saleValueAtDayLow = sharesToBuy * ipo.dayLow;
+          const sellFeeAndTax = calculateSellFeeAndTax(ipo.dayLow, sharesToBuy);
+
+          // 總虧損 = 買入成本 + 買入手續費 - 賣出價值 + 賣出手續費與稅金
+          const lossForThisIpo =
+            actualCost + buyFee - saleValueAtDayLow + sellFeeAndTax;
+          overallTotalLoss += lossForThisIpo;
+
+          const row = statementBody.insertRow();
+          row.innerHTML = `
+            <td class="whitespace-nowrap px-2 py-2 text-gray-700">${
+              ipo.name
+            }</td>
+            <td class="text-right px-2 py-2 text-gray-500">${formatNumber(
+              ipo.subPrice
+            )}</td>
+            <td class="text-right px-2 py-2 text-gray-500">${formatNumber(
+              ipo.dayLow
+            )}</td>
+            <td class="text-right px-2 py-2 text-gray-500">${formatNumber(
+              randomSubscriptionAmount
+            )}</td>
+            <td class="text-right px-2 py-2 text-gray-500">${formatNumber(
+              sharesToBuy
+            )}</td>
+            <td class="text-right px-2 py-2 text-gray-500">${formatNumber(
+              buyFee
+            )}</td>
+            <td class="text-right px-2 py-2 text-gray-500">${formatNumber(
+              sellFeeAndTax
+            )}</td>
+            <td class="text-right px-2 py-2 text-gray-500">${formatNumber(
+              actualCost
+            )}</td>
+            <td class="text-right px-2 py-2 text-gray-500">${formatNumber(
+              saleValueAtDayLow
+            )}</td>
+            <td class="text-right px-2 py-2 ${
+              lossForThisIpo > 0
+                ? "text-green-500 font-semibold"
+                : lossForThisIpo < 0
+                ? "text-red-500 font-semibold"
+                : "text-gray-500"
+            }">${formatNumber(lossForThisIpo)}</td>
+          `;
+        });
+
+        // 紅漲綠跌 - 調整顏色
+        totalLossEl.textContent = `${formatNumber(overallTotalLoss)} 元`;
+        totalLossEl.className = `px-2 py-2 text-right text-sm font-bold ${
+          overallTotalLoss > 0
+            ? "text-green-600"
+            : overallTotalLoss < 0
+            ? "text-red-600"
+            : "text-gray-700"
+        }`;
+      }
+
+      // --- Simulation Logic ---
+      function runSimulation() {
+        const resultDiv = document.getElementById("simulationResult");
+        if (!resultDiv) {
+          console.error("Simulation result element not found.");
+          return;
+        }
+
+        resultDiv.classList.remove("hidden");
+        resultDiv.innerHTML = ""; // Clear previous results
+
+        // 隨機選擇一個IPO標的
+        const ipo = getRandomIpo();
+
+        if (!ipo) {
+          resultDiv.innerHTML = `<p class="text-red-500 font-semibold p-4">未找到有效的IPO資料，無法進行模擬。</p>`;
+          return;
+        }
+
+        if (ipo.subPrice <= 0) {
+          resultDiv.innerHTML = `<p class="text-red-500 font-semibold p-4">選中的IPO募集價格無效，無法進行模擬。</p>`;
+          return;
+        }
+
+        // 更動態且更寬的責任額範圍
+        const randomResponsibilityAmount =
+          Math.floor(Math.random() * (2500000 - 300000 + 1)) + 300000; // 30萬到250萬之間
+
+        const randomPressureQuote =
+          EXTENDED_PRESSURE_QUOTES[
+            Math.floor(Math.random() * EXTENDED_PRESSURE_QUOTES.length)
+          ];
+        const randomMonologue =
+          BROKER_INNER_MONOLOGUES[
+            Math.floor(Math.random() * BROKER_INNER_MONOLOGUES.length)
+          ];
+
+        const sharesToBuy = Math.floor(
+          randomResponsibilityAmount / ipo.subPrice
+        );
+
+        // 隨機選擇賣出策略: 當日賣出 或 凹單月底賣出
+        const sellStrategy =
+          STRATEGY_TYPES[Math.floor(Math.random() * STRATEGY_TYPES.length)];
+        const sellPrice =
+          sellStrategy === "當日賣出" ? ipo.dayLow : ipo.monthLow;
+        const sellDayDescription =
+          sellStrategy === "當日賣出" ? "上市當日" : "凹單一個月後";
+
+        // 計算成本與賣出價值 (包含手續費)
+        const actualCost = sharesToBuy * ipo.subPrice;
+        const buyFee = calculateBuyFee(ipo.subPrice, sharesToBuy);
+        const saleValue = sharesToBuy * sellPrice;
+        const sellFeeAndTax = calculateSellFeeAndTax(sellPrice, sharesToBuy);
+
+        // 總虧損 = 買入成本 + 買入手續費 - 賣出價值 + 賣出手續費與稅金
+        const lossAmount = actualCost + buyFee - saleValue + sellFeeAndTax;
+        const lossPercent =
+          actualCost > 0 ? (lossAmount / actualCost) * 100 : 0;
+
+        let simulationContent = `<h3 class="text-xl font-semibold text-gray-800 mb-3">壓力鍋下的模擬結果:</h3>`;
+        simulationContent += `<p class="pressure-quote">主管：${randomPressureQuote}</p>`;
+
+        // Forced choice narrative
+        simulationContent += `
+          <div class="my-4 p-3 border border-yellow-400 bg-yellow-50 rounded-md">
+            <p class="font-semibold text-yellow-700">內心的掙扎：</p>
+            <p class="text-sm text-gray-600">「又來了...主管的話像緊箍咒一樣。我能怎麼辦？這個月薪水才三萬出頭，家裡還有開銷...」</p>
+            <ul class="list-disc list-inside text-sm text-gray-500 mt-2">
+                <li>選項一：拒絕，然後等著被刁難、被移走客戶，甚至...沒工作？</li>
+                <li>選項二：找親友幫忙？上次那個ETF他們賠錢到現在還在唸...</li>
+                <li>選項三：自己硬吞...祈禱這次運氣好一點？</li>
+            </ul>
+            <p class="mt-2 text-sm text-gray-600">「算了...為了飯碗，只能吞了...」</p>
+          </div>
+        `;
+
+        if (sharesToBuy === 0) {
+          simulationContent += `<p class="text-orange-600 bg-orange-100 p-3 rounded-md">模擬的責任額 ${formatNumber(
+            randomResponsibilityAmount
+          )} 元，不足以購買至少一股 <strong class="font-bold">${
+            ipo.name
+          }</strong> (募集價 ${formatNumber(
+            ipo.subPrice
+          )} 元/股)。主管可能還是會說：「金額太少？那你再多『努力』一點啊！」</p>`;
+          resultDiv.innerHTML = simulationContent;
+          return;
+        }
+
+        simulationContent += `
+            <p class="simulation-result-item"><strong>被迫決定：</strong>在巨大壓力下，您「決定」扛下 <span class="font-bold text-red-600">${formatNumber(
+              randomResponsibilityAmount
+            )}</span> 元的「目標」，以每股 <span class="font-bold text-blue-600">${formatNumber(
+          ipo.subPrice
+        )}</span> 元的募集價格，認購 <span class="font-bold text-blue-600">${
+          ipo.name
+        }</span> 共 <span class="font-bold text-blue-600">${formatNumber(
+          sharesToBuy
+        )}</span> 股。</p>
+            <p class="simulation-result-item text-xs text-gray-500">（實際總投資成本為 <span class="font-bold text-blue-600">${formatNumber(
+              actualCost
+            )}</span> 元，加上買入手續費 <span class="font-bold text-blue-600">${formatNumber(
+          buyFee
+        )}</span> 元，因股數取整，可能與目標額略有差異）</p>
+            <hr class="my-3">
+            <p class="simulation-result-item"><strong>等待與煎熬：</strong>終於等到 ${
+              ipo.name
+            } 上市 (${ipo.date})...打開看盤軟體，心一沉...</p>
+            <p class="simulation-result-item"><strong>${sellStrategy}：</strong>您被迫在${sellDayDescription}<strong class="text-red-500">最低價</strong>每股 <span class="font-bold ${
+          sellPrice < ipo.subPrice ? "text-green-500" : "text-red-500"
+        }">${formatNumber(sellPrice)}</span> 元時，將所有 ${formatNumber(
+          sharesToBuy
+        )} 股持股賣出。</p>
+            <hr class="my-4 border-dashed">
+            <div class="p-4 bg-gray-100 rounded-md mt-4">
+                <h4 class="text-lg font-semibold text-gray-700 mb-2">血淋淋的對帳單結果：</h4>
+                <p class="simulation-result-item"><strong>買入總成本：</strong>${formatNumber(
+                  actualCost
+                )} 元</p>
+                <p class="simulation-result-item"><strong>買入手續費 (0.0855%)：</strong>${formatNumber(
+                  buyFee
+                )} 元</p>
+                <p class="simulation-result-item"><strong>賣出總金額：</strong>${formatNumber(
+                  saleValue
+                )} 元</p>
+                <p class="simulation-result-item"><strong>賣出手續費+稅 (0.0855%+0.1%)：</strong>${formatNumber(
+                  sellFeeAndTax
+                )} 元</p>
+                <p class="simulation-result-item final-loss-figure"><strong>總計損益：</strong><span class="${
+                  lossAmount > 0
+                    ? "text-green-600"
+                    : lossAmount < 0
+                    ? "text-red-600"
+                    : "text-gray-700"
+                }">${
+          lossAmount > 0 ? "-" : lossAmount < 0 ? "+" : ""
+        }${formatNumber(Math.abs(lossAmount))} 元</span></p>
+                <p class="simulation-result-item"><strong>報酬率：</strong><span class="${
+                  lossAmount > 0
+                    ? "text-green-600 font-bold"
+                    : lossAmount < 0
+                    ? "text-red-600 font-bold"
+                    : "text-gray-700 font-bold"
+                }">${formatNumber(
+          lossAmount > 0 ? lossPercent : -lossPercent,
+          2
+        )}% ${
+          lossAmount > 0 ? "(虧損)" : lossAmount < 0 ? "(獲利)" : "(持平)"
+        }</span></p>
+            </div>
+            <div class="broker-monologue sad-text-effect mt-4">
+                <p class="font-semibold">營業員的內心獨白 (底薪三萬的悲鳴)：</p>
+                <p>${randomMonologue}</p>
+                ${
+                  lossAmount > 0
+                    ? '<p class="mt-2 text-red-700 font-semibold">看著對帳單上的數字，心涼了半截...這個月的薪水，又不知道要怎麼填這個坑了...</p>'
+                    : '<p class="mt-2 text-green-700 font-semibold">萬幸！這次居然沒賠還小賺！但這種提心吊膽的日子，還要過多久...</p>'
+                }
+            </div>
+        `;
+        resultDiv.innerHTML = simulationContent;
+      }
+
+      // --- Event Listeners and Initialization ---
+      document.addEventListener("DOMContentLoaded", () => {
+        loadAndProcessData();
+        const currentYearEl = document.getElementById("currentYear");
+        if (currentYearEl) {
+          currentYearEl.textContent = new Date().getFullYear();
+        }
+
+        const runSimulationButton = document.getElementById("runSimulationBtn");
+        if (runSimulationButton) {
+          runSimulationButton.addEventListener("click", runSimulation);
+        } else {
+          console.error("Simulation button not found");
+        }
+      });
+    </script>
+  </body>
+</html>
