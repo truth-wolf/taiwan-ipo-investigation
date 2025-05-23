@@ -737,8 +737,18 @@ class HarassmentVoicesModule {
         nextButton.classList.add("hover:bg-neutral-200");
       }
 
-      // 更新頁面信息 (從1開始計算)
-      pageInfoElement.textContent = `${this.currentPage} / ${totalPages}`;
+      // 更新頁面信息顯示
+      if (pageInfoElement) {
+        const currentPageSpans = pageInfoElement.querySelectorAll("span");
+        if (currentPageSpans.length >= 2) {
+          // 新格式：第 X 頁，共 Y 頁
+          currentPageSpans[0].textContent = this.currentPage;
+          currentPageSpans[1].textContent = totalPages;
+        } else {
+          // 備用：舊格式
+          pageInfoElement.textContent = `${this.currentPage} / ${totalPages}`;
+        }
+      }
     };
 
     // 桌面版和手機版統一應用

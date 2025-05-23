@@ -264,6 +264,34 @@ a:hover {
   transform: none !important;
 }
 
+/* 純icon分頁按鈕特殊樣式 */
+#voices-prev,
+#voices-next,
+#voices-prev-mobile,
+#voices-next-mobile {
+  min-width: 40px;
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#voices-prev:hover:not(:disabled),
+#voices-next:hover:not(:disabled),
+#voices-prev-mobile:hover:not(:disabled),
+#voices-next-mobile:hover:not(:disabled) {
+  background-color: #f5f5f5;
+  border-color: #e23e57;
+  color: #e23e57;
+}
+
+/* 頁碼信息樣式增強 */
+#voices-page-info,
+#voices-page-info-mobile {
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
 /* 語音卡片動畫 */
 .voice-card {
   transition: all 0.3s cubic-bezier(0.19, 1, 0.22, 1);

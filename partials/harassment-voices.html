@@ -339,11 +339,12 @@
           >
             <button
               id="voices-prev-mobile"
-              class="flex items-center px-4 py-3 bg-white border border-neutral-200 text-neutral-600 rounded-xl hover:bg-neutral-50 hover:shadow-sm hover:scale-[1.03] hover:border-neutral-300 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 text-sm font-medium max-w-[120px]"
+              class="flex items-center justify-center w-10 h-10 bg-white border border-neutral-200 text-neutral-600 rounded-xl hover:bg-neutral-50 hover:shadow-sm hover:scale-[1.03] hover:border-neutral-300 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
               disabled
+              aria-label="上一頁"
             >
               <svg
-                class="w-4 h-4 mr-2"
+                class="w-4 h-4"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -355,22 +356,23 @@
                   d="M15 19l-7-7 7-7"
                 ></path>
               </svg>
-              上一頁
             </button>
+
             <div
               id="voices-page-info-mobile"
-              class="text-sm text-neutral-600 px-4 py-2 font-medium bg-white rounded-lg border border-neutral-200 shadow-sm min-w-[80px] text-center"
+              class="flex items-center px-4 py-2 bg-gradient-to-r from-neutral-100 to-neutral-50 text-neutral-700 rounded-xl text-sm font-medium border border-neutral-200 shadow-inner"
             >
-              1 / 1
+              第 <span class="font-bold text-primary mx-1">1</span> 頁，共
+              <span class="font-bold text-primary mx-1">1</span> 頁
             </div>
+
             <button
               id="voices-next-mobile"
-              class="flex items-center px-4 py-3 bg-white border border-neutral-200 text-neutral-600 rounded-xl hover:bg-neutral-50 hover:shadow-sm hover:scale-[1.03] hover:border-neutral-300 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 text-sm font-medium max-w-[120px]"
-              disabled
+              class="flex items-center justify-center w-10 h-10 bg-white border border-neutral-200 text-neutral-600 rounded-xl hover:bg-neutral-50 hover:shadow-sm hover:scale-[1.03] hover:border-neutral-300 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+              aria-label="下一頁"
             >
-              下一頁
               <svg
-                class="w-4 h-4 ml-2"
+                class="w-4 h-4"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -386,123 +388,146 @@
           </div>
         </div>
 
-        <!-- 桌面版佈局 -->
-        <div class="hidden lg:flex gap-8">
-          <!-- 桌面版左側篩選器 - 改善文字顏色和高亮效果 -->
-          <div class="w-1/4">
-            <h3
-              class="text-xl font-bold mb-6 flex items-center text-neutral-800"
-            >
-              <i class="fas fa-filter text-primary mr-3"></i>
-              心聲分類
-            </h3>
-            <div class="space-y-4">
-              <button
-                class="voice-filter active w-full text-left px-6 py-5 rounded-2xl bg-gradient-to-br from-primary via-primary to-primary-dark text-white border-2 border-primary shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 hover:scale-105"
-                data-category="all"
+        <!-- 桌面版優化佈局 -->
+        <div class="hidden lg:block">
+          <div class="grid grid-cols-4 gap-8">
+            <!-- 桌面版左側篩選器 -->
+            <div class="col-span-1">
+              <h3
+                class="text-xl font-bold mb-6 flex items-center text-neutral-800"
               >
-                <div class="flex items-center">
-                  <i class="fas fa-globe mr-4 text-xl"></i>
-                  <div class="flex-1">
-                    <span class="font-bold text-lg block">全部心聲</span>
-                    <span class="text-sm text-white/80 block mt-1"
-                      >查看所有案例 (<span class="counter" data-target="90"
-                        >90</span
+                <i class="fas fa-filter text-primary mr-3"></i>
+                心聲分類
+              </h3>
+              <div class="space-y-4">
+                <button
+                  class="voice-filter active w-full text-left px-6 py-5 rounded-2xl bg-gradient-to-br from-primary via-primary to-primary-dark text-white border-2 border-primary shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 hover:scale-105"
+                  data-category="all"
+                >
+                  <div class="flex items-center">
+                    <i class="fas fa-globe mr-4 text-xl"></i>
+                    <div class="flex-1">
+                      <span class="font-bold text-lg block">全部心聲</span>
+                      <span class="text-sm text-white/80 block mt-1"
+                        >查看所有案例 (<span class="counter" data-target="90"
+                          >90</span
+                        >
+                        則)</span
                       >
-                      則)</span
-                    >
+                    </div>
                   </div>
-                </div>
-              </button>
-              <button
-                class="voice-filter w-full text-left px-6 py-5 rounded-2xl bg-white/90 backdrop-blur-sm text-neutral-800 border-2 border-neutral-200/60 hover:border-red-400 hover:bg-red-50 hover:text-red-700 transition-all duration-300 transform hover:-translate-y-1 hover:scale-105 shadow-sm hover:shadow-lg"
-                data-category="威脅恐嚇"
-              >
-                <div class="flex items-center">
-                  <i
-                    class="fas fa-exclamation-triangle mr-4 text-xl text-red-500"
-                  ></i>
-                  <div class="flex-1">
-                    <span class="font-bold text-lg block">威脅恐嚇</span>
-                    <span class="text-sm text-neutral-600 block mt-1"
-                      >恐嚇威脅類案例 (<span class="counter" data-target="42"
-                        >42</span
+                </button>
+                <button
+                  class="voice-filter w-full text-left px-6 py-5 rounded-2xl bg-white/90 backdrop-blur-sm text-neutral-800 border-2 border-neutral-200/60 hover:border-red-400 hover:bg-red-50 hover:text-red-700 transition-all duration-300 transform hover:-translate-y-1 hover:scale-105 shadow-sm hover:shadow-lg"
+                  data-category="威脅恐嚇"
+                >
+                  <div class="flex items-center">
+                    <i
+                      class="fas fa-exclamation-triangle mr-4 text-xl text-red-500"
+                    ></i>
+                    <div class="flex-1">
+                      <span class="font-bold text-lg block">威脅恐嚇</span>
+                      <span class="text-sm text-neutral-600 block mt-1"
+                        >恐嚇威脅類案例 (<span class="counter" data-target="42"
+                          >42</span
+                        >
+                        則)</span
                       >
-                      則)</span
-                    >
+                    </div>
                   </div>
-                </div>
-              </button>
-              <button
-                class="voice-filter w-full text-left px-6 py-5 rounded-2xl bg-white/90 backdrop-blur-sm text-neutral-800 border-2 border-neutral-200/60 hover:border-orange-400 hover:bg-orange-50 hover:text-orange-700 transition-all duration-300 transform hover:-translate-y-1 hover:scale-105 shadow-sm hover:shadow-lg"
-                data-category="經濟壓迫"
-              >
-                <div class="flex items-center">
-                  <i
-                    class="fas fa-money-bill-wave mr-4 text-xl text-orange-500"
-                  ></i>
-                  <div class="flex-1">
-                    <span class="font-bold text-lg block">經濟壓迫</span>
-                    <span class="text-sm text-neutral-600 block mt-1"
-                      >經濟壓迫類案例 (<span class="counter" data-target="24"
-                        >24</span
+                </button>
+                <button
+                  class="voice-filter w-full text-left px-6 py-5 rounded-2xl bg-white/90 backdrop-blur-sm text-neutral-800 border-2 border-neutral-200/60 hover:border-orange-400 hover:bg-orange-50 hover:text-orange-700 transition-all duration-300 transform hover:-translate-y-1 hover:scale-105 shadow-sm hover:shadow-lg"
+                  data-category="經濟壓迫"
+                >
+                  <div class="flex items-center">
+                    <i
+                      class="fas fa-money-bill-wave mr-4 text-xl text-orange-500"
+                    ></i>
+                    <div class="flex-1">
+                      <span class="font-bold text-lg block">經濟壓迫</span>
+                      <span class="text-sm text-neutral-600 block mt-1"
+                        >經濟壓迫類案例 (<span class="counter" data-target="24"
+                          >24</span
+                        >
+                        則)</span
                       >
-                      則)</span
-                    >
+                    </div>
                   </div>
-                </div>
-              </button>
-              <button
-                class="voice-filter w-full text-left px-6 py-5 rounded-2xl bg-white/90 backdrop-blur-sm text-neutral-800 border-2 border-neutral-200/60 hover:border-purple-400 hover:bg-purple-50 hover:text-purple-700 transition-all duration-300 transform hover:-translate-y-1 hover:scale-105 shadow-sm hover:shadow-lg"
-                data-category="人格侮辱"
-              >
-                <div class="flex items-center">
-                  <i class="fas fa-frown mr-4 text-xl text-purple-500"></i>
-                  <div class="flex-1">
-                    <span class="font-bold text-lg block">人格侮辱</span>
-                    <span class="text-sm text-neutral-600 block mt-1"
-                      >人格侮辱類案例 (<span class="counter" data-target="16"
-                        >16</span
+                </button>
+                <button
+                  class="voice-filter w-full text-left px-6 py-5 rounded-2xl bg-white/90 backdrop-blur-sm text-neutral-800 border-2 border-neutral-200/60 hover:border-purple-400 hover:bg-purple-50 hover:text-purple-700 transition-all duration-300 transform hover:-translate-y-1 hover:scale-105 shadow-sm hover:shadow-lg"
+                  data-category="人格侮辱"
+                >
+                  <div class="flex items-center">
+                    <i class="fas fa-frown mr-4 text-xl text-purple-500"></i>
+                    <div class="flex-1">
+                      <span class="font-bold text-lg block">人格侮辱</span>
+                      <span class="text-sm text-neutral-600 block mt-1"
+                        >人格侮辱類案例 (<span class="counter" data-target="16"
+                          >16</span
+                        >
+                        則)</span
                       >
-                      則)</span
-                    >
+                    </div>
                   </div>
-                </div>
-              </button>
-              <button
-                class="voice-filter w-full text-left px-6 py-5 rounded-2xl bg-white/90 backdrop-blur-sm text-neutral-800 border-2 border-neutral-200/60 hover:border-blue-400 hover:bg-blue-50 hover:text-blue-700 transition-all duration-300 transform hover:-translate-y-1 hover:scale-105 shadow-sm hover:shadow-lg"
-                data-category="不公對待"
-              >
-                <div class="flex items-center">
-                  <i
-                    class="fas fa-balance-scale mr-4 text-xl text-blue-500"
-                  ></i>
-                  <div class="flex-1">
-                    <span class="font-bold text-lg block">不公對待</span>
-                    <span class="text-sm text-neutral-600 block mt-1"
-                      >不公對待類案例 (<span class="counter" data-target="8"
-                        >8</span
+                </button>
+                <button
+                  class="voice-filter w-full text-left px-6 py-5 rounded-2xl bg-white/90 backdrop-blur-sm text-neutral-800 border-2 border-neutral-200/60 hover:border-blue-400 hover:bg-blue-50 hover:text-blue-700 transition-all duration-300 transform hover:-translate-y-1 hover:scale-105 shadow-sm hover:shadow-lg"
+                  data-category="不公對待"
+                >
+                  <div class="flex items-center">
+                    <i
+                      class="fas fa-balance-scale mr-4 text-xl text-blue-500"
+                    ></i>
+                    <div class="flex-1">
+                      <span class="font-bold text-lg block">不公對待</span>
+                      <span class="text-sm text-neutral-600 block mt-1"
+                        >不公對待類案例 (<span class="counter" data-target="8"
+                          >8</span
+                        >
+                        則)</span
                       >
-                      則)</span
-                    >
+                    </div>
                   </div>
-                </div>
-              </button>
+                </button>
+              </div>
             </div>
-          </div>
 
-          <!-- 桌面版右側內容區 -->
-          <div class="w-3/4">
-            <div class="flex justify-between items-center mb-6">
-              <h3 class="text-xl font-bold text-neutral-800">真實控訴</h3>
-              <div class="flex items-center space-x-3">
+            <!-- 桌面版右側內容區 -->
+            <div class="col-span-3">
+              <!-- 桌面版標題 -->
+              <div class="flex justify-between items-center mb-6">
+                <h3 class="text-xl font-bold text-neutral-800">真實控訴</h3>
+                <!-- 移除這裡的分頁控制 -->
+              </div>
+
+              <!-- 桌面版心聲卡片容器 -->
+              <div
+                id="voices-cards-container"
+                class="grid grid-cols-2 gap-6 mb-8"
+              >
+                <!-- 桌面版心聲卡片將在這裡動態生成 -->
+                <div class="col-span-2 text-center py-12">
+                  <div
+                    class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"
+                  ></div>
+                  <p class="text-neutral-500">載入真實心聲中...</p>
+                </div>
+              </div>
+
+              <!-- 桌面版分頁控制移至底部 -->
+              <div
+                class="flex justify-center items-center space-x-4 pt-4 border-t border-neutral-200"
+              >
                 <button
                   id="voices-prev"
-                  class="flex items-center px-4 py-2.5 bg-white border border-neutral-200 text-neutral-600 rounded-xl hover:bg-neutral-50 hover:shadow-sm hover:scale-[1.03] hover:border-neutral-300 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 font-medium max-w-[120px]"
+                  class="flex items-center justify-center w-10 h-10 bg-white border border-neutral-200 text-neutral-600 rounded-xl hover:bg-neutral-50 hover:shadow-sm hover:scale-[1.03] hover:border-neutral-300 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
                   disabled
+                  aria-label="上一頁"
                 >
                   <svg
-                    class="w-4 h-4 mr-2"
+                    class="w-4 h-4"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -514,22 +539,23 @@
                       d="M15 19l-7-7 7-7"
                     ></path>
                   </svg>
-                  上一頁
                 </button>
+
                 <div
                   id="voices-page-info"
-                  class="text-sm text-neutral-600 px-4 py-2 font-semibold bg-white rounded-lg border border-neutral-200 shadow-sm min-w-[80px] text-center"
+                  class="flex items-center px-4 py-2 bg-gradient-to-r from-neutral-100 to-neutral-50 text-neutral-700 rounded-xl text-sm font-medium border border-neutral-200 shadow-inner"
                 >
-                  1 / 1
+                  第 <span class="font-bold text-primary mx-1">1</span> 頁，共
+                  <span class="font-bold text-primary mx-1">1</span> 頁
                 </div>
+
                 <button
                   id="voices-next"
-                  class="flex items-center px-4 py-2.5 bg-white border border-neutral-200 text-neutral-600 rounded-xl hover:bg-neutral-50 hover:shadow-sm hover:scale-[1.03] hover:border-neutral-300 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 font-medium max-w-[120px]"
-                  disabled
+                  class="flex items-center justify-center w-10 h-10 bg-white border border-neutral-200 text-neutral-600 rounded-xl hover:bg-neutral-50 hover:shadow-sm hover:scale-[1.03] hover:border-neutral-300 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+                  aria-label="下一頁"
                 >
-                  下一頁
                   <svg
-                    class="w-4 h-4 ml-2"
+                    class="w-4 h-4"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -542,17 +568,6 @@
                     ></path>
                   </svg>
                 </button>
-              </div>
-            </div>
-
-            <!-- 桌面版卡片容器 -->
-            <div id="voices-cards-container" class="space-y-6">
-              <!-- 卡片將由JavaScript動態載入 -->
-              <div class="text-center py-12">
-                <div
-                  class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"
-                ></div>
-                <p class="text-neutral-500">載入真實心聲中...</p>
               </div>
             </div>
           </div>
@@ -585,10 +600,9 @@
           </a>
           <button
             id="share-harassment-voices"
-            class="inline-flex items-center px-6 py-3 bg-white/20 text-white border border-white/30 rounded-xl font-semibold hover:bg-white/30 transition-all duration-300 transform hover:-translate-y-1 text-sm md:text-base"
+            class="share-modal-trigger p-3 rounded-full bg-primary text-white hover:bg-primary-dark transition-colors shadow-sm hover:shadow-md"
           >
-            <i class="fas fa-share-alt mr-2"></i>
-            分享給朋友
+            <i class="fas fa-share-alt"></i>
           </button>
         </div>
       </div>

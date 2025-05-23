@@ -1352,11 +1352,217 @@
     <script>
       // 頁面載入時載入各部分內容
       document.addEventListener("DOMContentLoaded", function () {
+        // Header功能初始化函數
+        function initHeaderFunctionality() {
+          console.log("Header: 開始初始化...");
+
+          // 導航列滑動效果
+          const header = document.querySelector("header");
+          const nav = document.querySelector("nav");
+          let lastScrollTop = 0;
+
+          function handleScroll() {
+            const scrollTop =
+              window.pageYOffset || document.documentElement.scrollTop;
+
+            // 添加/移除滑動後的樣式
+            if (scrollTop > 50) {
+              nav.classList.add("scrolled");
+              nav.style.backgroundColor = "rgba(255, 255, 255, 0.95)";
+              nav.style.backdropFilter = "blur(10px)";
+              nav.style.borderBottom = "1px solid rgba(0, 0, 0, 0.1)";
+            } else {
+              nav.classList.remove("scrolled");
+              nav.style.backgroundColor = "rgba(255, 255, 255, 0.8)";
+              nav.style.backdropFilter = "blur(5px)";
+              nav.style.borderBottom = "none";
+            }
+
+            lastScrollTop = scrollTop;
+          }
+
+          // 節流函數優化性能
+          let ticking = false;
+          function requestTick() {
+            if (!ticking) {
+              requestAnimationFrame(handleScroll);
+              ticking = true;
+              setTimeout(() => {
+                ticking = false;
+              }, 16);
+            }
+          }
+
+          if (nav) {
+            window.addEventListener("scroll", requestTick);
+          }
+
+          // 漢堡包菜單功能
+          function initMobileMenu() {
+            const menuToggle = document.querySelector(".menu-toggle");
+            const mobileMenu = document.querySelector(".mobile-menu");
+            const menuClose = document.querySelector(".menu-close");
+            const menuItems = document.querySelectorAll(".menu-item");
+            const menuPanel = document.querySelector(".menu-panel");
+            const menuBackdrop = document.querySelector(".menu-backdrop");
+            const hamburgerLines = document.querySelectorAll(".hamburger-line");
+
+            if (!menuToggle || !mobileMenu || !menuPanel || !menuBackdrop) {
+              console.log("Header: 選單元素未完全載入，稍後重試...");
+              setTimeout(initMobileMenu, 200);
+              return;
+            }
+
+            let isMenuOpen = false;
+
+            // 開啟菜單
+            function openMenu() {
+              if (isMenuOpen) return;
+              isMenuOpen = true;
+
+              console.log("Header: 開啟選單");
+
+              // 顯示選單容器
+              mobileMenu.classList.remove("hidden");
+              document.body.style.overflow = "hidden";
+
+              // 漸顯背景遮罩
+              setTimeout(() => {
+                menuBackdrop.classList.remove("opacity-0");
+                menuBackdrop.classList.add("opacity-100");
+              }, 10);
+
+              // 滑入菜單面板
+              setTimeout(() => {
+                menuPanel.style.transform = "translateX(0)";
+              }, 10);
+
+              // 漢堡包線條變形為X
+              if (hamburgerLines.length >= 3) {
+                hamburgerLines[0].style.transform =
+                  "rotate(45deg) translate(5px, 5px)";
+                hamburgerLines[1].style.opacity = "0";
+                hamburgerLines[2].style.transform =
+                  "rotate(-45deg) translate(7px, -6px)";
+              }
+            }
+
+            // 關閉菜單
+            function closeMenu() {
+              if (!isMenuOpen) return;
+              isMenuOpen = false;
+
+              console.log("Header: 關閉選單");
+
+              // 隱藏背景遮罩
+              menuBackdrop.classList.remove("opacity-100");
+              menuBackdrop.classList.add("opacity-0");
+
+              // 滑出菜單面板
+              menuPanel.style.transform = "translateX(100%)";
+
+              // 恢復漢堡包線條
+              if (hamburgerLines.length >= 3) {
+                hamburgerLines[0].style.transform = "";
+                hamburgerLines[1].style.opacity = "";
+                hamburgerLines[2].style.transform = "";
+              }
+
+              // 延遲隱藏容器和恢復滾動
+              setTimeout(() => {
+                mobileMenu.classList.add("hidden");
+                document.body.style.overflow = "";
+              }, 500);
+            }
+
+            // 綁定事件
+            if (menuToggle) {
+              menuToggle.addEventListener("click", function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                if (isMenuOpen) {
+                  closeMenu();
+                } else {
+                  openMenu();
+                }
+              });
+            }
+
+            if (menuClose) {
+              menuClose.addEventListener("click", function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                closeMenu();
+              });
+            }
+
+            // 點擊菜單項目後自動關閉
+            menuItems.forEach((item) => {
+              item.addEventListener("click", function () {
+                setTimeout(closeMenu, 200);
+              });
+            });
+
+            // 點擊背景遮罩關閉菜單
+            if (menuBackdrop) {
+              menuBackdrop.addEventListener("click", function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                closeMenu();
+              });
+            }
+
+            // ESC 鍵關閉菜單
+            document.addEventListener("keydown", function (e) {
+              if (e.key === "Escape" && isMenuOpen) {
+                closeMenu();
+              }
+            });
+
+            console.log("Header: 漢堡包選單初始化完成");
+          }
+
+          // 手機版分享按鈕功能
+          function initMobileShareButton() {
+            const mobileShareBtn = document.getElementById("mobile-share-btn");
+            if (
+              mobileShareBtn &&
+              !mobileShareBtn.hasAttribute("data-share-bound")
+            ) {
+              mobileShareBtn.addEventListener("click", function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                // 觸發分享模態框
+                if (
+                  window.showShareModal &&
+                  typeof window.showShareModal === "function"
+                ) {
+                  window.showShareModal();
+                } else {
+                  console.log("Header: 分享功能尚未準備就緒");
+                }
+              });
+              mobileShareBtn.setAttribute("data-share-bound", "true");
+            }
+          }
+
+          // 延遲初始化，確保DOM完全載入
+          setTimeout(() => {
+            initMobileMenu();
+            initMobileShareButton();
+          }, 100);
+
+          console.log("Header: 初始化完成");
+        }
+
         // 載入頭部區域
         fetch("partials/header.html")
           .then((response) => response.text())
           .then((data) => {
             document.getElementById("header-container").innerHTML = data;
+            // 立即初始化header功能
+            initHeaderFunctionality();
           })
           .catch((error) => {
             console.error("頭部載入錯誤:", error);
