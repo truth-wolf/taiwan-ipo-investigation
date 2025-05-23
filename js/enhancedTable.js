@@ -429,10 +429,11 @@ function createDataStats() {
     brokerCount > 0 ? Math.round(originalTotalAmount / brokerCount) : 0;
   // 或者，如果要基於加權總額的某種平均，則需要重新定義分母
 
+  // 修改：將萬元轉換為億元顯示
   let totalTarget, totalUnit;
   if (rawTotal >= 10000) {
-    // rawTotal 現在是萬元為單位，所以億的門檻是 10000 萬
-    totalTarget = (rawTotal / 10000).toFixed(2); // 換算成億元
+    // rawTotal 是萬元為單位，轉換為億元（1億 = 10,000萬）
+    totalTarget = (rawTotal / 10000).toFixed(2); // 轉換成億元，保留兩位小數
     totalUnit = "億";
   } else {
     totalTarget = rawTotal.toFixed(0); // 保持萬元，不需要小數

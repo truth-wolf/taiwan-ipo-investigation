@@ -8,7 +8,7 @@ class HarassmentVoicesModule {
     this.harassmentData = [];
     this.currentCategory = "all";
     this.currentPage = 1;
-    this.itemsPerPage = 3;
+    this.itemsPerPage = 6;
     this.totalVoices = 90; // 修正後CSV檔案的筆數
     this.totalBrokers = 96; // 根據證券商基本資料.csv的筆數
 
@@ -39,7 +39,7 @@ class HarassmentVoicesModule {
       {
         category: "人格侮辱",
         message:
-          "「妳裙子穿得比別人短，責任額跟其他男生一樣不覺得愧疚嗎」、「你是女生要會利用自己優勢」、「佔著茅坑不拉屎」",
+          "「妳裙子穿得比別人短，責任額跟其他男生一樣不覺得愧疚嗎」、「你是女生要會利用自己優勢」、「女生怎麼可能賣不出去是妳要不要而已你知道方法的」",
         compliantConsequence:
           "配合後果：\n• 忍受性騷擾言論繼續工作\n• 被迫穿著暴露服裝見客戶\n• 自尊心受到嚴重創傷\n• 客戶開始對你有不當想法\n• 身心俱疲，開始看心理醫生",
         resistConsequence:
@@ -375,119 +375,65 @@ class HarassmentVoicesModule {
       this.initSimulator();
       this.initPagination();
     }, 500);
-
-    // 模態窗關閉事件
-    document.addEventListener("click", (e) => {
-      if (e.target.classList.contains("modal-overlay")) {
-        e.target.classList.add("hidden");
-      }
-    });
-
-    // ESC鍵關閉模態窗
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape") {
-        const modals = document.querySelectorAll(".modal-overlay");
-        modals.forEach((modal) => modal.classList.add("hidden"));
-      }
-    });
-
-    // 手機版收折選單功能
-    this.initMobileFilterToggle();
   }
 
   initFilters() {
-    // 獲取所有篩選器按鈕（桌面版和手機版）
     const filterButtons = document.querySelectorAll(".voice-filter");
 
     filterButtons.forEach((button) => {
-      button.addEventListener("click", (e) => {
-        const category = e.currentTarget.dataset.category;
-
-        // 移除所有按鈕的 active 狀態
+      button.addEventListener("click", () => {
+        // 移除所有按鈕的活動狀態
         filterButtons.forEach((btn) => {
           btn.classList.remove("active");
-          // 桌面版樣式重置
-          if (btn.classList.contains("w-full")) {
-            btn.className =
-              "voice-filter w-full text-left px-6 py-5 rounded-2xl bg-white/90 backdrop-blur-sm text-neutral-800 border-2 border-neutral-200/60 hover:border-red-400 hover:bg-red-50 hover:text-red-700 transition-all duration-300 transform hover:-translate-y-1 hover:scale-105 shadow-sm hover:shadow-lg";
-
-            // 根據分類設置不同的 hover 顏色
-            const categoryClass = btn.dataset.category;
-            if (categoryClass === "威脅恐嚇") {
-              btn.className = btn.className.replace(
-                "hover:border-red-400 hover:bg-red-50 hover:text-red-700",
-                "hover:border-red-400 hover:bg-red-50 hover:text-red-700"
-              );
-            } else if (categoryClass === "經濟壓迫") {
-              btn.className = btn.className.replace(
-                "hover:border-red-400 hover:bg-red-50 hover:text-red-700",
-                "hover:border-orange-400 hover:bg-orange-50 hover:text-orange-700"
-              );
-            } else if (categoryClass === "人格侮辱") {
-              btn.className = btn.className.replace(
-                "hover:border-red-400 hover:bg-red-50 hover:text-red-700",
-                "hover:border-purple-400 hover:bg-purple-50 hover:text-purple-700"
-              );
-            } else if (categoryClass === "不公對待") {
-              btn.className = btn.className.replace(
-                "hover:border-red-400 hover:bg-red-50 hover:text-red-700",
-                "hover:border-blue-400 hover:bg-blue-50 hover:text-blue-700"
-              );
-            }
-          } else {
-            // 手機版樣式重置
-            btn.className =
-              "voice-filter px-5 py-4 rounded-2xl bg-white/90 backdrop-blur-sm text-neutral-800 border-2 border-neutral-200/60 font-bold text-sm hover:border-red-400 hover:bg-red-50 hover:text-red-700 transition-all duration-300 transform hover:-translate-y-1 hover:scale-105 shadow-sm hover:shadow-lg";
-
-            // 根據分類設置不同的 hover 顏色
-            const categoryClass = btn.dataset.category;
-            if (categoryClass === "威脅恐嚇") {
-              btn.className = btn.className.replace(
-                "hover:border-red-400 hover:bg-red-50 hover:text-red-700",
-                "hover:border-red-400 hover:bg-red-50 hover:text-red-700"
-              );
-            } else if (categoryClass === "經濟壓迫") {
-              btn.className = btn.className.replace(
-                "hover:border-red-400 hover:bg-red-50 hover:text-red-700",
-                "hover:border-orange-400 hover:bg-orange-50 hover:text-orange-700"
-              );
-            } else if (categoryClass === "人格侮辱") {
-              btn.className = btn.className.replace(
-                "hover:border-red-400 hover:bg-red-50 hover:text-red-700",
-                "hover:border-purple-400 hover:bg-purple-50 hover:text-purple-700"
-              );
-            } else if (categoryClass === "不公對待") {
-              btn.className = btn.className.replace(
-                "hover:border-red-400 hover:bg-red-50 hover:text-red-700",
-                "hover:border-blue-400 hover:bg-blue-50 hover:text-blue-700"
-              );
-            }
-
-            if (btn.classList.contains("col-span-2")) {
-              btn.classList.add("col-span-2");
-            }
+          // 還原為預設樣式
+          if (btn.dataset.category !== "all") {
+            btn.classList.remove(
+              "bg-gradient-to-br",
+              "from-primary",
+              "via-primary",
+              "to-primary-dark",
+              "text-white",
+              "border-primary"
+            );
+            btn.classList.add(
+              "bg-white/90",
+              "backdrop-blur-sm",
+              "text-neutral-800",
+              "border-neutral-200/60"
+            );
           }
         });
 
-        // 設置當前按鈕為 active
+        // 為當前按鈕添加活動狀態
         button.classList.add("active");
-        if (button.classList.contains("w-full")) {
-          // 桌面版 active 樣式
-          button.className =
-            "voice-filter active w-full text-left px-6 py-5 rounded-2xl bg-gradient-to-br from-primary via-primary to-primary-dark text-white border-2 border-primary shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 hover:scale-105";
-        } else {
-          // 手機版 active 樣式
-          button.className =
-            "voice-filter active px-5 py-4 rounded-2xl bg-gradient-to-br from-primary via-primary to-primary-dark text-white border-2 border-primary shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 hover:scale-105 font-bold text-sm";
-          if (category === "不公對待") {
-            button.classList.add("col-span-2");
-          }
+
+        // 為非「全部」分類添加特殊樣式
+        if (button.dataset.category !== "all") {
+          button.classList.remove(
+            "bg-white/90",
+            "backdrop-blur-sm",
+            "text-neutral-800",
+            "border-neutral-200/60"
+          );
+          button.classList.add(
+            "bg-gradient-to-br",
+            "from-primary",
+            "via-primary",
+            "to-primary-dark",
+            "text-white",
+            "border-primary"
+          );
         }
 
-        // 更新當前分類並重置分頁
-        this.currentCategory = category;
-        this.currentPage = 0;
+        // 更新當前分類並重置到第一頁
+        this.currentCategory = button.dataset.category;
+        this.currentPage = 1; // 重置到第一頁
+
+        // 載入新的篩選結果
         this.loadVoiceCards();
+
+        // 更新統計數據
+        this.updateStats();
       });
     });
   }
@@ -606,15 +552,45 @@ class HarassmentVoicesModule {
   }
 
   initPagination() {
+    // 桌面版分頁控制
+    const prevButton = document.getElementById("voices-prev");
+    const nextButton = document.getElementById("voices-next");
+    const pageInfo = document.getElementById("voices-page-info");
+
     // 手機版分頁控制
     const prevButtonMobile = document.getElementById("voices-prev-mobile");
     const nextButtonMobile = document.getElementById("voices-next-mobile");
+    const pageInfoMobile = document.getElementById("voices-page-info-mobile");
+
+    // 新增：自動滾動到頂部的函數
+    const scrollToTop = () => {
+      // 手機版滾動到卡片容器頂部
+      const mobileContainer = document.getElementById(
+        "voices-cards-container-mobile"
+      );
+      // 桌面版滾動到整個心聲區域頂部
+      const desktopContainer = document.getElementById("harassment-voices");
+
+      if (window.innerWidth < 1024 && mobileContainer) {
+        mobileContainer.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+          inline: "nearest",
+        });
+      } else if (desktopContainer) {
+        desktopContainer.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+          inline: "nearest",
+        });
+      }
+    };
 
     const handlePrevClick = () => {
       if (this.currentPage > 1) {
         this.currentPage--;
         this.loadVoiceCards();
-        this.scrollToCardsTop(); // 添加自動滾動
+        scrollToTop(); // 新增：自動滾動
       }
     };
 
@@ -624,48 +600,20 @@ class HarassmentVoicesModule {
       if (this.currentPage < totalPages) {
         this.currentPage++;
         this.loadVoiceCards();
-        this.scrollToCardsTop(); // 添加自動滾動
+        scrollToTop(); // 新增：自動滾動
       }
     };
 
-    if (prevButtonMobile) {
-      prevButtonMobile.removeEventListener("click", handlePrevClick);
+    // 綁定事件監聽器
+    if (prevButton) prevButton.addEventListener("click", handlePrevClick);
+    if (nextButton) nextButton.addEventListener("click", handleNextClick);
+    if (prevButtonMobile)
       prevButtonMobile.addEventListener("click", handlePrevClick);
-    }
-
-    if (nextButtonMobile) {
-      nextButtonMobile.removeEventListener("click", handleNextClick);
+    if (nextButtonMobile)
       nextButtonMobile.addEventListener("click", handleNextClick);
-    }
 
-    // 桌面版分頁控制
-    const prevButton = document.getElementById("voices-prev");
-    const nextButton = document.getElementById("voices-next");
-
-    if (prevButton) {
-      prevButton.removeEventListener("click", handlePrevClick);
-      prevButton.addEventListener("click", handlePrevClick);
-    }
-
-    if (nextButton) {
-      nextButton.removeEventListener("click", handleNextClick);
-      nextButton.addEventListener("click", handleNextClick);
-    }
-  }
-
-  // 新增：滾動到卡片區域頂部的方法
-  scrollToCardsTop() {
-    const section = document.getElementById("harassment-voices");
-    if (section) {
-      // 計算到區段標題的位置，留一些空間
-      const sectionRect = section.getBoundingClientRect();
-      const scrollTop = window.pageYOffset + sectionRect.top - 100; // 向上偏移100px以獲得更好的視覺效果
-
-      window.scrollTo({
-        top: scrollTop,
-        behavior: "smooth",
-      });
-    }
+    // 初始載入時更新分頁按鈕狀態
+    this.updatePaginationButtons(this.getFilteredData().length);
   }
 
   getFilteredData() {
@@ -681,159 +629,194 @@ class HarassmentVoicesModule {
     const filteredData = this.getFilteredData();
     const totalItems = filteredData.length;
 
-    // 修正分頁計算：從1開始的頁碼
+    // 修正：頁碼從1開始，計算時需要減1
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-    const endIndex = startIndex + this.itemsPerPage;
+    const endIndex = Math.min(startIndex + this.itemsPerPage, totalItems);
     const currentPageData = filteredData.slice(startIndex, endIndex);
+
+    // 桌面版和手機版容器
+    const desktopContainer = document.getElementById("voices-cards-container");
+    const mobileContainer = document.getElementById(
+      "voices-cards-container-mobile"
+    );
 
     const createCards = (container) => {
       if (!container) return;
 
+      container.innerHTML = "";
+
       if (currentPageData.length === 0) {
         container.innerHTML = `
           <div class="text-center py-12">
-            <div class="text-neutral-400 mb-4">
-              <i class="fas fa-search text-4xl"></i>
-            </div>
-            <p class="text-neutral-500">目前篩選條件下沒有找到相關心聲</p>
+            <i class="fas fa-search text-4xl text-neutral-300 mb-4"></i>
+            <p class="text-neutral-500">目前沒有符合條件的心聲案例</p>
           </div>
         `;
         return;
       }
 
-      const cardsHTML = currentPageData
-        .map((caseItem, index) =>
-          this.createVoiceCard(caseItem, startIndex + index)
-        )
-        .join("");
-
-      container.innerHTML = cardsHTML;
+      currentPageData.forEach((caseItem, index) => {
+        const cardElement = this.createVoiceCard(caseItem, startIndex + index);
+        container.appendChild(cardElement);
+      });
     };
 
-    // 桌面版卡片
-    const desktopContainer = document.getElementById("voices-cards-container");
+    // 同時更新桌面版和手機版容器
     createCards(desktopContainer);
-
-    // 手機版卡片
-    const mobileContainer = document.getElementById(
-      "voices-cards-container-mobile"
-    );
     createCards(mobileContainer);
 
-    // 更新分頁按鈕
+    // 更新分頁按鈕狀態
     this.updatePaginationButtons(totalItems);
   }
 
   updatePaginationButtons(totalItems) {
     const totalPages = Math.ceil(totalItems / this.itemsPerPage);
 
+    // 桌面版按鈕和頁面信息
+    const prevButton = document.getElementById("voices-prev");
+    const nextButton = document.getElementById("voices-next");
+    const pageInfo = document.getElementById("voices-page-info");
+
+    // 手機版按鈕和頁面信息
+    const prevButtonMobile = document.getElementById("voices-prev-mobile");
+    const nextButtonMobile = document.getElementById("voices-next-mobile");
+    const pageInfoMobile = document.getElementById("voices-page-info-mobile");
+
+    // 統一更新按鈕狀態的函數
     const updateButtons = (prevButton, nextButton, pageInfoElement) => {
       if (!prevButton || !nextButton || !pageInfoElement) return;
 
-      // 更新分頁信息顯示
-      pageInfoElement.textContent = `${this.currentPage} / ${Math.max(
-        1,
-        totalPages
-      )}`;
-
-      // 更新按鈕狀態
-      prevButton.disabled = this.currentPage <= 1;
-      nextButton.disabled = this.currentPage >= totalPages || totalPages <= 1;
-
-      // 更新按鈕樣式
-      if (prevButton.disabled) {
-        prevButton.classList.add("opacity-50");
+      // 更新上一頁按鈕
+      if (this.currentPage <= 1) {
+        prevButton.disabled = true;
+        prevButton.classList.add("opacity-50", "cursor-not-allowed");
+        prevButton.classList.remove("hover:bg-neutral-200");
       } else {
-        prevButton.classList.remove("opacity-50");
+        prevButton.disabled = false;
+        prevButton.classList.remove("opacity-50", "cursor-not-allowed");
+        prevButton.classList.add("hover:bg-neutral-200");
       }
 
-      if (nextButton.disabled) {
-        nextButton.classList.add("opacity-50");
+      // 更新下一頁按鈕
+      if (this.currentPage >= totalPages) {
+        nextButton.disabled = true;
+        nextButton.classList.add("opacity-50", "cursor-not-allowed");
+        nextButton.classList.remove("hover:bg-neutral-200");
       } else {
-        nextButton.classList.remove("opacity-50");
+        nextButton.disabled = false;
+        nextButton.classList.remove("opacity-50", "cursor-not-allowed");
+        nextButton.classList.add("hover:bg-neutral-200");
       }
+
+      // 更新頁面信息 (從1開始計算)
+      pageInfoElement.textContent = `${this.currentPage} / ${totalPages}`;
     };
 
-    // 更新桌面版按鈕
-    const prevButton = document.getElementById("voices-prev");
-    const nextButton = document.getElementById("voices-next");
-    const pageInfoElement = document.getElementById("voices-page-info");
-    updateButtons(prevButton, nextButton, pageInfoElement);
-
-    // 更新手機版按鈕
-    const prevButtonMobile = document.getElementById("voices-prev-mobile");
-    const nextButtonMobile = document.getElementById("voices-next-mobile");
-    const pageInfoElementMobile = document.getElementById(
-      "voices-page-info-mobile"
-    );
-    updateButtons(prevButtonMobile, nextButtonMobile, pageInfoElementMobile);
+    // 桌面版和手機版統一應用
+    updateButtons(prevButton, nextButton, pageInfo);
+    updateButtons(prevButtonMobile, nextButtonMobile, pageInfoMobile);
   }
 
   createVoiceCard(caseItem, index) {
-    const severityScore = this.calculateSeverity(caseItem.職場壓力話術);
-    const category = this.categorizeContent(caseItem.職場壓力話術);
-    const company = this.extractCompany(caseItem.職場壓力話術);
+    const categoryConfig = {
+      威脅恐嚇: { color: "red", icon: "bullhorn", label: "威脅恐嚇" },
+      經濟壓迫: {
+        color: "orange",
+        icon: "money-bill-wave",
+        label: "經濟壓迫",
+      },
+      人格侮辱: { color: "purple", icon: "frown", label: "人格侮辱" },
+      不公對待: { color: "blue", icon: "balance-scale", label: "不公對待" },
+    };
 
+    const config =
+      categoryConfig[caseItem.分類標籤] || categoryConfig["威脅恐嚇"]; // 預設值
+
+    const card = document.createElement("div");
+    card.className =
+      "voice-card bg-white/90 backdrop-blur-sm rounded-2xl shadow-card p-6 border border-white/20 hover:shadow-hover transition-all duration-300 animate-fade-in-up";
+    card.style.animationDelay = `${index * 0.1}s`;
+
+    // 嚴重性指示器（不對外顯示數字）
     const getSeverityColor = (score) => {
-      if (score >= 8) return "text-red-600 bg-red-100";
-      if (score >= 6) return "text-orange-600 bg-orange-100";
-      if (score >= 4) return "text-yellow-600 bg-yellow-100";
-      return "text-green-600 bg-green-100";
+      if (score >= 9) return "bg-red-600";
+      if (score >= 7) return "bg-orange-500";
+      if (score >= 5) return "bg-yellow-500";
+      return "bg-green-500";
     };
 
     const getSeverityText = (score) => {
-      if (score >= 8) return "嚴重";
-      if (score >= 6) return "中等";
-      if (score >= 4) return "輕微";
-      return "一般";
+      if (score >= 9) return "極度嚴重";
+      if (score >= 7) return "嚴重";
+      if (score >= 5) return "中度";
+      return "輕度";
     };
 
-    return `
-      <div class="voice-card bg-white rounded-2xl shadow-card p-6 border border-neutral-100 hover:shadow-hover transition-all duration-300 transform hover:-translate-y-1">
-        <div class="flex items-start justify-between mb-4">
-          <div class="flex items-center space-x-3">
-            <div class="w-10 h-10 bg-gradient-to-br from-primary/10 to-primary/20 rounded-full flex items-center justify-center">
-              <i class="fas fa-user text-primary"></i>
-            </div>
-            <div>
-              <h4 class="font-semibold text-neutral-800">案例 #${index + 1}</h4>
-              <p class="text-sm text-neutral-500">${category}</p>
-            </div>
+    card.innerHTML = `
+      <div class="flex items-start justify-between mb-4">
+        <div class="flex items-center">
+          <div class="w-12 h-12 bg-${
+            config.color
+          }-100 rounded-full flex items-center justify-center mr-4 flex-shrink-0">
+            <i class="fas fa-${config.icon} text-${
+      config.color
+    }-500 text-xl"></i>
           </div>
-          <div class="flex items-center space-x-2">
-            <span class="px-2 py-1 rounded-full text-xs font-medium ${getSeverityColor(
-              severityScore
-            )}">
-              ${getSeverityText(severityScore)}
-            </span>
-            ${
-              company
-                ? `<span class="px-2 py-1 bg-neutral-100 text-neutral-600 rounded-full text-xs">${company}</span>`
-                : ""
-            }
+          <div>
+            <div class="font-semibold text-neutral-800">${caseItem.姓名}</div>
+            <div class="text-sm text-neutral-500">${caseItem.券商銀行}</div>
           </div>
         </div>
-        
-        <div class="mb-4">
-          <p class="text-neutral-700 leading-relaxed text-sm line-clamp-4">
-            ${caseItem.職場壓力話術}
-          </p>
-        </div>
-        
-        <div class="flex items-center justify-between pt-4 border-t border-neutral-100">
-          <div class="flex items-center text-xs text-neutral-500">
-            <i class="fas fa-calendar mr-1"></i>
-            <span>2024年案例</span>
+        <div class="flex flex-col items-end">
+          <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-${
+            config.color
+          }-100 text-${config.color}-700 mb-2">
+            <i class="fas fa-${config.icon} mr-1"></i>
+            ${config.label}
+          </span>
+          <div class="flex items-center">
+            <div class="w-2 h-2 ${getSeverityColor(
+              caseItem.嚴重性評分
+            )} rounded-full mr-1"></div>
+            <span class="text-xs text-neutral-500">${getSeverityText(
+              caseItem.嚴重性評分
+            )}</span>
           </div>
-          <button 
-            class="text-primary hover:text-primary-dark text-sm font-medium transition-colors"
-            onclick="this.parentElement.parentElement.querySelector('.voice-content').classList.toggle('line-clamp-4')"
-          >
-            展開詳情
-          </button>
         </div>
       </div>
+      
+      <div class="space-y-4">
+        <div class="bg-gradient-to-r from-neutral-50 to-neutral-25 p-4 rounded-xl border-l-4 border-${
+          config.color
+        }-400">
+          <p class="text-sm font-medium text-neutral-600 mb-2">
+            <i class="fas fa-quote-left text-${config.color}-400 mr-2"></i>
+            主管施壓話術
+          </p>
+          <p class="text-neutral-800 leading-relaxed">${
+            caseItem.職場壓力話術
+          }</p>
+        </div>
+        
+        <div class="mt-4 p-4 bg-gradient-to-r from-secondary/10 to-secondary/5 rounded-lg border-l-4 border-secondary">
+          <p class="text-sm font-medium text-secondary mb-2">
+            <i class="fas fa-heart mr-2"></i>內心真正想說
+          </p>
+          <p class="text-neutral-700 italic leading-relaxed text-sm">
+            ${caseItem.內心真正想說的話 || "內心的痛苦無法言喻..."}
+          </p>
+        </div>
+      </div>
+      
+      <div class="mt-4 flex justify-between items-center text-xs text-neutral-400">
+        <span><i class="fas fa-calendar mr-1"></i>${
+          caseItem.回覆時間 || "匿名投稿"
+        }</span>
+        <span>案例 #${caseItem.序號}</span>
+      </div>
     `;
+
+    return card;
   }
 
   initCounters() {
@@ -956,57 +939,6 @@ class HarassmentVoicesModule {
         }
       });
     });
-  }
-
-  initMobileFilterToggle() {
-    const toggleButton = document.getElementById("mobile-filter-toggle");
-    const filterContent = document.getElementById("mobile-filter-content");
-    const filterIcon = document.getElementById("mobile-filter-icon");
-    const currentFilterLabel = document.getElementById("mobile-current-filter");
-
-    if (toggleButton && filterContent && filterIcon) {
-      toggleButton.addEventListener("click", () => {
-        const isHidden = filterContent.classList.contains("hidden");
-
-        if (isHidden) {
-          filterContent.classList.remove("hidden");
-          filterIcon.style.transform = "rotate(180deg)";
-        } else {
-          filterContent.classList.add("hidden");
-          filterIcon.style.transform = "rotate(0deg)";
-        }
-      });
-
-      // 為收折選單中的篩選按鈕添加事件監聽器
-      const mobileFilterButtons =
-        filterContent.querySelectorAll(".voice-filter");
-      mobileFilterButtons.forEach((button) => {
-        button.addEventListener("click", () => {
-          // 更新當前篩選標籤
-          const category = button.dataset.category;
-          const categoryNames = {
-            all: "全部心聲",
-            威脅恐嚇: "威脅恐嚇",
-            經濟壓迫: "經濟壓迫",
-            人格侮辱: "人格侮辱",
-            不公對待: "不公對待",
-          };
-
-          if (currentFilterLabel) {
-            currentFilterLabel.textContent =
-              categoryNames[category] || category;
-          }
-
-          // 關閉收折選單
-          filterContent.classList.add("hidden");
-          filterIcon.style.transform = "rotate(0deg)";
-
-          // 更新按鈕狀態
-          mobileFilterButtons.forEach((btn) => btn.classList.remove("active"));
-          button.classList.add("active");
-        });
-      });
-    }
   }
 }
 

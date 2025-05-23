@@ -50,17 +50,17 @@
         <!-- 手機版漢堡包按鈕 -->
         <button class="menu-toggle md:hidden relative group">
           <div
-            class="w-10 h-10 rounded-xl bg-white/95 backdrop-blur-md shadow-md border border-neutral-200/30 flex items-center justify-center transition-all duration-300 group-hover:shadow-lg group-hover:scale-105"
+            class="w-12 h-12 rounded-2xl bg-white/95 backdrop-blur-md shadow-lg border border-neutral-200/50 flex items-center justify-center transition-all duration-300 group-hover:shadow-xl group-hover:scale-105 group-hover:border-primary/30"
           >
-            <div class="w-5 h-5 flex flex-col justify-center items-center">
+            <div class="w-6 h-6 flex flex-col justify-center items-center">
               <span
-                class="hamburger-line block w-4 h-0.5 bg-neutral-600 transition-all duration-300 ease-out group-hover:bg-primary"
+                class="hamburger-line block w-5 h-0.5 bg-gradient-to-r from-neutral-600 to-neutral-700 transition-all duration-300 ease-out group-hover:from-primary group-hover:to-primary-dark"
               ></span>
               <span
-                class="hamburger-line block w-4 h-0.5 bg-neutral-600 mt-1 transition-all duration-300 ease-out group-hover:bg-primary"
+                class="hamburger-line block w-5 h-0.5 bg-gradient-to-r from-neutral-600 to-neutral-700 mt-1.5 transition-all duration-300 ease-out group-hover:from-primary group-hover:to-primary-dark"
               ></span>
               <span
-                class="hamburger-line block w-4 h-0.5 bg-neutral-600 mt-1 transition-all duration-300 ease-out group-hover:bg-primary"
+                class="hamburger-line block w-5 h-0.5 bg-gradient-to-r from-neutral-600 to-neutral-700 mt-1.5 transition-all duration-300 ease-out group-hover:from-primary group-hover:to-primary-dark"
               ></span>
             </div>
           </div>
@@ -274,3 +274,150 @@
     </div>
   </div>
 </header>
+
+<!-- Header JavaScript 功能 -->
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    // 導航列滑動效果
+    const header = document.querySelector("header");
+    const nav = document.querySelector("nav");
+    let lastScrollTop = 0;
+
+    function handleScroll() {
+      const scrollTop =
+        window.pageYOffset || document.documentElement.scrollTop;
+
+      // 添加/移除滑動後的樣式
+      if (scrollTop > 50) {
+        nav.classList.add("scrolled");
+        nav.style.backgroundColor = "rgba(255, 255, 255, 0.95)";
+        nav.style.backdropFilter = "blur(10px)";
+        nav.style.borderBottom = "1px solid rgba(0, 0, 0, 0.1)";
+      } else {
+        nav.classList.remove("scrolled");
+        nav.style.backgroundColor = "rgba(255, 255, 255, 0.8)";
+        nav.style.backdropFilter = "blur(5px)";
+        nav.style.borderBottom = "none";
+      }
+
+      lastScrollTop = scrollTop;
+    }
+
+    // 節流函數優化性能
+    let ticking = false;
+    function requestTick() {
+      if (!ticking) {
+        requestAnimationFrame(handleScroll);
+        ticking = true;
+        setTimeout(() => {
+          ticking = false;
+        }, 16);
+      }
+    }
+
+    window.addEventListener("scroll", requestTick);
+
+    // 漢堡包菜單功能
+    const menuToggle = document.querySelector(".menu-toggle");
+    const mobileMenu = document.querySelector(".mobile-menu");
+    const menuClose = document.querySelector(".menu-close");
+    const menuItems = document.querySelectorAll(".menu-item");
+    const hamburgerLines = document.querySelectorAll(".hamburger-line");
+
+    let isMenuOpen = false;
+
+    function toggleMenu() {
+      isMenuOpen = !isMenuOpen;
+
+      if (isMenuOpen) {
+        // 打開菜單
+        mobileMenu.classList.remove("hidden");
+        document.body.style.overflow = "hidden";
+
+        // 動畫效果
+        setTimeout(() => {
+          mobileMenu.querySelector(".absolute.top-0.right-0").style.transform =
+            "translateX(0)";
+        }, 10);
+
+        // 漢堡包線條變形為X
+        hamburgerLines[0].style.transform = "rotate(45deg) translate(5px, 5px)";
+        hamburgerLines[1].style.opacity = "0";
+        hamburgerLines[2].style.transform =
+          "rotate(-45deg) translate(7px, -6px)";
+      } else {
+        // 關閉菜單
+        mobileMenu.querySelector(".absolute.top-0.right-0").style.transform =
+          "translateX(100%)";
+        document.body.style.overflow = "";
+
+        // 恢復漢堡包線條
+        hamburgerLines[0].style.transform = "";
+        hamburgerLines[1].style.opacity = "";
+        hamburgerLines[2].style.transform = "";
+
+        setTimeout(() => {
+          mobileMenu.classList.add("hidden");
+        }, 500);
+      }
+    }
+
+    function closeMenu() {
+      if (isMenuOpen) {
+        toggleMenu();
+      }
+    }
+
+    // 事件監聽器
+    if (menuToggle) menuToggle.addEventListener("click", toggleMenu);
+    if (menuClose) menuClose.addEventListener("click", toggleMenu);
+
+    // 點擊菜單項目後自動關閉
+    menuItems.forEach((item) => {
+      item.addEventListener("click", closeMenu);
+    });
+
+    // 點擊背景遮罩關閉菜單
+    if (mobileMenu) {
+      mobileMenu.addEventListener("click", function (e) {
+        if (e.target === mobileMenu || e.target.matches(".bg-gradient-to-br")) {
+          closeMenu();
+        }
+      });
+    }
+
+    // ESC 鍵關閉菜單
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && isMenuOpen) {
+        closeMenu();
+      }
+    });
+
+    // 手機版分享按鈕功能
+    const mobileShareBtn = document.getElementById("mobile-share-btn");
+    if (mobileShareBtn) {
+      mobileShareBtn.addEventListener("click", function () {
+        closeMenu();
+        // 觸發分享模態框
+        if (typeof showShareModal === "function") {
+          showShareModal();
+        } else {
+          // 備用分享功能
+          const shareData = {
+            title: "#終結IPO制度暴力調查網站",
+            text: "揭露台灣證券業IPO與ETF募集制度問題的深度調查報告",
+            url: window.location.href,
+          };
+
+          if (navigator.share) {
+            navigator.share(shareData);
+          } else {
+            navigator.clipboard.writeText(shareData.url).then(() => {
+              alert("網站連結已複製到剪貼簿");
+            });
+          }
+        }
+      });
+    }
+  });
+</script>

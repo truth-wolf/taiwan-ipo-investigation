@@ -824,45 +824,119 @@ window.shareModal = (function () {
 
   // 綁定事件處理函數
   function bindEvents() {
-    // 分享模態窗事件
+    console.log("開始綁定分享相關事件...");
+
+    // 所有可能的分享按鈕選擇器
+    const shareButtonSelectors = [
+      "#share-btn",
+      "#mobile-share-btn",
+      "#share-harassment-voices", // 新增：職場霸凌心聲分享按鈕
+      ".share-button",
+      '[data-action="share"]',
+      ".fa-share-alt", // 新增：所有帶有分享圖標的元素
+      ".share-modal-trigger", // 新增：通用分享觸發器類
+    ];
+
+    // 綁定所有分享按鈕
+    shareButtonSelectors.forEach((selector) => {
+      const buttons = document.querySelectorAll(selector);
+      buttons.forEach((button) => {
+        if (button && !button.hasAttribute("data-share-bound")) {
+          console.log(`綁定分享按鈕: ${selector}`);
+
+          button.addEventListener("click", function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log(`分享按鈕被點擊: ${selector}`);
+            showShareModal();
+          });
+
+          // 標記已綁定，避免重複綁定
+          button.setAttribute("data-share-bound", "true");
+        }
+      });
+    });
+
+    // 針對父元素包含分享圖標的情況（如按鈕內的 i 標籤）
+    document.addEventListener("click", function (e) {
+      const target = e.target;
+
+      // 檢查是否點擊了分享圖標或其父元素
+      if (
+        target.classList.contains("fa-share-alt") ||
+        target.closest(".fa-share-alt") ||
+        target.closest('[data-action="share"]') ||
+        target.closest(".share-button")
+      ) {
+        e.preventDefault();
+        e.stopPropagation();
+        console.log("通過事件委派觸發分享模態框");
+        showShareModal();
+      }
+    });
+
+    // 關閉按鈕事件
     if (shareElements.closeBtn) {
       shareElements.closeBtn.addEventListener("click", hideShareModal);
     }
 
-    if (shareElements.shareFormBtn) {
-      shareElements.shareFormBtn.addEventListener("click", () => {
-        markUserInteraction();
-        window.open(links.shareForm, "_blank");
+    if (shareModal) {
+      shareModal.addEventListener("click", (e) => {
+        if (e.target === shareModal) {
+          hideShareModal();
+        }
       });
     }
 
-    if (shareElements.joinCommunityBtn) {
-      shareElements.joinCommunityBtn.addEventListener("click", () => {
-        markUserInteraction();
-        window.open(links.lineCommunity, "_blank");
-      });
-    }
-
-    if (shareElements.followThreadsBtn) {
-      shareElements.followThreadsBtn.addEventListener("click", () => {
-        markUserInteraction();
-        window.open(links.threads, "_blank");
-      });
-    }
-
-    if (shareElements.copyLinkBtn) {
-      shareElements.copyLinkBtn.addEventListener("click", function () {
-        markUserInteraction();
-        copyToClipboard();
-      });
-    }
-
+    // 複製連結按鈕
     if (shareElements.copyBtnInline) {
-      shareElements.copyBtnInline.addEventListener("click", function () {
-        markUserInteraction();
+      shareElements.copyBtnInline.addEventListener("click", function (e) {
+        e.preventDefault();
         copyToClipboard();
       });
     }
+
+    // ESC 鍵關閉
+    document.addEventListener("keydown", function (e) {
+      if (
+        e.key === "Escape" &&
+        shareModal &&
+        !shareModal.classList.contains("hidden")
+      ) {
+        hideShareModal();
+      }
+    });
+
+    // 社群分享按鈕
+    const socialButtons = document.querySelectorAll(".social-share-btn");
+    socialButtons.forEach((button) => {
+      button.addEventListener("click", function (e) {
+        e.preventDefault();
+        const platform = this.dataset.platform;
+        const shareUrl = encodeURIComponent(window.location.href);
+        const shareTitle = encodeURIComponent(document.title);
+
+        let url = "";
+        switch (platform) {
+          case "facebook":
+            url = `https://www.facebook.com/sharer/sharer.php?u=${shareUrl}`;
+            break;
+          case "twitter":
+            url = `https://twitter.com/intent/tweet?url=${shareUrl}&text=${shareTitle}`;
+            break;
+          case "line":
+            url = `https://social-plugins.line.me/lineit/share?url=${shareUrl}`;
+            break;
+          case "telegram":
+            url = `https://t.me/share/url?url=${shareUrl}&text=${shareTitle}`;
+            break;
+        }
+
+        if (url) {
+          window.open(url, "_blank", "width=600,height=400");
+        }
+      });
+    });
 
     // 歡迎模態窗事件
     if (welcomeElements.closeBtn) {
@@ -906,57 +980,7 @@ window.shareModal = (function () {
       );
     }
 
-    // 點擊模態窗外部關閉
-    if (shareModal) {
-      shareModal.addEventListener("click", (e) => {
-        if (e.target === shareModal) {
-          hideShareModal();
-          markUserInteraction();
-        }
-      });
-    }
-
-    if (welcomeModal) {
-      welcomeModal.addEventListener("click", (e) => {
-        if (e.target === welcomeModal) {
-          handleWelcomeModalClose();
-        }
-      });
-    }
-
-    // 按 ESC 關閉模態窗
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape") {
-        if (shareModal.classList.contains("active")) {
-          hideShareModal();
-          markUserInteraction();
-        } else if (welcomeModal.classList.contains("active")) {
-          handleWelcomeModalClose();
-        }
-      }
-    });
-
-    // 添加額外的共享按鈕事件處理
-    const shareBtn = document.getElementById("share-btn");
-    const mobileShareBtn = document.getElementById("mobile-share-btn");
-
-    if (shareBtn) {
-      shareBtn.addEventListener("click", () => {
-        showShareModal();
-        markUserInteraction();
-      });
-      console.log("ShareModal: 主導航分享按鈕已綁定");
-    }
-
-    if (mobileShareBtn) {
-      mobileShareBtn.addEventListener("click", () => {
-        showShareModal();
-        markUserInteraction();
-      });
-      console.log("ShareModal: 行動版導航分享按鈕已綁定");
-    }
-
-    console.log("ShareModal: 事件處理函數已綁定");
+    console.log("事件綁定完成");
   }
 
   // 處理歡迎模態窗關閉
@@ -1189,6 +1213,10 @@ window.shareModal = (function () {
   // 返回公開 API
   return {
     init: init,
+    showShareModal: showShareModal,
+    hideShareModal: hideShareModal,
+    markUserInteraction: markUserInteraction,
+    checkAndShowWelcomeModal: checkAndShowWelcomeModal,
   };
 })();
 
@@ -1415,3 +1443,27 @@ if (document.readyState === "loading") {
     }, 1000);
   }
 }
+
+// 暴露showShareModal作為全局函數，供其他模組調用
+window.showShareModal = function () {
+  if (
+    window.shareModalControls &&
+    typeof window.shareModalControls.showShareModal === "function"
+  ) {
+    window.shareModalControls.showShareModal();
+  } else {
+    console.error("ShareModal: showShareModal函數未初始化");
+  }
+};
+
+// 暴露hideShareModal作為全局函數
+window.hideShareModal = function () {
+  if (
+    window.shareModalControls &&
+    typeof window.shareModalControls.hideShareModal === "function"
+  ) {
+    window.shareModalControls.hideShareModal();
+  } else {
+    console.error("ShareModal: hideShareModal函數未初始化");
+  }
+};
