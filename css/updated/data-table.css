@@ -1,4 +1,4 @@
-/* data-table.css - 數據表格樣式 */
+/* data-table.css - 數據表格樣式 - 優化版 */
 
 /* 基礎表格樣式 */
 .table-wrapper {
@@ -28,9 +28,26 @@
   border-bottom: 1px solid #e5e7eb;
 }
 
-#csv-table th.dt-right,
-#csv-table td.dt-right {
-  text-align: right;
+/* 將責任額數字置中顯示 */
+#csv-table th.dt-center,
+#csv-table td.dt-center {
+  text-align: center;
+}
+
+/* 增加金額列顯示的區別 */
+#csv-table td .amount-critical {
+  color: #c1292e;
+  font-weight: bold;
+}
+
+#csv-table td .amount-warning {
+  color: #e85d04;
+  font-weight: bold;
+}
+
+#csv-table td .amount-high {
+  color: #e23e57;
+  font-weight: bold;
 }
 
 #csv-table tbody tr:hover {
@@ -43,6 +60,25 @@
   padding: 1rem;
   background-color: #f9fafb;
   border-radius: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Excel下載按鈕 */
+.download-excel-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 1rem;
+  background-color: #1a5d7a;
+  color: white;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.download-excel-btn:hover {
+  background-color: #164e66;
 }
 
 /* 篩選器樣式 */
@@ -94,6 +130,15 @@
   background-color: #d1d5db;
 }
 
+.export-button {
+  background-color: #e23e57;
+  color: white;
+}
+
+.export-button:hover {
+  background-color: #c1292e;
+}
+
 /* 圖表容器 */
 .chart-container {
   padding: 1rem;
@@ -129,6 +174,32 @@
   scrollbar-color: #1a5d7a #f1f1f1;
 }
 
+/* 分頁樣式優化 */
+.dataTables_paginate {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: center;
+}
+
+.dataTables_paginate .paginate_button {
+  padding: 0.5rem 0.75rem;
+  margin: 0 0.25rem;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.dataTables_paginate .paginate_button.current {
+  background-color: #1a5d7a;
+  color: white;
+  border: 1px solid #1a5d7a;
+}
+
+.dataTables_paginate .paginate_button:hover:not(.current) {
+  background-color: #f3f4f6;
+  color: #1a5d7a;
+}
+
 /* 手機版響應式設計 */
 @media (max-width: 767px) {
   .product-based-view,
@@ -148,18 +219,18 @@
     font-size: 0.75rem;
   }
 
-  /* 手機版經典視圖產品欄位寬度限制 - 更窄 */
+  /* 手機版經典視圖產品欄位寬度限制 - 嚴格限制為20%寬度 */
   #csv-table th:nth-child(2), /* Product Header */
   #csv-table td:nth-child(2) {
     /* Product Data */
-    min-width: 60px;
-    max-width: 80px;
+    width: 20%;
+    max-width: 20%;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap; /* 限制為單行 */
   }
 
-  /* 調整分頁控制項，確保在一行內顯示 */
+  /* 調整分頁控制項，改進UI */
   .dataTables_paginate {
     display: flex;
     justify-content: center;
@@ -169,9 +240,12 @@
   }
 
   .dataTables_paginate .paginate_button {
-    padding: 0.25rem 0.5rem !important;
-    min-width: 1.5rem;
+    padding: 0.5rem !important;
+    min-width: 2rem;
     text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   /* 手機版視圖切換按鈕（圖標模式） */
@@ -184,15 +258,60 @@
   .mobile-view-toggle button {
     background-color: #e5e7eb;
     border: none;
-    border-radius: 0.375rem;
-    padding: 0.3rem 0.6rem;
+    border-radius: 50%; /* 改為圓形按鈕 */
+    width: 2.5rem;
+    height: 2.5rem;
     margin: 0 0.25rem;
-    font-size: 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
 
   .mobile-view-toggle button.active {
     background-color: #1a5d7a;
     color: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  }
+  
+  /* 手機版匯出選單 */
+  .mobile-export-menu {
+    position: fixed;
+    z-index: 9999;
+    background-color: white;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    width: 200px;
+  }
+  
+  .mobile-export-options {
+    display: flex;
+    flex-direction: column;
+    padding: 0.5rem;
+  }
+  
+  .mobile-export-options button {
+    padding: 0.75rem 1rem;
+    text-align: left;
+    background: none;
+    border: none;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    align-items: center;
+  }
+  
+  .mobile-export-options button i {
+    margin-right: 0.5rem;
+    width: 1.5rem;
+    text-align: center;
+  }
+  
+  .mobile-export-options button:last-child {
+    border-bottom: none;
+    margin-top: 0.5rem;
+    color: #e23e57;
+    font-weight: bold;
+    justify-content: center;
   }
 }
 
@@ -214,8 +333,44 @@
 #data-detail-modal .close-modal {
   background-color: #e5e7eb;
   color: #374151;
+  transition: all 0.2s;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
 }
 
 #data-detail-modal .close-modal:hover {
   background-color: #d1d5db;
+}
+
+/* DataTables信息區域優化 */
+.dataTables_info {
+  margin-top: 1rem;
+  color: #4b5563;
+  font-size: 0.875rem;
+  text-align: center;
+}
+
+/* 固定表格標頭 */
+#csv-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* 針對不同金額的高亮顯示 */
+td .amount-over-million {
+  color: #c1292e !important;
+  font-weight: bold;
+}
+
+td .amount-over-half-million {
+  color: #e85d04 !important;
+  font-weight: bold;
+}
+
+td .amount-over-hundred-thousand {
+  color: #e23e57 !important;
+  font-weight: bold;
 }

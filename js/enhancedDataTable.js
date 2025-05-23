@@ -1,5 +1,5 @@
 /**
- * enhancedDataTable.js - 增強的數據表格處理模組
+ * enhancedDataTable.js - 完整優化版本
  *
  * 提供多種表格視圖與功能:
  * - 經典視圖 (券商-產品)
@@ -7,6 +7,8 @@
  * - 篩選與排序功能
  * - 總和與統計
  * - 資料視覺化
+ * - 自動檢測與載入SheetJS庫
+ * - 導出Excel和CSV功能
  */
 
 // 全局變數
@@ -30,81 +32,54 @@ function initEnhancedDataTable() {
     return;
   }
 
+  // 檢查SheetJS庫是否載入
+  if (typeof XLSX === "undefined") {
+    console.log("SheetJS庫未預載入，嘗試動態載入...");
+    loadScript(
+      "https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js",
+      function () {
+        console.log("SheetJS庫動態載入完成");
+      }
+    );
+  } else {
+    console.log("SheetJS庫已預先載入");
+  }
+
   // 等待DOM載入完成
   document.addEventListener("DOMContentLoaded", function () {
     let attempts = 0;
-    const maxAttempts = 100; // 例如，輪詢10秒 (100次 * 100毫秒)
-    const intervalTime = 100; // 毫秒
+    const maxAttempts = 100;
+    const intervalTime = 100;
     let pollerIntervalId;
 
     const executeMainLogic = function () {
       // 這是原始在DOMContentLoaded中，並且在表格檢查通過後的邏輯
-      Promise.all([
-        fetch("ipo_broker_product.csv").then((response) => {
-          if (!response.ok)
-            throw new Error(
-              `HTTP 錯誤 (ipo_broker_product.csv)：${response.status}`
-            );
+      fetch("ipo_broker_product.csv")
+        .then((response) => {
+          if (!response.ok) throw new Error(`HTTP 錯誤：${response.status}`);
           return response.text();
-        }),
-        fetch("branch_counts.csv").then((response) => {
-          if (!response.ok)
-            throw new Error(
-              `HTTP 錯誤 (branch_counts.csv)：${response.status}`
-            );
-          return response.text();
-        }),
-      ])
-        .then(([ipoCsvText, branchCsvText]) => {
-          Papa.parse(branchCsvText, {
-            header: true, // branch_counts.csv 有標題行
+        })
+        .then((csvText) => {
+          Papa.parse(csvText, {
+            header: false,
             skipEmptyLines: true,
             complete: function (results) {
-              console.log(
-                "branch_counts.csv 解析完成，列數:",
-                results.data.length
-              );
-              results.data.forEach((row) => {
-                const companyName = row.parent_company
-                  ? row.parent_company.trim()
-                  : null;
-                const count = row.branch_count
-                  ? parseInt(row.branch_count, 10)
-                  : 0;
-                if (companyName && !isNaN(count)) {
-                  branchCountsMap[companyName] = count;
-                }
-              });
-              window.branchCountsMap = branchCountsMap; // 提供給 enhancedTable.js 使用
-              console.log("券商分點數量映射表:", branchCountsMap);
+              console.log("CSV解析完成，列數:", results.data.length);
+              csvData = results.data.slice(1); // 移除標題行
+              window.csvData = csvData; // 提供給 enhancedTable.js 使用
 
-              // 現在解析 IPO 數據
-              Papa.parse(ipoCsvText, {
-                header: false,
-                skipEmptyLines: true,
-                complete: function (results) {
-                  console.log("CSV解析完成，列數:", results.data.length);
-                  csvData = results.data.slice(1); // 移除標題行
-                  window.csvData = csvData; // 提供給 enhancedTable.js 使用
-
-                  initClassicTable(csvData);
-                  initFilters(csvData);
-                  if (window.innerWidth >= 768) {
-                    prepareProductTableContainer();
-                    initViewButtons();
-                  }
-                  initDataVisualizations(csvData);
-                  generateKeyInsights();
-                },
-                error: function (error) {
-                  console.error("ipo_broker_product.csv 解析錯誤:", error);
-                  displayError("IPO 資料解析錯誤，請稍後再試。");
-                },
-              });
+              initClassicTable(csvData);
+              initFilters(csvData);
+              if (window.innerWidth >= 768) {
+                prepareProductTableContainer();
+                initViewButtons();
+              }
+              initDataVisualizations(csvData);
+              generateKeyInsights();
             },
             error: function (error) {
-              console.error("branch_counts.csv 解析錯誤:", error);
-              displayError("券商分點數據解析錯誤，請稍後再試。");
+              console.error("CSV解析錯誤:", error);
+              displayError("資料解析錯誤，請稍後再試。");
             },
           });
         })
@@ -145,6 +120,7 @@ function initEnhancedDataTable() {
 
 // 顯示錯誤訊息
 function displayError(message) {
+  console.error("表格錯誤:", message);
   const csvTable = document.getElementById("csv-table");
   if (csvTable) {
     csvTable.innerHTML = `<tbody><tr><td colspan="4" class="text-red-500 p-4">${message}</td></tr></tbody>`;
@@ -176,21 +152,28 @@ function initClassicTable(data) {
     },
     {
       title: "責任額",
-      className: "dt-right font-bold", // 保持原有class
+      className: "dt-center font-bold", // 將dt-right改為dt-center置中對齊
       render: function (data, type, row) {
         if (type === "display") {
           const amount = parseInt(data, 10);
           if (!isNaN(amount)) {
-            // 根據閾值決定顯示樣式
+            // 根據閾值決定顯示樣式，增加100萬以上的顏色區分
             if (amount >= 1000000 || amount === highestAmount) {
               return (
-                '<span style="color: var(--primary-dark); font-weight: bold;">' +
+                '<span style="color: #c1292e; font-weight: bold;">' +
                 amount.toLocaleString() +
                 "</span>"
               );
             } else if (amount >= highThreshold || amount >= 500000) {
               return (
-                '<span style="color: var(--alert-color); font-weight: bold;">' +
+                '<span style="color: #e85d04; font-weight: bold;">' +
+                amount.toLocaleString() +
+                "</span>"
+              );
+            } else if (amount >= 100000) {
+              // 10萬以上的一般高亮
+              return (
+                '<span style="color: #e23e57; font-weight: bold;">' +
                 amount.toLocaleString() +
                 "</span>"
               );
@@ -215,36 +198,40 @@ function initClassicTable(data) {
       lengthMenu: "每頁 _MENU_ 筆",
       info: "顯示第 _START_ 至 _END_ 筆結果，共 _TOTAL_ 筆",
       paginate: {
-        first: '<i class="fas fa-angle-double-left"></i>',
-        last: '<i class="fas fa-angle-double-right"></i>',
-        next: '<i class="fas fa-angle-right"></i>',
-        previous: '<i class="fas fa-angle-left"></i>',
+        first: "第一頁",
+        last: "最後一頁",
+        next: "下一頁",
+        previous: "上一頁",
       },
       zeroRecords: "沒有找到匹配的記錄",
       infoEmpty: "沒有記錄",
       infoFiltered: "(從 _MAX_ 筆記錄中過濾)",
     },
-    dom: '<"top"<"filter-controls"fl><"view-buttons">>rtip',
+    // 在初始化時檢查SheetJS庫
     initComplete: function () {
-      console.log("DataTable初始化完成");
+      console.log(
+        "檢查SheetJS庫的可用性:",
+        typeof XLSX !== "undefined" ? "已載入" : "未載入"
+      );
+      if (typeof XLSX === "undefined") {
+        console.warn("SheetJS庫未載入，Excel功能可能不可用");
+        // 動態載入SheetJS庫
+        loadScript(
+          "https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js",
+          function () {
+            console.log("SheetJS庫已動態載入");
+          }
+        );
+      }
+
+      // 如果數據存在，高亮顯示第一行
       if (data.length > 0) {
         const firstRow = $("#csv-table tbody tr:first-child");
         firstRow.addClass("bg-primary bg-opacity-10");
       }
-      // 確保 branchCountsMap 已載入
-      const currentBranchCounts = window.branchCountsMap || {};
-      if (Object.keys(currentBranchCounts).length > 0) {
-        addTotalInformation(data, currentBranchCounts);
-      } else {
-        console.warn(
-          "branchCountsMap 尚未就緒，addTotalInformation 將延遲或使用空數據。"
-        );
-        setTimeout(
-          () => addTotalInformation(data, window.branchCountsMap || {}),
-          500
-        ); // 增加延遲以等待 branchCountsMap
-      }
+      addTotalInformation(data);
     },
+    dom: '<"top"<"filter-controls"fl><"view-buttons">>rtip',
   });
 
   const viewControls = `
@@ -255,11 +242,50 @@ function initClassicTable(data) {
       <button id="product-view-btn" class="view-button">
         <i class="fas fa-table"></i> 產品視圖
       </button>
+      <button id="export-csv-btn" class="view-button export-button">
+        <i class="fas fa-download"></i> 匯出CSV
+      </button>
     </div>
   `;
 
   $(".view-buttons").html(viewControls);
 
+  // 添加匯出CSV按鈕功能
+  $("#export-csv-btn").on("click", function () {
+    console.log("準備匯出CSV...");
+    try {
+      const csvContent = [
+        [
+          "\u5238\u5546",
+          "\u7522\u54c1",
+          "\u8cac\u4efb\u984d",
+          "\u52df\u96c6\u671f\u9593",
+        ],
+      ];
+      data.forEach((row) => csvContent.push(row));
+
+      // 轉換為CSV格式
+      let csvString = "";
+      csvContent.forEach((row) => {
+        csvString += row.join(",") + "\n";
+      });
+
+      // 創建下載連結
+      const blob = new Blob([csvString], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.setAttribute("href", url);
+      link.setAttribute("download", "IPO責任額數據.csv");
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      console.log("CSV檔案匯出成功");
+    } catch (error) {
+      console.error("CSV檔案匯出失敗:", error);
+    }
+  });
+
+  // 在手機版上點擊行顯示詳情
   if (window.innerWidth <= 768) {
     $("#csv-table tbody").on("click", "tr", function () {
       const rowData = dataTable.row(this).data();
@@ -374,19 +400,22 @@ function createMobileViewToggle() {
   mobileToggle.innerHTML = `
     <button id="mobile-classic-btn" class="active" aria-label="經典視圖"><i class="fas fa-th-list"></i></button>
     <button id="mobile-product-btn" aria-label="產品視圖"><i class="fas fa-table"></i></button>
+    <button id="mobile-export-btn" aria-label="匯出數據"><i class="fas fa-download"></i></button>
   `;
 
   tableWrapper.parentNode.insertBefore(mobileToggle, tableWrapper);
 
-  // 添加事件監聽器
+  // 添加經典視圖按鈕事件
   document
     .getElementById("mobile-classic-btn")
     .addEventListener("click", () => {
       toggleTableView("classic");
       document.getElementById("mobile-classic-btn").classList.add("active");
       document.getElementById("mobile-product-btn").classList.remove("active");
+      document.getElementById("mobile-export-btn").classList.remove("active");
     });
 
+  // 添加產品視圖按鈕事件
   document
     .getElementById("mobile-product-btn")
     .addEventListener("click", () => {
@@ -394,7 +423,68 @@ function createMobileViewToggle() {
       toggleTableView("product");
       document.getElementById("mobile-product-btn").classList.add("active");
       document.getElementById("mobile-classic-btn").classList.remove("active");
+      document.getElementById("mobile-export-btn").classList.remove("active");
     });
+
+  // 添加手機版匯出按鈕功能
+  document.getElementById("mobile-export-btn").addEventListener("click", () => {
+    console.log("手機版 - 準備匯出選單");
+    // 顯示匯出選項選單
+    const exportMenu = document.createElement("div");
+    exportMenu.className = "mobile-export-menu";
+    exportMenu.innerHTML = `
+        <div class="mobile-export-options">
+          <button id="mobile-export-csv"><i class="fas fa-file-csv"></i> 匯出CSV</button>
+          <button id="mobile-export-excel"><i class="fas fa-file-excel"></i> 匯出Excel</button>
+          <button id="mobile-export-cancel">取消</button>
+        </div>
+      `;
+    document.body.appendChild(exportMenu);
+
+    // 設置選單位置
+    const buttonRect = document
+      .getElementById("mobile-export-btn")
+      .getBoundingClientRect();
+    exportMenu.style.position = "fixed";
+    exportMenu.style.top = buttonRect.bottom + 10 + "px";
+    exportMenu.style.left = window.innerWidth / 2 - 100 + "px";
+
+    // 添加事件處理
+    document
+      .getElementById("mobile-export-csv")
+      .addEventListener("click", function () {
+        // 觸發CSV匯出邏輯
+        $("#export-csv-btn").trigger("click");
+        document.body.removeChild(exportMenu);
+      });
+
+    document
+      .getElementById("mobile-export-excel")
+      .addEventListener("click", function () {
+        // 觸發Excel匯出邏輯
+        $("#download-excel-btn").trigger("click");
+        document.body.removeChild(exportMenu);
+      });
+
+    document
+      .getElementById("mobile-export-cancel")
+      .addEventListener("click", function () {
+        document.body.removeChild(exportMenu);
+      });
+
+    // 點擊其他區域關閉選單
+    document.addEventListener("click", function closeMenu(e) {
+      if (
+        !exportMenu.contains(e.target) &&
+        e.target.id !== "mobile-export-btn"
+      ) {
+        if (document.body.contains(exportMenu)) {
+          document.body.removeChild(exportMenu);
+        }
+        document.removeEventListener("click", closeMenu);
+      }
+    });
+  });
 }
 
 // 切換表格視圖
@@ -551,6 +641,9 @@ function initProductTable(data) {
         } else if (amount >= 500000) {
           // 500k
           amountClass += " amount-warning";
+        } else if (amount >= 100000) {
+          // 100k
+          amountClass += " amount-high";
         }
         tableHTML += `<td class="${amountClass}">${match[2]}</td>`;
         totalAmountForAverageCalc += amount;
@@ -796,6 +889,9 @@ function addTotalInformation(data, currentBranchCountsMap) {
       <span>產品數: <strong class="text-primary-dark">${
         uniqueProducts.length
       }</strong></span>
+      <button id="download-excel-btn" class="download-excel-btn ml-auto mt-2 md:mt-0">
+        <i class="fas fa-file-excel mr-1"></i> 下載Excel
+      </button>
     </div>
   `;
 
@@ -821,14 +917,50 @@ function addTotalInformation(data, currentBranchCountsMap) {
       }
     });
   }
+
+  // 添加下載Excel功能
+  const downloadExcelBtn = document.getElementById("download-excel-btn");
+  if (downloadExcelBtn) {
+    downloadExcelBtn.addEventListener("click", function () {
+      console.log("準備下載Excel檔案...");
+      if (typeof XLSX === "undefined") {
+        console.error("SheetJS庫未載入，無法下載Excel");
+        alert("Excel功能暫時無法使用，請稍後再試。");
+        return;
+      }
+
+      try {
+        // 準備工作表數據
+        const wsData = [
+          [
+            "\u5238\u5546",
+            "\u7522\u54c1",
+            "\u8cac\u4efb\u984d",
+            "\u52df\u96c6\u671f\u9593",
+          ],
+        ];
+        data.forEach((row) => wsData.push(row));
+
+        // 創建工作表
+        const ws = XLSX.utils.aoa_to_sheet(wsData);
+
+        // 創建工作簿並添加工作表
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "\u8cac\u4efb\u984d\u6578\u64da");
+
+        // 下載Excel檔案
+        XLSX.writeFile(wb, "IPO責任額數據.xlsx");
+        console.log("Excel檔案下載成功");
+      } catch (error) {
+        console.error("Excel檔案生成失敗:", error);
+      }
+    });
+  }
 }
 
 // 初始化數據視覺化
 function initDataVisualizations(data) {
   console.log("初始化數據視覺化");
-  // const tableInfo = document.querySelector(".table-info"); // 原來的定位方式
-  // if (!tableInfo) return;
-
   // 確保先移除可能已存在的舊圖表容器，避免重複添加
   const existingViz = document.querySelector(".data-visualization");
   if (existingViz) {
@@ -838,11 +970,6 @@ function initDataVisualizations(data) {
   const visualizationContainer = document.createElement("div");
   visualizationContainer.className =
     "data-visualization grid grid-cols-1 md:grid-cols-2 gap-8 mt-8";
-
-  // tableInfo.parentNode.insertBefore(
-  //   visualizationContainer,
-  //   tableInfo.nextSibling
-  // ); // 原來的插入方式
 
   // 將圖表容器附加到 .overflow-x-auto 區域的末尾，以獲得更穩定的佈局
   const mainContentArea = document.querySelector(".overflow-x-auto");
@@ -1089,7 +1216,7 @@ function showDetailModal(data) {
   modal.classList.remove("hidden");
 }
 
-// 生成關鍵 insights
+// 生成關鍵 insights 和統計數據
 function generateKeyInsights() {
   if (!window.csvData || window.csvData.length === 0) {
     console.error("csvData 未就緒，無法生成 insights");
@@ -1172,5 +1299,33 @@ function generateKeyInsights() {
     });
 }
 
+// 輔助函數：計算天數
+function days(period) {
+  if (!period || !period.includes("-")) return 0;
+  const [start, end] = period.split("-");
+  return 7; // 簡單估計
+}
+
+// 輔助函數：動態載入腳本
+function loadScript(url, callback) {
+  console.log("動態載入腳本:", url);
+  const script = document.createElement("script");
+  script.src = url;
+  script.onload = function () {
+    console.log("腳本載入成功:", url);
+    if (callback) callback();
+  };
+  script.onerror = function () {
+    console.error("腳本載入失敗:", url);
+  };
+  document.head.appendChild(script);
+}
+
 // 初始化
 initEnhancedDataTable();
+
+// 導出模組
+window.enhancedDataTable = {
+  init: initEnhancedDataTable,
+  toggleTableView: toggleTableView,
+};

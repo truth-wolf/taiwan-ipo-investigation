@@ -119,6 +119,9 @@
       href="https://cdn.datatables.net/responsive/2.4.0/css/responsive.dataTables.min.css"
     />
 
+    <!-- SheetJS - Excel功能庫 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
     <!-- 自定義 CSS -->
     <link rel="stylesheet" href="css/main.css" />
     <link rel="stylesheet" href="css/components.css" />
@@ -129,6 +132,9 @@
     <link rel="stylesheet" href="css/updated/fixes.css" />
     <link rel="stylesheet" href="css/updated/formula-tooltip.css" />
     <link rel="stylesheet" href="css/updated/shareModal.css" />
+    <link rel="stylesheet" href="css/updated/mobile-enhancements.css" />
+    <link rel="stylesheet" href="css/updated/mobile-optimizations.css" />
+    <link rel="stylesheet" href="css/updated/fixed-elements.css" />
 
     <style>
       .fade-in {
@@ -368,6 +374,37 @@
         </div>
       </div>
     </section>
+
+    <!-- IPO營業員心聲集結區 -->
+    <div id="testimony-section-container"></div>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        fetch("partials/testimony-section/testimony-section.html")
+          .then((response) => response.text())
+          .then((html) => {
+            document.getElementById("testimony-section-container").innerHTML =
+              html;
+            // 初始化心聲卡片功能
+            if (typeof initCardFlip === "function") {
+              initCardFlip();
+            }
+            if (typeof initTabFiltering === "function") {
+              initTabFiltering();
+            }
+            if (typeof initEasterEgg === "function") {
+              initEasterEgg();
+            }
+          })
+          .catch((error) => {
+            console.error("載入營業員心聲區塊時出錯:", error);
+            document.getElementById("testimony-section-container").innerHTML =
+              '<div class="text-red-500 p-4 bg-white rounded-lg shadow-card">載入營業員心聲區塊時出錯，請重新整理頁面。</div>';
+          });
+      });
+    </script>
+
+    <!-- 彩蛋區域 - 由JS載入 -->
+    <div id="easter-egg-container"></div>
 
     <!-- 事件時間軸 -->
     <div id="timeline-section" class="relative z-10">
@@ -1298,10 +1335,14 @@
       <!-- <div id="labor-template"></div> -->
     </div>
 
+    <!-- 自定義心聲卡片樣式 -->
+    <link rel="stylesheet" href="css/testimony-cards.css" />
+
     <!-- JavaScript -->
     <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/responsive/2.4.0/js/dataTables.responsive.min.js"></script>
     <script src="https://cdn.datatables.net/buttons/2.3.2/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.3.2/js/buttons.html5.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
     <!-- 核心腳本 -->
     <script src="js/loader.js"></script>
@@ -1313,6 +1354,7 @@
     <script src="js/enhancedTable.js"></script>
     <!-- 主程序入口點必須最後加載 -->
     <script src="js/shareModal.js"></script>
+    <script src="js/testimony-cards.js"></script>
     <script src="js/app.js"></script>
 
     <script>
@@ -1368,50 +1410,56 @@
           });
         }, 500);
 
-        // // 固定表格標頭的直接解決方案
-        // setTimeout(function () {
-        //   // 為表格添加固定標題樣式
-        //   const tableStyle = document.createElement("style");
-        //   tableStyle.textContent = `
-        //   .table-wrapper {
-        //     overflow: auto;
-        //     max-height: 80vh;
-        //   }
-        //   #csv-table thead,
-        //   #product-table thead {
-        //     position: sticky;
-        //     top: 0;
-        //     z-index: 10;
-        //   }
-        //   #csv-table thead th,
-        //   #product-table thead th {
-        //     position: sticky;
-        //     top: 0;
-        //     z-index: 10;
-        //     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        //   }
-        // `;
-        //   document.head.appendChild(tableStyle);
+        // 固定表格標頭的直接解決方案
+        setTimeout(function () {
+          // 為表格添加固定標題樣式
+          const tableStyle = document.createElement("style");
+          tableStyle.textContent = `
+          .table-wrapper {
+            overflow: auto;
+            max-height: 80vh;
+          }
+          #csv-table thead,
+          #product-table thead {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+          }
+          #csv-table thead th,
+          #product-table thead th {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+          }
+        `;
+          document.head.appendChild(tableStyle);
 
-        //   // 確保表格有正確的容器結構
-        //   const tableWrapper = document.querySelector(".table-wrapper");
-        //   if (tableWrapper) {
-        //     tableWrapper.style.overflow = "auto";
-        //     tableWrapper.style.maxHeight = "80vh";
-        //   }
+          // 確保表格有正確的容器結構
+          const tableWrapper = document.querySelector(".table-wrapper");
+          if (tableWrapper) {
+            tableWrapper.style.overflow = "auto";
+            tableWrapper.style.maxHeight = "80vh";
+          }
 
-        //   // 直接應用樣式到表格標頭
-        //   const tableHeaders = document.querySelectorAll(
-        //     "#csv-table thead, #product-table thead"
-        //   );
-        //   tableHeaders.forEach((header) => {
-        //     header.style.position = "sticky";
-        //     header.style.top = "0";
-        //     header.style.zIndex = "10";
-        //   });
+          // 直接應用樣式到表格標頭
+          const tableHeaders = document.querySelectorAll(
+            "#csv-table thead, #product-table thead"
+          );
+          tableHeaders.forEach((header) => {
+            header.style.position = "sticky";
+            header.style.top = "0";
+            header.style.zIndex = "10";
+          });
 
-        //   console.log("直接應用表格標頭固定樣式完成");
-        // }, 2000);
+          console.log("直接應用表格標頭固定樣式完成");
+
+          // 檢查SheetJS庫是否已載入，並在控制台輸出狀態
+          console.log(
+            "SheetJS庫載入狀態:",
+            typeof XLSX !== "undefined" ? "已載入" : "未載入"
+          );
+        }, 1000);
       });
     </script>
   </body>

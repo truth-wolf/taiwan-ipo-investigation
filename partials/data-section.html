@@ -6,7 +6,72 @@
     <select id="date-filter"></select>
   </div>
 
-  <!-- 表格控制項將由JS動態添加 -->
+  <!-- 增強控制區 -->
+  <div class="enhanced-controls">
+    <div class="control-group">
+      <div class="enhanced-filter broker-filter-wrapper">
+        <select id="broker-filter" class="broker-filter-select">
+          <option value="">所有券商</option>
+          <option value="中信">中信</option>
+          <option value="元大">元大</option>
+          <option value="元富">元富</option>
+          <option value="兆豐">兆豐</option>
+          <option value="凱基">凱基</option>
+          <option value="台新">台新</option>
+          <option value="國票">國票</option>
+          <option value="富邦">富邦</option>
+          <option value="康和">康和</option>
+          <option value="永豐">永豐</option>
+          <option value="第一證">第一證</option>
+          <option value="統一">統一</option>
+          <option value="群益">群益</option>
+          <option value="華南">華南</option>
+        </select>
+      </div>
+      <div class="enhanced-filter date-filter-wrapper">
+        <select id="date-filter" class="date-filter-select">
+          <option value="">所有日期</option>
+          <option value="113/02">113/02</option>
+          <option value="113/03">113/03</option>
+          <option value="113/04">113/04</option>
+          <option value="113/05">113/05</option>
+          <option value="113/06">113/06</option>
+          <option value="113/07">113/07</option>
+          <option value="113/08">113/08</option>
+          <option value="113/09">113/09</option>
+          <option value="113/10">113/10</option>
+          <option value="113/11">113/11</option>
+          <option value="113/12">113/12</option>
+          <option value="114/01">114/01</option>
+          <option value="114/02">114/02</option>
+          <option value="114/03">114/03</option>
+          <option value="114/04">114/04</option>
+          <option value="114/05">114/05</option>
+        </select>
+      </div>
+      <div class="enhanced-checkbox">
+        <label class="inline-flex items-center">
+          <input type="checkbox" id="show-totals" class="mr-2"> 
+          <span></span>
+        </label>
+      </div>
+    </div>
+    <div class="control-group">
+      <div class="view-buttons">
+        <button id="classic-view-btn" class="view-button">
+          <i class="fas fa-th-list"></i> 經典視圖
+        </button>
+        <button id="product-view-btn" class="view-button active">
+          <i class="fas fa-table"></i> 產品視圖
+        </button>
+      </div>
+      <div class="download-menu">
+        <button class="download-button" aria-label="下載表格">
+          <i class="fas fa-cloud-download-alt"></i> <span class="hidden md:inline">下載表格</span>
+        </button>
+      </div>
+    </div>
+  </div>
 
   <!-- 經典表格視圖 -->
   <div class="table-wrapper classic-view-table">
