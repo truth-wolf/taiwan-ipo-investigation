@@ -261,20 +261,13 @@ header.visible {
 
 /* 檢舉範本內容樣式 */
 .template-content {
-  line-height: 1.7;
-  color: var(--neutral-800);
+  padding: 20px;
+  line-height: 1.8;
+  color: var(--neutral-dark);
 }
 
 .template-content strong {
-  color: var(--secondary-dark);
-}
-
-.dark-mode .template-content {
-  color: var(--neutral-100);
-}
-
-.dark-mode .template-content strong {
-  color: var(--secondary-light);
+  color: var(--primary-color);
 }
 
 .template-container:focus-within {
@@ -419,11 +412,6 @@ h1.newspaper-title::after {
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.18);
-}
-
-.dark-mode .glass-effect {
-  background: rgba(38, 38, 38, 0.7);
-  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 /* 螢光筆標記文字效果 */
@@ -765,10 +753,6 @@ th.sort-desc i.fas {
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
     0 2px 4px -1px rgba(0, 0, 0, 0.06);
   transition: all 0.3s ease;
-}
-
-.dark .chart-container {
-  background: rgba(0, 0, 0, 0.2);
 }
 
 .chart-container:hover {

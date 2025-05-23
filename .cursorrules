@@ -1,0 +1,210 @@
+# Taiwan IPO Investigation Project - Cursor Rules
+
+## 專案概述
+這是一個揭露台灣證券業 IPO 與 ETF 募集制度問題的調查網站專案，使用純前端技術搭配 Python 資料處理腳本。
+
+## 核心技術棧
+- **前端**: HTML5, CSS3, JavaScript (ES6+), jQuery, Tailwind CSS
+- **圖表庫**: Chart.js, DataTables
+- **資料處理**: PapaParse (CSV), LocalStorage API
+- **動畫**: Intersection Observer API, CSS animations
+- **圖標**: Font Awesome 6
+- **後端**: Python 3, Pandas (僅用於資料預處理)
+
+## 檔案結構約定
+
+### 主要檔案
+- `index.html` - 主頁面，載入所有元件
+- `main.js` - 核心應用邏輯
+- `ipo_broker_product.csv` - 主要資料集
+
+### 模組化目錄
+- `js/` - 所有 JavaScript 模組
+- `css/` - 樣式檔案 (main.css, components.css, enhanced-styles.css)
+- `partials/` - HTML 元件 (header.html, footer.html, data-section.html)
+- `txt/` - 檢舉信範本檔案
+- `docs/` - 文件與報告
+
+## 編碼規範
+
+### JavaScript
+- 使用 ES6+ 語法，支援 arrow functions, destructuring, template literals
+- 模組化設計：每個功能獨立為一個 .js 檔案
+- 使用 jQuery 處理 DOM 操作，搭配原生 JavaScript API
+- 命名約定：camelCase for variables/functions, PascalCase for classes
+- 函式名稱使用動詞開頭：`loadData()`, `renderChart()`, `updateTable()`
+
+### CSS
+- 使用 Tailwind CSS 作為基礎框架
+- 自定義樣式放在對應的 CSS 檔案中
+- 動畫效果使用 CSS transitions 和 keyframes
+- 響應式設計優先：mobile-first approach
+- 類別命名使用 kebab-case
+
+### HTML
+- 語義化標籤：`<main>`, `<section>`, `<article>`, `<aside>`
+- 可訪問性：適當的 aria-labels 和 role 屬性
+- 元件化：使用 partials/ 目錄分離可重複使用的 HTML 區塊
+
+## 資料處理約定
+
+### CSV 檔案
+- 使用 UTF-8 編碼
+- 標頭行使用繁體中文描述性名稱
+- 日期格式：YYYY-MM-DD
+- 數字使用英文格式（小數點用 .）
+
+### Python 腳本
+- 使用 pandas 處理 Excel 到 CSV 轉換
+- 檔案路徑使用相對路徑
+- 錯誤處理：包裝在 try-catch 區塊
+
+## 功能模組約定
+
+### 資料視覺化
+- Chart.js 用於圖表渲染
+- DataTables 用於表格功能（排序、篩選、分頁）
+- 使用響應式圖表配置
+
+### 動畫效果
+- 滾動觸發動畫使用 Intersection Observer API
+- CSS 動畫優先於 JavaScript 動畫
+- 提供 `prefers-reduced-motion` 支援
+
+### 模態窗與互動
+- 分享功能使用模態窗
+- 檢舉信範本支援複製與下載
+- 社群分享連結格式化
+
+## 命名約定
+
+### 檔案命名
+- JavaScript: camelCase (enhancedDataTable.js)
+- CSS: kebab-case (enhanced-styles.css)  
+- HTML partials: kebab-case (data-section.html)
+- 資料檔案: kebab-case (ipo-broker-product.csv)
+
+### 變數命名
+- JavaScript 變數: camelCase (`brokerData`, `chartInstance`)
+- CSS 類別: kebab-case (`.data-table`, `.share-modal`)
+- ID: kebab-case (`#broker-chart`, `#testimony-section`)
+
+### 函式命名
+- 動詞開頭: `load`, `render`, `update`, `process`
+- 事件處理: `handle` + EventType (`handleShareClick`)
+- 初始化: `init` + ModuleName (`initDataTable`)
+
+## 效能優化
+
+### 前端
+- 延遲載入 (Lazy loading) 用於圖片和非關鍵資源
+- CSV 資料快取在 localStorage
+- 圖表重繪最小化：只在資料變更時重新渲染
+- 使用 requestAnimationFrame 進行動畫
+
+### 資料載入
+- 分批載入大型資料集
+- 使用 Web Workers 進行重型計算（如有需要）
+- 圖片壓縮和 WebP 格式優先
+
+## 可訪問性 (A11y)
+
+### 語義化
+- 正確的標題層級 (h1-h6)
+- 表格使用 `<caption>`, `<thead>`, `<tbody>`
+- 表單標籤與輸入元素關聯
+
+### 鍵盤導航
+- 所有互動元素可通過 Tab 鍵訪問
+- 自定義焦點樣式
+- Skip links 用於主要內容
+
+### 螢幕閱讀器
+- aria-labels 用於圖表和複雜元件
+- 資料表格包含適當的標頭關聯
+- 狀態變更使用 aria-live 區域
+
+## 國際化
+
+### 語言
+- 主要語言：繁體中文
+- 所有使用者介面文字使用繁體中文
+- 日期格式遵循台灣慣例
+
+### 字型
+- 中文字型優先：思源黑體、微軟正黑體
+- 英文字型：系統字型堆疊
+
+## 測試約定
+
+### 瀏覽器兼容性
+- Chrome 90+, Firefox 88+, Safari 14+, Edge 90+
+- 移動裝置：iOS Safari 14+, Android Chrome 90+
+
+### 響應式測試
+- 斷點：sm (640px), md (768px), lg (1024px), xl (1280px)
+- 測試裝置：iPhone SE, iPad, 桌面顯示器
+
+## 安全性
+
+### 前端安全
+- 不在前端儲存敏感資料
+- 使用 HTTPS 進行所有外部資源載入
+- CSP (Content Security Policy) 配置
+
+### 資料驗證
+- 使用者輸入驗證（雖然本專案主要為展示性質）
+- CSV 資料載入前進行格式驗證
+
+## 部署約定
+
+### 靜態網站
+- 可部署至 GitHub Pages, Netlify, Vercel
+- 使用 Docker 進行容器化部署
+- 支援 CDN 配置
+
+### 環境
+- 開發：本地 HTTP 伺服器 (python -m http.server)
+- 生產：Nginx 或靜態網站託管服務
+
+## 版本控制
+
+### Git 約定
+- Commit 訊息使用繁體中文
+- 格式：[類型] 簡要描述 (例：[修復] 表格排序功能異常)
+- 分支命名：feature/功能名稱, fix/問題描述
+
+### 發布
+- 使用語義化版本 (Semantic Versioning)
+- CHANGELOG.md 記錄重要變更
+- GitHub Releases 用於版本發布
+
+## 文件約定
+
+### README
+- 繁體中文撰寫
+- 包含快速開始指南
+- 技術棧說明與貢獻指南
+
+### 程式碼註解
+- JavaScript: JSDoc 格式
+- CSS: 區塊註解說明用途
+- HTML: 重要區塊使用註解分隔
+
+---
+
+## 特殊指示
+
+當修改現有功能時：
+1. 保持向後相容性
+2. 更新對應的文件
+3. 確保響應式設計不受影響
+4. 測試所有瀏覽器相容性
+
+當新增功能時：
+1. 考慮模組化設計
+2. 遵循現有的命名約定
+3. 添加適當的錯誤處理
+4. 更新 README 與相關文件
+
+請始終考慮專案的社會意義：這是一個為了促進金融業透明度和保護投資人權益的公益專案。 

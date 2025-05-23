@@ -16,7 +16,6 @@ document.addEventListener("DOMContentLoaded", function () {
   const menuToggle = document.querySelector(".menu-toggle");
   const mobileMenu = document.querySelector(".mobile-menu");
   const menuClose = document.querySelector(".menu-close");
-  const darkModeToggle = document.getElementById("darkModeToggle");
   const backToTop = document.getElementById("back-to-top");
   const secretTrigger = document.getElementById("secret-trigger");
   const secretContent = document.getElementById("secret-content");
@@ -56,25 +55,6 @@ document.addEventListener("DOMContentLoaded", function () {
       mobileMenu.classList.add("hidden");
       mobileMenu.classList.remove("flex");
     });
-  }
-
-  // 暗黑模式切換
-  if (darkModeToggle) {
-    darkModeToggle.addEventListener("click", function () {
-      body.classList.toggle("dark-mode");
-      darkModeToggle.innerHTML = body.classList.contains("dark-mode")
-        ? '<i class="fas fa-sun"></i>'
-        : '<i class="fas fa-moon"></i>';
-
-      // 保存使用者偏好
-      localStorage.setItem("darkMode", body.classList.contains("dark-mode"));
-    });
-
-    // 檢查使用者之前的偏好
-    if (localStorage.getItem("darkMode") === "true") {
-      body.classList.add("dark-mode");
-      darkModeToggle.innerHTML = '<i class="fas fa-sun"></i>';
-    }
   }
 
   // 回到頂部按鈕

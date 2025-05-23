@@ -1,0 +1,330 @@
+/* 職場霸凌心聲區塊專用樣式 */
+
+/* 基礎動畫 */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  opacity: 0;
+  transform: translateY(30px);
+  animation: fadeInUp 0.8s ease forwards;
+}
+
+/* 高亮文字 */
+.highlight-text {
+  position: relative;
+  display: inline-block;
+  z-index: 1;
+  color: #e23e57;
+}
+
+/* 計數器動畫 */
+.counter {
+  transition: all 0.3s ease;
+}
+
+/* 篩選按鈕樣式 */
+.voice-filter {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.voice-filter::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  transition: left 0.5s ease;
+}
+
+.voice-filter:hover::before {
+  left: 100%;
+}
+
+.voice-filter.active {
+  background-color: rgba(226, 62, 87, 0.1) !important;
+  color: #e23e57 !important;
+  border-color: rgba(226, 62, 87, 0.2) !important;
+  box-shadow: 0 4px 12px rgba(226, 62, 87, 0.15);
+}
+
+/* 心聲卡片樣式 */
+.voice-card {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.5s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.voice-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, #e23e57, #1a5d7a);
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+}
+
+.voice-card:hover::before {
+  transform: scaleX(1);
+}
+
+.voice-card.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.voice-card.hidden {
+  opacity: 0;
+  transform: translateY(20px);
+  height: 0;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+/* 回應選項樣式 */
+.response-option {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.response-option::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: radial-gradient(
+    circle,
+    rgba(226, 62, 87, 0.1) 0%,
+    transparent 70%
+  );
+  transition: all 0.6s ease;
+  transform: translate(-50%, -50%);
+}
+
+.response-option:hover::before {
+  width: 300px;
+  height: 300px;
+}
+
+.response-option:hover {
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+.response-option:active {
+  transform: translateY(0);
+}
+
+/* 模擬器消息打字機效果 */
+#harassment-message {
+  position: relative;
+}
+
+#harassment-message.typing::after {
+  content: "|";
+  animation: blink 1s infinite;
+  color: #e23e57;
+}
+
+@keyframes blink {
+  0%,
+  50% {
+    opacity: 1;
+  }
+  51%,
+  100% {
+    opacity: 0;
+  }
+}
+
+/* 統計卡片懸浮效果 */
+.hover\:shadow-hover:hover {
+  transform: translateY(-5px);
+  transition: all 0.3s ease;
+}
+
+/* 背景裝飾元素 */
+.bg-primary\/5 {
+  background-color: rgba(226, 62, 87, 0.05);
+}
+
+.bg-secondary\/5 {
+  background-color: rgba(26, 93, 122, 0.05);
+}
+
+/* 毛玻璃效果 */
+.backdrop-blur-sm {
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+/* 載入動畫 */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+/* 脈衝動畫 */
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Toast 通知樣式 */
+.toast {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 1000;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  transform: translateX(100%);
+  transition: transform 0.3s ease;
+}
+
+.toast.show {
+  transform: translateX(0);
+}
+
+.toast.success {
+  background-color: #10b981;
+  color: white;
+}
+
+.toast.error {
+  background-color: #ef4444;
+  color: white;
+}
+
+.toast.info {
+  background-color: #3b82f6;
+  color: white;
+}
+
+/* 響應式調整 */
+@media (max-width: 768px) {
+  .grid.grid-cols-1.lg\:grid-cols-3 {
+    grid-template-columns: 1fr;
+  }
+
+  .lg\:col-span-1,
+  .lg\:col-span-2 {
+    grid-column: span 1;
+  }
+
+  .response-option {
+    padding: 1rem;
+    text-align: center;
+  }
+
+  .voice-card {
+    margin-bottom: 1rem;
+  }
+
+  /* 手機版的篩選器樣式 */
+  .voice-filter {
+    padding: 0.75rem;
+    font-size: 0.875rem;
+  }
+
+  /* 手機版統計卡片 */
+  .grid.grid-cols-1.md\:grid-cols-4 {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .grid.grid-cols-1.md\:grid-cols-4 {
+    grid-template-columns: 1fr;
+  }
+
+  .response-option {
+    padding: 0.75rem;
+  }
+}
+
+/* 深色模式支援 */
+@media (prefers-color-scheme: dark) {
+  .voice-card {
+    background-color: rgba(30, 41, 59, 0.9);
+    border-color: rgba(255, 255, 255, 0.1);
+    color: #e2e8f0;
+  }
+
+  .voice-filter {
+    background-color: rgba(30, 41, 59, 0.8);
+    color: #e2e8f0;
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .voice-filter.active {
+    background-color: rgba(226, 62, 87, 0.2) !important;
+    color: #fca5a5 !important;
+  }
+}
+
+/* 可訪問性增強 */
+.voice-filter:focus,
+.response-option:focus {
+  outline: 2px solid #e23e57;
+  outline-offset: 2px;
+}
+
+/* 動畫減弱支援 */
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-in-up,
+  .voice-card,
+  .response-option,
+  .counter {
+    animation: none;
+    transition: none;
+  }
+
+  .voice-filter::before,
+  .response-option::before,
+  .voice-card::before {
+    display: none;
+  }
+}
