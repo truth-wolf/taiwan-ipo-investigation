@@ -1402,6 +1402,11 @@
           });
         }, 500);
 
+        // 初始化漢堡包菜單功能
+        setTimeout(function () {
+          initMobileMenu();
+        }, 1000);
+
         // // 固定表格標頭的直接解決方案
         // setTimeout(function () {
         //   // 為表格添加固定標題樣式
@@ -1447,6 +1452,54 @@
         //   console.log("直接應用表格標頭固定樣式完成");
         // }, 2000);
       });
+
+      // 漢堡包菜單功能
+      function initMobileMenu() {
+        const menuToggle = document.querySelector(".menu-toggle");
+        const mobileMenu = document.querySelector(".mobile-menu");
+        const menuClose = document.querySelector(".menu-close");
+        const menuLinks = document.querySelectorAll(".mobile-menu a");
+
+        if (!menuToggle || !mobileMenu) {
+          console.log("漢堡包菜單元素未找到，稍後重試...");
+          return;
+        }
+
+        // 開啟菜單
+        menuToggle.addEventListener("click", function (e) {
+          e.preventDefault();
+          mobileMenu.classList.remove("hidden");
+          mobileMenu.classList.add("flex");
+          document.body.style.overflow = "hidden";
+        });
+
+        // 關閉菜單
+        const closeMenu = function () {
+          mobileMenu.classList.add("hidden");
+          mobileMenu.classList.remove("flex");
+          document.body.style.overflow = "";
+        };
+
+        if (menuClose) {
+          menuClose.addEventListener("click", closeMenu);
+        }
+
+        // 點擊菜單項目後關閉菜單
+        menuLinks.forEach((link) => {
+          link.addEventListener("click", function () {
+            setTimeout(closeMenu, 300); // 延遲關閉讓動畫完成
+          });
+        });
+
+        // 點擊背景關閉菜單
+        mobileMenu.addEventListener("click", function (e) {
+          if (e.target === mobileMenu) {
+            closeMenu();
+          }
+        });
+
+        console.log("漢堡包菜單初始化完成");
+      }
     </script>
   </body>
 </html>
