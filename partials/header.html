@@ -70,15 +70,15 @@
   </nav>
 
   <!-- 手機版滑出菜單 -->
-  <div class="mobile-menu fixed inset-0 z-50 hidden">
+  <div class="mobile-menu fixed inset-0 z-[9999] hidden">
     <!-- 背景遮罩 -->
     <div
-      class="absolute inset-0 bg-gradient-to-br from-black/40 via-black/60 to-black/80 backdrop-blur-md"
+      class="menu-backdrop absolute inset-0 bg-gradient-to-br from-black/30 via-black/50 to-black/70 backdrop-blur-sm transition-opacity duration-500 opacity-0"
     ></div>
 
     <!-- 菜單面板 -->
     <div
-      class="absolute top-0 right-0 h-full w-96 max-w-[90vw] bg-white/95 backdrop-blur-xl shadow-2xl transform translate-x-full transition-transform duration-500 ease-out border-l border-neutral-200/30"
+      class="menu-panel absolute top-0 right-0 h-full w-96 max-w-[90vw] bg-white/98 backdrop-blur-xl shadow-2xl transform translate-x-full transition-transform duration-500 ease-out border-l border-neutral-200/50 overflow-hidden"
     >
       <!-- 菜單標頭 -->
       <div
@@ -278,6 +278,14 @@
 <!-- Header JavaScript 功能 -->
 <script>
   document.addEventListener("DOMContentLoaded", function () {
+    // 防止重複初始化
+    if (window.headerInitialized) {
+      return;
+    }
+    window.headerInitialized = true;
+
+    console.log("Header: 開始初始化...");
+
     // 導航列滑動效果
     const header = document.querySelector("header");
     const nav = document.querySelector("nav");
@@ -315,109 +323,167 @@
       }
     }
 
-    window.addEventListener("scroll", requestTick);
+    if (nav) {
+      window.addEventListener("scroll", requestTick);
+    }
 
-    // 漢堡包菜單功能
-    const menuToggle = document.querySelector(".menu-toggle");
-    const mobileMenu = document.querySelector(".mobile-menu");
-    const menuClose = document.querySelector(".menu-close");
-    const menuItems = document.querySelectorAll(".menu-item");
-    const hamburgerLines = document.querySelectorAll(".hamburger-line");
+    // 漢堡包菜單功能 - 統一邏輯管理
+    function initMobileMenu() {
+      const menuToggle = document.querySelector(".menu-toggle");
+      const mobileMenu = document.querySelector(".mobile-menu");
+      const menuClose = document.querySelector(".menu-close");
+      const menuItems = document.querySelectorAll(".menu-item");
+      const menuPanel = document.querySelector(".menu-panel");
+      const menuBackdrop = document.querySelector(".menu-backdrop");
+      const hamburgerLines = document.querySelectorAll(".hamburger-line");
 
-    let isMenuOpen = false;
+      if (!menuToggle || !mobileMenu || !menuPanel || !menuBackdrop) {
+        console.log("Header: 選單元素未完全載入，稍後重試...");
+        setTimeout(initMobileMenu, 500);
+        return;
+      }
 
-    function toggleMenu() {
-      isMenuOpen = !isMenuOpen;
+      let isMenuOpen = false;
 
-      if (isMenuOpen) {
-        // 打開菜單
+      // 開啟菜單
+      function openMenu() {
+        if (isMenuOpen) return;
+        isMenuOpen = true;
+
+        console.log("Header: 開啟選單");
+
+        // 顯示選單容器
         mobileMenu.classList.remove("hidden");
         document.body.style.overflow = "hidden";
 
-        // 動畫效果
+        // 漸顯背景遮罩
         setTimeout(() => {
-          mobileMenu.querySelector(".absolute.top-0.right-0").style.transform =
-            "translateX(0)";
+          menuBackdrop.classList.remove("opacity-0");
+          menuBackdrop.classList.add("opacity-100");
+        }, 10);
+
+        // 滑入菜單面板
+        setTimeout(() => {
+          menuPanel.style.transform = "translateX(0)";
         }, 10);
 
         // 漢堡包線條變形為X
-        hamburgerLines[0].style.transform = "rotate(45deg) translate(5px, 5px)";
-        hamburgerLines[1].style.opacity = "0";
-        hamburgerLines[2].style.transform =
-          "rotate(-45deg) translate(7px, -6px)";
-      } else {
-        // 關閉菜單
-        mobileMenu.querySelector(".absolute.top-0.right-0").style.transform =
-          "translateX(100%)";
-        document.body.style.overflow = "";
+        if (hamburgerLines.length >= 3) {
+          hamburgerLines[0].style.transform =
+            "rotate(45deg) translate(5px, 5px)";
+          hamburgerLines[1].style.opacity = "0";
+          hamburgerLines[2].style.transform =
+            "rotate(-45deg) translate(7px, -6px)";
+        }
+      }
+
+      // 關閉菜單
+      function closeMenu() {
+        if (!isMenuOpen) return;
+        isMenuOpen = false;
+
+        console.log("Header: 關閉選單");
+
+        // 隱藏背景遮罩
+        menuBackdrop.classList.remove("opacity-100");
+        menuBackdrop.classList.add("opacity-0");
+
+        // 滑出菜單面板
+        menuPanel.style.transform = "translateX(100%)";
 
         // 恢復漢堡包線條
-        hamburgerLines[0].style.transform = "";
-        hamburgerLines[1].style.opacity = "";
-        hamburgerLines[2].style.transform = "";
+        if (hamburgerLines.length >= 3) {
+          hamburgerLines[0].style.transform = "";
+          hamburgerLines[1].style.opacity = "";
+          hamburgerLines[2].style.transform = "";
+        }
 
+        // 延遲隱藏容器和恢復滾動
         setTimeout(() => {
           mobileMenu.classList.add("hidden");
+          document.body.style.overflow = "";
         }, 500);
       }
-    }
 
-    function closeMenu() {
-      if (isMenuOpen) {
-        toggleMenu();
+      // 綁定事件
+      if (menuToggle) {
+        menuToggle.addEventListener("click", function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+          if (isMenuOpen) {
+            closeMenu();
+          } else {
+            openMenu();
+          }
+        });
       }
-    }
 
-    // 事件監聽器
-    if (menuToggle) menuToggle.addEventListener("click", toggleMenu);
-    if (menuClose) menuClose.addEventListener("click", toggleMenu);
+      if (menuClose) {
+        menuClose.addEventListener("click", function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+          closeMenu();
+        });
+      }
 
-    // 點擊菜單項目後自動關閉
-    menuItems.forEach((item) => {
-      item.addEventListener("click", closeMenu);
-    });
+      // 點擊菜單項目後自動關閉
+      menuItems.forEach((item) => {
+        item.addEventListener("click", function () {
+          setTimeout(closeMenu, 200);
+        });
+      });
 
-    // 點擊背景遮罩關閉菜單
-    if (mobileMenu) {
-      mobileMenu.addEventListener("click", function (e) {
-        if (e.target === mobileMenu || e.target.matches(".bg-gradient-to-br")) {
+      // 點擊背景遮罩關閉菜單
+      if (menuBackdrop) {
+        menuBackdrop.addEventListener("click", function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+          closeMenu();
+        });
+      }
+
+      // ESC 鍵關閉菜單
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape" && isMenuOpen) {
           closeMenu();
         }
       });
-    }
 
-    // ESC 鍵關閉菜單
-    document.addEventListener("keydown", function (e) {
-      if (e.key === "Escape" && isMenuOpen) {
-        closeMenu();
-      }
-    });
+      console.log("Header: 漢堡包選單初始化完成");
+    }
 
     // 手機版分享按鈕功能
-    const mobileShareBtn = document.getElementById("mobile-share-btn");
-    if (mobileShareBtn) {
-      mobileShareBtn.addEventListener("click", function () {
-        closeMenu();
-        // 觸發分享模態框
-        if (typeof showShareModal === "function") {
-          showShareModal();
-        } else {
-          // 備用分享功能
-          const shareData = {
-            title: "#終結IPO制度暴力調查網站",
-            text: "揭露台灣證券業IPO與ETF募集制度問題的深度調查報告",
-            url: window.location.href,
-          };
+    function initMobileShareButton() {
+      const mobileShareBtn = document.getElementById("mobile-share-btn");
+      if (mobileShareBtn) {
+        mobileShareBtn.addEventListener("click", function (e) {
+          e.preventDefault();
+          e.stopPropagation();
 
-          if (navigator.share) {
-            navigator.share(shareData);
+          // 觸發分享模態框
+          if (
+            window.showShareModal &&
+            typeof window.showShareModal === "function"
+          ) {
+            window.showShareModal();
+          } else if (
+            window.shareModalControls &&
+            typeof window.shareModalControls.showShareModal === "function"
+          ) {
+            window.shareModalControls.showShareModal();
           } else {
-            navigator.clipboard.writeText(shareData.url).then(() => {
-              alert("網站連結已複製到剪貼簿");
-            });
+            console.log("Header: 分享功能尚未準備就緒");
           }
-        }
-      });
+        });
+      }
     }
+
+    // 延遲初始化，確保DOM完全載入
+    setTimeout(() => {
+      initMobileMenu();
+      initMobileShareButton();
+    }, 100);
+
+    console.log("Header: 初始化完成");
   });
 </script>

@@ -19,7 +19,7 @@ class HarassmentVoicesModule {
         message:
           "「這責任額不高啦，大家都做得到了，就差你了」、「你這樣年終可能不保喔」、「錢自己準備好，必要的話就信貸一下，不然這季怎麼過？」",
         compliantConsequence:
-          "配合後果：\n• 自掏腰包 30 萬元買 IPO\n• 上市第一天就跌破發行價 15%\n• 加上手續費總共虧損 5 萬元\n• 三個月薪水打水漂\n• 下個月又來新的責任額...",
+          "配合後果：\n• 自掏腰包 30 萬元買 IPO\n• 上市第一天就跌破發行價 15%\n• 加上手續費總共虧損 5 萬元\n• 一個半月薪水打水漂\n• 過幾天又來新的責任額...",
         resistConsequence:
           "拒絕後果：\n• 主管當眾羞辱：「你這樣給我掛0，叫你把離職單丟出來算了！」\n• 被要求寫悔過書檢討\n• 大客戶被轉移給其他同事\n• 考績被打丙等\n• 年終獎金縮水 80%",
         innerThought:
@@ -429,11 +429,28 @@ class HarassmentVoicesModule {
         this.currentCategory = button.dataset.category;
         this.currentPage = 1; // 重置到第一頁
 
+        // 添加觸覺反饋效果
+        if ("vibrate" in navigator) {
+          navigator.vibrate(50);
+        }
+
         // 載入新的篩選結果
         this.loadVoiceCards();
 
         // 更新統計數據
         this.updateStats();
+
+        // 滾動到第一個卡片
+        setTimeout(() => {
+          const firstCard = document.querySelector(".voice-card:first-child");
+          if (firstCard) {
+            firstCard.scrollIntoView({
+              behavior: "smooth",
+              block: "start",
+              inline: "nearest",
+            });
+          }
+        }, 200);
       });
     });
   }
@@ -562,35 +579,47 @@ class HarassmentVoicesModule {
     const nextButtonMobile = document.getElementById("voices-next-mobile");
     const pageInfoMobile = document.getElementById("voices-page-info-mobile");
 
-    // 新增：自動滾動到頂部的函數
-    const scrollToTop = () => {
-      // 手機版滾動到卡片容器頂部
-      const mobileContainer = document.getElementById(
-        "voices-cards-container-mobile"
-      );
-      // 桌面版滾動到整個心聲區域頂部
-      const desktopContainer = document.getElementById("harassment-voices");
+    // 新增：自動滾動到第一個卡片的函數
+    const scrollToFirstCard = () => {
+      // 等待一小段時間確保DOM更新完成
+      setTimeout(() => {
+        let targetElement = null;
 
-      if (window.innerWidth < 1024 && mobileContainer) {
-        mobileContainer.scrollIntoView({
-          behavior: "smooth",
-          block: "start",
-          inline: "nearest",
-        });
-      } else if (desktopContainer) {
-        desktopContainer.scrollIntoView({
-          behavior: "smooth",
-          block: "start",
-          inline: "nearest",
-        });
-      }
+        if (window.innerWidth < 1024) {
+          // 手機版：優先嘗試第一個卡片，若不存在則滾動到容器
+          const mobileContainer = document.getElementById(
+            "voices-cards-container-mobile"
+          );
+          const firstCard = mobileContainer?.querySelector(
+            ".voice-card:first-child"
+          );
+          targetElement = firstCard || mobileContainer;
+        } else {
+          // 桌面版：優先嘗試第一個卡片，若不存在則滾動到容器
+          const desktopContainer = document.getElementById(
+            "voices-cards-container"
+          );
+          const firstCard = desktopContainer?.querySelector(
+            ".voice-card:first-child"
+          );
+          targetElement = firstCard || desktopContainer;
+        }
+
+        if (targetElement) {
+          targetElement.scrollIntoView({
+            behavior: "smooth",
+            block: "start",
+            inline: "nearest",
+          });
+        }
+      }, 100); // 給100ms讓DOM更新
     };
 
     const handlePrevClick = () => {
       if (this.currentPage > 1) {
         this.currentPage--;
         this.loadVoiceCards();
-        scrollToTop(); // 新增：自動滾動
+        scrollToFirstCard(); // 新增：自動滾動
       }
     };
 
@@ -600,7 +629,7 @@ class HarassmentVoicesModule {
       if (this.currentPage < totalPages) {
         this.currentPage++;
         this.loadVoiceCards();
-        scrollToTop(); // 新增：自動滾動
+        scrollToFirstCard(); // 新增：自動滾動
       }
     };
 

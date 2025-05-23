@@ -245,3 +245,138 @@ a:hover {
     width: calc(100% + 2rem);
   }
 }
+
+/* 分頁按鈕增強樣式 */
+.pagination-button {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.pagination-button:hover:not(:disabled) {
+  transform: scale(1.03);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.pagination-button:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.pagination-button:disabled {
+  transform: none !important;
+}
+
+/* 語音卡片動畫 */
+.voice-card {
+  transition: all 0.3s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+.voice-card:hover {
+  transform: translateY(-4px);
+}
+
+/* 篩選器按鈕動畫增強 */
+.voice-filter {
+  transition: all 0.3s cubic-bezier(0.19, 1, 0.22, 1);
+  will-change: transform;
+}
+
+.voice-filter:active {
+  transform: translateY(1px) scale(0.95);
+}
+
+/* 手機版選單優化 */
+.mobile-menu {
+  -webkit-overflow-scrolling: touch;
+  pointer-events: none;
+}
+
+.mobile-menu:not(.hidden) {
+  pointer-events: auto;
+}
+
+.menu-panel {
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+.menu-backdrop {
+  will-change: opacity;
+  transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.menu-backdrop.opacity-100 {
+  opacity: 1;
+}
+
+.menu-backdrop.opacity-0 {
+  opacity: 0;
+}
+
+/* 漢堡包按鈕動畫 */
+.hamburger-line {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-origin: center;
+}
+
+/* 選單項目 hover 效果 */
+.menu-item {
+  position: relative;
+  overflow: hidden;
+}
+
+.menu-item::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(226, 62, 87, 0.1),
+    transparent
+  );
+  transition: left 0.5s;
+}
+
+.menu-item:hover::before {
+  left: 100%;
+}
+
+/* 防止內聯樣式干擾 */
+.menu-panel[style*="transform"] {
+  transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) !important;
+}
+
+/* 響應式優化 */
+@media (max-width: 640px) {
+  .menu-panel {
+    width: calc(100vw - 2rem);
+    max-width: none;
+  }
+}
+
+/* SVG 圖標樣式 */
+.pagination-icon {
+  transition: transform 0.2s ease;
+}
+
+.pagination-button:hover .pagination-icon {
+  transform: translateX(2px);
+}
+
+.pagination-button[data-direction="prev"]:hover .pagination-icon {
+  transform: translateX(-2px);
+}
+
+/* 響應式優化 */
+@media (max-width: 640px) {
+  .voice-filter {
+    min-height: 60px;
+  }
+
+  .pagination-button {
+    max-width: 100px;
+    font-size: 0.875rem;
+  }
+}
