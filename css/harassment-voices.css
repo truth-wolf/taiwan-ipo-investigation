@@ -31,38 +31,46 @@
   transition: all 0.3s ease;
 }
 
-/* 篩選按鈕樣式 */
+/* 默認白底 */
 .voice-filter {
-  position: relative;
-  overflow: hidden;
-  transition: all 0.3s ease;
+  background: #ffffff !important;
+  color: #374151 !important;
+  border: 1px solid #d1d5db !important;
+}
+/* 「全部」按鈕預設 icon 和文字為紅褐色 */
+.voice-filter[data-category="all"] i {
+  color: hsl(328, 98%, 67%) !important; /* saddle brown */
+}
+.voice-filter[data-category="all"] .text-xs,
+.voice-filter[data-category="all"] .font-semibold,
+.voice-filter[data-category="all"] .counter {
+  color: #000000 !important; /* saddle brown */
+}
+/* 活躍態顏色 */
+.voice-filter[data-category="all"].active {
+  background: #ef4444 !important;
+  color: #ffffff !important;
+}
+.voice-filter[data-category="威脅恐嚇"].active {
+  background: #dc2626 !important;
+  color: #ffffff !important;
+}
+.voice-filter[data-category="經濟壓迫"].active {
+  background: #f59e0b !important;
+  color: #ffffff !important;
+}
+.voice-filter[data-category="人格侮辱"].active {
+  background: #8b5cf6 !important;
+  color: #ffffff !important;
+}
+.voice-filter[data-category="不公對待"].active {
+  background: #3b82f6 !important;
+  color: #ffffff !important;
 }
 
+/* 移除所有按鈕前置遮罩 */
 .voice-filter::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.3),
-    transparent
-  );
-  transition: left 0.5s ease;
-}
-
-.voice-filter:hover::before {
-  left: 100%;
-}
-
-.voice-filter.active {
-  background-color: rgba(226, 62, 87, 0.1) !important;
-  color: #e23e57 !important;
-  border-color: rgba(226, 62, 87, 0.2) !important;
-  box-shadow: 0 4px 12px rgba(226, 62, 87, 0.15);
+  display: none !important;
 }
 
 /* 心聲卡片樣式 */
@@ -484,25 +492,7 @@
   overflow: hidden;
 }
 
-.voice-filter::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.3),
-    transparent
-  );
-  transition: left 0.5s;
-}
-
-.voice-filter:hover::before {
-  left: 100%;
-}
+/* .voice-filter::before pseudo-element removed */
 
 .voice-filter.active {
   transform: translateY(-2px);
@@ -591,7 +581,13 @@
   width: 300px;
   height: 300px;
 }
-
+/* 活躍狀態下 icon 和文字轉白 */
+.voice-filter.active i,
+.voice-filter.active .text-xs,
+.voice-filter.active .font-semibold,
+.voice-filter.active .counter {
+  color: #ffffff !important;
+}
 /* 結果顯示動畫 */
 #harassment-result {
   transition: all 0.3s ease;
@@ -710,5 +706,17 @@
   .response-option:hover {
     border-width: 3px;
     font-weight: bold;
+  }
+  @media (max-width: 640px) {
+    .bg-neutral-50 > .grid {
+      display: flex !important;
+      flex-wrap: nowrap !important;
+      overflow-x: auto !important;
+      gap: 0.75rem !important;
+    }
+    /* 隐藏第二行 */
+    .bg-neutral-50 > .grid + .grid {
+      display: none !important;
+    }
   }
 }

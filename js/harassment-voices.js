@@ -379,68 +379,21 @@ class HarassmentVoicesModule {
 
   initFilters() {
     const filterButtons = document.querySelectorAll(".voice-filter");
-
     filterButtons.forEach((button) => {
       button.addEventListener("click", () => {
-        // 移除所有按鈕的活動狀態
-        filterButtons.forEach((btn) => {
-          btn.classList.remove("active");
-          // 還原為預設樣式
-          if (btn.dataset.category !== "all") {
-            btn.classList.remove(
-              "bg-gradient-to-br",
-              "from-primary",
-              "via-primary",
-              "to-primary-dark",
-              "text-white",
-              "border-primary"
-            );
-            btn.classList.add(
-              "bg-white/90",
-              "backdrop-blur-sm",
-              "text-neutral-800",
-              "border-neutral-200/60"
-            );
-          }
-        });
-
-        // 為當前按鈕添加活動狀態
+        // 清除所有按鈕的活動狀態
+        filterButtons.forEach((btn) => btn.classList.remove("active"));
+        // 僅設置被點擊按鈕為活動狀態
         button.classList.add("active");
-
-        // 為非「全部」分類添加特殊樣式
-        if (button.dataset.category !== "all") {
-          button.classList.remove(
-            "bg-white/90",
-            "backdrop-blur-sm",
-            "text-neutral-800",
-            "border-neutral-200/60"
-          );
-          button.classList.add(
-            "bg-gradient-to-br",
-            "from-primary",
-            "via-primary",
-            "to-primary-dark",
-            "text-white",
-            "border-primary"
-          );
-        }
-
-        // 更新當前分類並重置到第一頁
+        // 更新分類與分頁
         this.currentCategory = button.dataset.category;
-        this.currentPage = 1; // 重置到第一頁
-
-        // 添加觸覺反饋效果
-        if ("vibrate" in navigator) {
-          navigator.vibrate(50);
-        }
-
-        // 載入新的篩選結果
+        this.currentPage = 1;
+        // 觸覺反饋
+        if ("vibrate" in navigator) navigator.vibrate(50);
+        // 重新載入內容並更新統計
         this.loadVoiceCards();
-
-        // 更新統計數據
         this.updateStats();
-
-        // 滾動到第一個卡片
+        // 滾動到第一張卡片
         setTimeout(() => {
           const firstCard = document.querySelector(".voice-card:first-child");
           if (firstCard) {
