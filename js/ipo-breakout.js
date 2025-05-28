@@ -1,7 +1,7 @@
 // IPO破發模組 - 修復版本
-(function() {
-  'use strict';
-  
+(function () {
+  "use strict";
+
   console.log("IPO破發模組初始化開始...");
 
   // 增強錯誤診斷
@@ -82,16 +82,16 @@
   async function loadCSVFile() {
     const possiblePaths = [
       "IPO-最低價格.csv",
-      "./IPO-最低價格.csv", 
+      "./IPO-最低價格.csv",
       "/IPO-最低價格.csv",
-      "../IPO-最低價格.csv"
+      "../IPO-最低價格.csv",
     ];
 
     for (const path of possiblePaths) {
       try {
         logDiagnostic(`嘗試載入路徑: ${path}`);
         const response = await fetch(path);
-        
+
         if (response.ok) {
           logDiagnostic(`成功載入: ${path}`);
           return await response.text();
@@ -102,7 +102,7 @@
         logDiagnostic(`路徑錯誤: ${path} - ${error.message}`);
       }
     }
-    
+
     throw new Error("無法找到IPO-最低價格.csv檔案，請檢查檔案位置");
   }
 
@@ -122,7 +122,7 @@
 
       const parsedData = parseCSV(csvText);
       logDiagnostic(`解析完成，找到 ${parsedData.length} 行數據`);
-      
+
       if (parsedData.length > 0) {
         logDiagnostic("CSV頭部:", parsedData[0]);
       }
@@ -245,7 +245,7 @@
       }
 
       // 簡化處理：直接分割，不處理複雜的引號情況
-      const values = lines[i].split(",").map(val => val.trim());
+      const values = lines[i].split(",").map((val) => val.trim());
 
       // 檢查值的數量是否與標頭匹配
       if (values.length !== headers.length) {
@@ -530,10 +530,34 @@
     const ctx = chartCanvas.getContext("2d");
 
     // 檢查Chart.js是否可用
-    if (typeof Chart === 'undefined') {
+    if (typeof Chart === "undefined") {
       console.error("[IPO錯誤] Chart.js 未載入");
       return;
     }
+
+    // 確保畫布尺寸正確響應容器
+    const resizeChart = function () {
+      const container = chartCanvas.parentElement;
+      if (container) {
+        const containerWidth = container.clientWidth;
+        const containerHeight = container.clientHeight;
+
+        // 設置畫布尺寸以匹配容器
+        chartCanvas.style.width = "100%";
+        chartCanvas.style.height = "100%";
+      }
+    };
+
+    // 立即調整尺寸
+    resizeChart();
+
+    // 監聽窗口大小變化，重新調整圖表尺寸
+    window.addEventListener("resize", function () {
+      if (ipoSimulationChart) {
+        resizeChart();
+        ipoSimulationChart.resize();
+      }
+    });
 
     // 模擬30天的價格走勢
     const days = 30;
@@ -785,12 +809,15 @@
 
   // 確保在DOM準備就緒後初始化
   function ensureDOMReady(callback) {
-    if (document.readyState === "complete" || document.readyState === "interactive") {
+    if (
+      document.readyState === "complete" ||
+      document.readyState === "interactive"
+    ) {
       logDiagnostic("文檔已準備就緒，立即初始化");
       setTimeout(callback, 100); // 給予少許時間確保元素完全可用
     } else {
       logDiagnostic("等待文檔完全載入...");
-      document.addEventListener("DOMContentLoaded", function() {
+      document.addEventListener("DOMContentLoaded", function () {
         logDiagnostic("文檔載入完成，準備初始化");
         setTimeout(callback, 100);
       });
@@ -799,5 +826,4 @@
 
   // 啟動模組
   ensureDOMReady(initializeModule);
-
 })();
