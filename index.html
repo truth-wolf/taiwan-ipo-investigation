@@ -130,6 +130,7 @@
     <link rel="stylesheet" href="css/updated/formula-tooltip.css" />
     <link rel="stylesheet" href="css/updated/shareModal.css" />
     <link rel="stylesheet" href="css/harassment-voices.css" />
+    <link rel="stylesheet" href="css/ipo-breakout.css" />
 
     <style>
       .fade-in {
@@ -607,153 +608,38 @@
                 });
             });
           </script>
-
-          <!-- 數據視覺化 -->
-          <!-- <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-            <div class="bg-white p-8 rounded-lg shadow-card fade-in">
-              <h3 class="text-xl font-bold mb-6">責任額天花板上升趨勢</h3>
-
-              <div class="space-y-6">
-                <div>
-                  <div class="flex justify-between mb-2">
-                    <span class="font-semibold">2024年3月 (群益)</span>
-                    <span>300萬</span>
-                  </div>
-                  <div class="data-bar" style="--data-value: 0.43">
-                    <span data-show-after="800">43%</span>
-                  </div>
-                </div>
-
-                <div>
-                  <div class="flex justify-between mb-2">
-                    <span class="font-semibold">2024年8月 (群益)</span>
-                    <span>380萬</span>
-                  </div>
-                  <div class="data-bar" style="--data-value: 0.54">
-                    <span data-show-after="1000">54%</span>
-                  </div>
-                </div>
-
-                <div>
-                  <div class="flex justify-between mb-2">
-                    <span class="font-semibold">2025年4月 (富邦)</span>
-                    <span>300萬</span>
-                  </div>
-                  <div class="data-bar" style="--data-value: 0.43">
-                    <span data-show-after="1200">43%</span>
-                  </div>
-                </div>
-
-                <div>
-                  <div class="flex justify-between mb-2">
-                    <span class="font-semibold">2025年4月 (中信)</span>
-                    <span>700萬</span>
-                  </div>
-                  <div class="data-bar" style="--data-value: 1">
-                    <span data-show-after="1400">100%</span>
-                  </div>
-                </div>
-              </div>
-            </div> -->
-
-          <!-- <div class="bg-white p-8 rounded-lg shadow-card fade-in">
-              <h3 class="text-xl font-bold mb-6">相同產品的責任額差異</h3>
-
-              <div class="space-y-6">
-                <div>
-                  <div class="flex justify-between mb-2">
-                    <span class="font-semibold">00982A (富邦)</span>
-                    <span>200-260萬</span>
-                  </div>
-                  <div class="data-bar" style="--data-value: 0.37">
-                    <span data-show-after="800">37%</span>
-                  </div>
-                </div>
-
-                <div>
-                  <div class="flex justify-between mb-2">
-                    <span class="font-semibold">00982A (群益)</span>
-                    <span>300萬</span>
-                  </div>
-                  <div class="data-bar" style="--data-value: 0.43">
-                    <span data-show-after="1000">43%</span>
-                  </div>
-                </div>
-
-                <div>
-                  <div class="flex justify-between mb-2">
-                    <span class="font-semibold">00982A (中信)</span>
-                    <span>120萬</span>
-                  </div>
-                  <div class="data-bar" style="--data-value: 0.17">
-                    <span data-show-after="1200">17%</span>
-                  </div>
-                </div>
-
-                <div>
-                  <div class="flex justify-between mb-2">
-                    <span class="font-semibold">00982A (匿名分點)</span>
-                    <span>50萬</span>
-                  </div>
-                  <div class="data-bar" style="--data-value: 0.07">
-                    <span data-show-after="1400">7%</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div> -->
-
-          <!-- 重點觀察 -->
-          <!-- <div
-            class="bg-secondary text-white p-8 rounded-lg shadow-card fade-in"
-          >
-            <h3 class="text-xl font-bold mb-4">責任額數據重點觀察</h3>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div>
-                <ul class="space-y-4">
-                  <li class="flex items-start">
-                    <i
-                      class="fas fa-check-circle text-primary-light mt-1 mr-3"
-                    ></i>
-                    <span
-                      >責任額天花板持續上升：從2024年通常300萬/檔提升至2025年單檔700萬</span
-                    >
-                  </li>
-                  <li class="flex items-start">
-                    <i
-                      class="fas fa-check-circle text-primary-light mt-1 mr-3"
-                    ></i>
-                    <span>募集期縮短：從月度指標變為5-7天的短期衝刺</span>
-                  </li>
-                </ul>
-              </div>
-
-              <div>
-                <ul class="space-y-4">
-                  <li class="flex items-start">
-                    <i
-                      class="fas fa-check-circle text-primary-light mt-1 mr-3"
-                    ></i>
-                    <span
-                      >產品頻率加速：2025年4-5月間，同一營業員被要求同時銷售5-10檔不同產品</span
-                    >
-                  </li>
-                  <li class="flex items-start">
-                    <i
-                      class="fas fa-check-circle text-primary-light mt-1 mr-3"
-                    ></i>
-                    <span
-                      >分點差異明顯：同一產品在不同分點的配額相差達50-100萬元</span
-                    >
-                  </li>
-                </ul>
-              </div>
-            </div>
-         </div> -->
         </div>
       </section>
     </div>
+
+    <!-- IPO破發模組 -->
+    <div id="ipo-breakout-container"></div>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        fetch("partials/ipo-breakout.html")
+          .then((response) => response.text())
+          .then((html) => {
+            document.getElementById("ipo-breakout-container").innerHTML = html;
+
+            // 確認HTML已載入後再載入腳本
+            console.log("IPO破發模組HTML已載入，準備初始化腳本...");
+
+            // 動態載入腳本
+            const script = document.createElement("script");
+            script.src = "js/ipo-breakout.js";
+            script.type = "text/javascript";
+            script.onload = function () {
+              console.log("IPO破發模組腳本載入完成");
+            };
+            document.body.appendChild(script);
+          })
+          .catch((error) => {
+            console.error("載入IPO破發模組時出錯:", error);
+            document.getElementById("ipo-breakout-container").innerHTML =
+              '<div class="text-red-500 p-4 bg-white rounded-lg shadow-card">載入IPO破發模組時出錯，請重新整理頁面。</div>';
+          });
+      });
+    </script>
 
     <!-- 影響分析 -->
     <div id="impact-section">

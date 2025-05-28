@@ -1,0 +1,271 @@
+<section class="py-20 px-6 bg-white">
+  <div class="max-w-content mx-auto">
+    <!-- 標題區域 - 增強視覺效果 -->
+    <div class="mb-16 text-center">
+      <h2 class="text-3xl md:text-4xl font-bold mb-4 fade-in">
+        營業員<span class="highlight-text">血汗責任額</span>模擬
+      </h2>
+      <p class="text-neutral-600 max-w-3xl mx-auto fade-in leading-relaxed">
+        模擬營業員因高額責任額制度被迫自行認購IPO，並於上市一個月後賣出的潛在損益情境。透過真實數據重現基層員工面臨的財務壓力。
+      </p>
+    </div>
+
+    <!-- 說明區塊 - 增強設計 -->
+    <div class="bg-gradient-to-r from-neutral-50 to-neutral-100 p-8 rounded-2xl shadow-card mb-12 fade-in border-l-4 border-primary">
+      <div class="flex items-start mb-6">
+        <div class="w-12 h-12 bg-primary bg-opacity-10 rounded-full flex items-center justify-center mr-4 flex-shrink-0">
+          <i class="fas fa-info-circle text-primary text-xl"></i>
+        </div>
+        <div>
+          <h3 class="text-xl font-bold text-neutral-800 mb-2">責任額制度說明</h3>
+          <p class="text-neutral-600 leading-relaxed">
+            當券商營業員無法達成分配的IPO或ETF銷售額度時，常被迫以自有資金認購，承擔相關風險。以下模擬在隨機
+            <strong class="text-red-600 font-semibold">30萬至600萬</strong>
+            元責任額度下，自行認購後於上市一個月內賣出的潛在損益。
+          </p>
+        </div>
+      </div>
+      
+      <div class="flex flex-col sm:flex-row gap-4">
+        <button
+          id="simulateNewScenario"
+          class="bg-primary text-white py-3 px-6 rounded-xl flex items-center justify-center hover:bg-primary-dark transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg btn-effect"
+        >
+          <i class="fas fa-sync-alt mr-2"></i>
+          <span class="font-semibold">模擬新情境</span>
+        </button>
+        <button
+          id="toggleDetailedView"
+          class="bg-secondary text-white py-3 px-6 rounded-xl flex items-center justify-center hover:bg-secondary-dark transition-all duration-300 transform hover:scale-105 shadow-md hover:shadow-lg btn-effect"
+        >
+          <i class="fas fa-table mr-2"></i>
+          <span class="font-semibold">完整數據檢視</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- 主要模擬結果區域 -->
+    <div id="simulation-result" class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
+      
+      <!-- 對帳單區域 - 增強設計 -->
+      <div class="lg:col-span-2 bg-white p-8 rounded-2xl shadow-card hover-lift fade-in border border-neutral-200">
+        <div class="flex items-center mb-6">
+          <div class="w-12 h-12 bg-primary bg-opacity-10 rounded-full flex items-center justify-center mr-4">
+            <i class="fas fa-receipt text-primary text-xl"></i>
+          </div>
+          <h3 class="text-2xl font-bold text-neutral-800">營業員自購模擬對帳單</h3>
+        </div>
+        
+        <div id="account-statement" class="overflow-x-auto">
+          <div class="p-6 border-2 border-neutral-200 rounded-xl bg-gradient-to-br from-neutral-50 to-white">
+            <table class="min-w-full">
+              <thead>
+                <tr class="border-b-2 border-neutral-200">
+                  <th class="text-left text-neutral-600 py-3 font-semibold">項目</th>
+                  <th class="text-right text-neutral-600 py-3 font-semibold">數值</th>
+                </tr>
+              </thead>
+              <tbody id="statement-details" class="divide-y divide-neutral-100">
+                <tr>
+                  <td class="py-3 text-neutral-600">隨機責任額度</td>
+                  <td class="text-right py-3">
+                    <div class="inline-flex items-center">
+                      <div class="animate-spin rounded-full h-4 w-4 border-2 border-primary border-t-transparent mr-2"></div>
+                      <span class="text-neutral-500">載入中...</span>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          
+          <!-- 損益總結區 - 增強視覺效果 -->
+          <div id="loss-summary" class="mt-6 p-6 border-t-4 border-primary bg-gradient-to-r from-red-50 to-orange-50 rounded-xl">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center">
+                <i class="fas fa-calculator text-primary text-2xl mr-3"></i>
+                <span class="text-xl font-semibold text-neutral-800">總計損益：</span>
+              </div>
+              <span id="total-loss-amount" class="text-2xl font-bold">
+                <div class="inline-flex items-center">
+                  <div class="animate-pulse h-6 w-20 bg-neutral-300 rounded mr-2"></div>
+                  <span class="text-neutral-500">計算中...</span>
+                </div>
+              </span>
+            </div>
+            <p class="text-sm text-neutral-500 mt-3 flex items-center">
+              <i class="fas fa-info-circle mr-2"></i>
+              上述金額僅為模擬情境，實際損益因個案而異。數據來源為真實IPO歷史價格。
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 心理壓力模擬區域 - 大幅增強設計 -->
+      <div class="bg-white p-8 rounded-2xl shadow-card hover-lift fade-in border border-neutral-200">
+        <div class="flex items-center mb-6">
+          <div class="w-12 h-12 bg-secondary bg-opacity-10 rounded-full flex items-center justify-center mr-4">
+            <i class="fas fa-brain text-secondary text-xl"></i>
+          </div>
+          <h3 class="text-xl font-bold text-neutral-800">營業員心理壓力</h3>
+        </div>
+        
+        <div id="pressure-simulation" class="space-y-6">
+          <!-- 主管語錄 -->
+          <div class="pressure-quote bg-gradient-to-r from-red-50 to-red-100 p-4 rounded-xl border-l-4 border-red-500">
+            <div class="flex items-start">
+              <i class="fas fa-quote-left text-red-500 text-lg mr-3 mt-1 flex-shrink-0"></i>
+              <div>
+                <p class="italic text-neutral-700 mb-2 leading-relaxed" id="manager-quote">
+                  「這責任額不高啦，別人都做得到，就差你了」
+                </p>
+                <p class="text-right text-neutral-500 text-sm font-medium">— 主管的日常對白</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- 營業員獨白 -->
+          <div class="broker-monologue bg-gradient-to-r from-yellow-50 to-amber-50 p-4 rounded-xl border-l-4 border-yellow-500">
+            <div class="flex items-start">
+              <i class="fas fa-comment-dots text-yellow-600 text-lg mr-3 mt-1 flex-shrink-0"></i>
+              <div>
+                <p class="italic text-neutral-700 mb-2 leading-relaxed" id="broker-monologue">
+                  「底薪三萬，這筆單下去後...這個月又要吃土了...」
+                </p>
+                <p class="text-right text-neutral-500 text-sm font-medium">— 營業員的內心獨白</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- 壓力指數顯示 -->
+          <div class="bg-neutral-50 p-4 rounded-xl">
+            <div class="flex items-center justify-between mb-3">
+              <span class="text-sm font-semibold text-neutral-600">心理壓力指數</span>
+              <span id="stress-percent" class="text-lg font-bold text-primary">75%</span>
+            </div>
+            <div id="stress-level" class="w-full h-6 bg-neutral-200 rounded-full overflow-hidden shadow-inner">
+              <div class="stress-bar h-full rounded-full transition-all duration-1000 ease-out shadow-sm" style="width: 75%; background: linear-gradient(90deg, #f59e0b, #ef4444);"></div>
+            </div>
+            <div class="flex justify-between text-xs text-neutral-500 mt-2">
+              <span>輕鬆</span>
+              <span>適中</span>
+              <span>壓力山大</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 價格走勢圖區域 - 增強設計 -->
+    <div class="bg-white p-8 rounded-2xl shadow-card hover-lift mb-12 fade-in border border-neutral-200">
+      <div class="flex items-center mb-6">
+        <div class="w-12 h-12 bg-primary bg-opacity-10 rounded-full flex items-center justify-center mr-4">
+          <i class="fas fa-chart-line text-primary text-xl"></i>
+        </div>
+        <div>
+          <h3 class="text-2xl font-bold text-neutral-800">IPO價格走勢與賣出時機</h3>
+          <p class="text-neutral-600 text-sm mt-1">模擬營業員被迫認購後的賣出時機與損益變化</p>
+        </div>
+      </div>
+      
+      <div class="chart-container bg-gradient-to-br from-neutral-50 to-white p-6 rounded-xl border border-neutral-200" style="position: relative; height: 400px">
+        <canvas id="ipo-price-chart"></canvas>
+      </div>
+      
+      <div class="mt-4 flex items-center justify-center space-x-6 text-sm text-neutral-500">
+        <div class="flex items-center">
+          <div class="w-3 h-3 bg-red-500 rounded-full mr-2"></div>
+          <span>買入點（被迫認購）</span>
+        </div>
+        <div class="flex items-center">
+          <div class="w-3 h-3 bg-green-500 rounded-full mr-2"></div>
+          <span>賣出點（停損出場）</span>
+        </div>
+        <div class="flex items-center">
+          <i class="fas fa-info-circle text-neutral-400 mr-2"></i>
+          <span>基於實際IPO數據與模擬買賣時機</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 詳細數據表格區域 - 增強設計 -->
+    <div id="detailed-data-section" class="bg-white p-8 rounded-2xl shadow-card fade-in border border-neutral-200 hidden">
+      <div class="flex justify-between items-center mb-6">
+        <div class="flex items-center">
+          <div class="w-12 h-12 bg-secondary bg-opacity-10 rounded-full flex items-center justify-center mr-4">
+            <i class="fas fa-table text-secondary text-xl"></i>
+          </div>
+          <div>
+            <h3 class="text-2xl font-bold text-neutral-800">IPO價格詳細數據</h3>
+            <p class="text-neutral-600 text-sm mt-1">完整的IPO上市後價格表現統計</p>
+          </div>
+        </div>
+        <button 
+          id="hideDetailedData" 
+          class="text-neutral-400 hover:text-primary transition-colors duration-200 p-2 rounded-lg hover:bg-neutral-100"
+          title="關閉詳細數據"
+        >
+          <i class="fas fa-times text-xl"></i>
+        </button>
+      </div>
+      
+      <div class="overflow-x-auto">
+        <div class="bg-gradient-to-r from-neutral-50 to-white p-4 rounded-xl border border-neutral-200">
+          <table class="min-w-full divide-y divide-neutral-200">
+            <thead class="bg-gradient-to-r from-neutral-100 to-neutral-50">
+              <tr>
+                <th scope="col" class="px-4 py-4 text-left text-sm font-bold text-neutral-800 rounded-tl-lg">
+                  <i class="fas fa-building mr-2 text-primary"></i>股票名稱
+                </th>
+                <th scope="col" class="px-4 py-4 text-left text-sm font-bold text-neutral-800">
+                  <i class="fas fa-calendar mr-2 text-secondary"></i>上市日
+                </th>
+                <th scope="col" class="px-4 py-4 text-right text-sm font-bold text-neutral-800">
+                  <i class="fas fa-tag mr-2 text-alert"></i>募集價格(元)
+                </th>
+                <th scope="col" class="px-4 py-4 text-right text-sm font-bold text-neutral-800">
+                  掛牌當天最低(元)
+                </th>
+                <th scope="col" class="px-4 py-4 text-right text-sm font-bold text-neutral-800">
+                  掛盤後一個月最低(元)
+                </th>
+                <th scope="col" class="px-4 py-4 text-right text-sm font-bold text-neutral-800">
+                  當日潛在虧損(%)
+                </th>
+                <th scope="col" class="px-4 py-4 text-right text-sm font-bold text-neutral-800 rounded-tr-lg">
+                  月後潛在虧損(%)
+                </th>
+              </tr>
+            </thead>
+            <tbody id="ipo-data-table-body" class="divide-y divide-neutral-100 bg-white">
+              <tr>
+                <td colspan="7" class="text-center p-8 text-neutral-500">
+                  <div class="flex flex-col items-center">
+                    <div class="animate-spin rounded-full h-12 w-12 border-4 border-primary border-t-transparent mb-4"></div>
+                    <span class="text-lg font-medium">數據載入中...</span>
+                    <span class="text-sm mt-2">正在處理IPO歷史價格數據</span>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      
+      <!-- 數據說明 -->
+      <div class="mt-6 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border-l-4 border-blue-500">
+        <div class="flex items-start">
+          <i class="fas fa-lightbulb text-blue-500 text-lg mr-3 mt-1"></i>
+          <div>
+            <h4 class="font-semibold text-neutral-800 mb-2">數據說明</h4>
+            <p class="text-sm text-neutral-600 leading-relaxed">
+              上表顯示近期IPO在掛牌當天及一個月後的最低價格表現。負數代表相對募集價的跌幅，正數代表漲幅。
+              此數據協助了解營業員被迫自購IPO後可能面臨的財務風險。
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>

@@ -1,0 +1,395 @@
+/* IPO破發模組專用樣式 - 增強版 */
+
+/* 壓力引述區塊 - 增強設計 */
+.pressure-quote {
+  font-style: italic;
+  color: #4b5563;
+  border-left: 4px solid #e23e57; /* primary色系 */
+  padding: 1rem;
+  margin: 1rem 0;
+  background: linear-gradient(135deg, #fef2f2, #fef7f7);
+  border-radius: 0.75rem;
+  box-shadow: 0 2px 8px rgba(226, 62, 87, 0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.pressure-quote:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(226, 62, 87, 0.15);
+}
+
+.broker-monologue {
+  font-style: italic;
+  color: #71717a;
+  border-left: 4px solid #facc15; /* 黃色系 */
+  padding: 1rem;
+  margin: 1rem 0;
+  background: linear-gradient(135deg, #fffbeb, #fefce8);
+  border-radius: 0.75rem;
+  box-shadow: 0 2px 8px rgba(250, 204, 21, 0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.broker-monologue:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(250, 204, 21, 0.15);
+}
+
+/* 壓力指數條 - 增強動畫 */
+.stress-bar {
+  transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.8s ease;
+  background: linear-gradient(90deg, #22c55e, #eab308, #f59e0b, #ef4444);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
+  position: relative;
+}
+
+.stress-bar::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+/* 統計卡片 - 增強懸停效果 */
+.stat-card {
+  background: linear-gradient(135deg, #ffffff, #f9fafb);
+  border-radius: 1rem;
+  padding: 2rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid #e5e7eb;
+}
+
+.stat-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  border-color: #d1d5db;
+}
+
+/* 表格樣式增強 */
+#ipo-breakout-section table {
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+#ipo-breakout-section table th,
+#ipo-breakout-section table td {
+  padding: 1rem 1.25rem;
+  text-align: left;
+  border-bottom: 1px solid #e5e7eb;
+  transition: background-color 0.2s ease;
+}
+
+#ipo-breakout-section table thead th {
+  background: linear-gradient(135deg, #f9fafb, #f3f4f6);
+  font-weight: 700;
+  color: #374151;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 0.875rem;
+}
+
+#ipo-breakout-section table tbody tr:hover {
+  background-color: #f9fafb;
+}
+
+#ipo-breakout-section table tbody tr:hover td {
+  background-color: transparent;
+}
+
+/* 圖表容器增強 */
+.chart-container {
+  background: linear-gradient(135deg, #ffffff, #f8fafc);
+  padding: 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  position: relative;
+  height: 400px;
+  border: 1px solid #e2e8f0;
+  transition: box-shadow 0.3s ease;
+}
+
+.chart-container:hover {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+/* 按鈕增強動畫效果 */
+.btn-effect {
+  position: relative;
+  overflow: hidden;
+  font-weight: 600;
+  letter-spacing: 0.025em;
+}
+
+.btn-effect::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.btn-effect:hover::before {
+  left: 100%;
+}
+
+.btn-effect:after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 5px;
+  height: 5px;
+  background: rgba(255, 255, 255, 0.5);
+  opacity: 0;
+  border-radius: 100%;
+  transform: scale(1, 1) translate(-50%);
+  transform-origin: 50% 50%;
+}
+
+.btn-effect:focus:not(:active)::after {
+  animation: ripple 1s ease-out;
+}
+
+@keyframes ripple {
+  0% {
+    transform: scale(0, 0);
+    opacity: 0.5;
+  }
+  20% {
+    transform: scale(25, 25);
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 0;
+    transform: scale(40, 40);
+  }
+}
+
+/* 響應式調整 */
+@media (max-width: 768px) {
+  .chart-container {
+    height: 300px;
+    padding: 1.5rem;
+  }
+  
+  .stat-card {
+    padding: 1.5rem;
+  }
+  
+  #ipo-breakout-section table th,
+  #ipo-breakout-section table td {
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .pressure-quote,
+  .broker-monologue {
+    padding: 0.75rem;
+    font-size: 0.9rem;
+    margin: 0.75rem 0;
+  }
+  
+  .chart-container {
+    padding: 1rem;
+    height: 250px;
+  }
+  
+  .stat-card {
+    padding: 1.25rem;
+  }
+}
+
+/* 載入動畫增強 */
+@keyframes pulse-glow {
+  0% {
+    opacity: 0.7;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+  100% {
+    opacity: 0.7;
+    transform: scale(1);
+  }
+}
+
+.loading-pulse {
+  animation: pulse-glow 1.5s infinite ease-in-out;
+}
+
+/* 卡片懸停效果統一 */
+.hover-lift {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hover-lift:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+/* 漸變背景增強 */
+.gradient-bg-primary {
+  background: linear-gradient(135deg, #e23e57, #c1292e);
+}
+
+.gradient-bg-secondary {
+  background: linear-gradient(135deg, #1a5d7a, #1d3557);
+}
+
+.gradient-bg-alert {
+  background: linear-gradient(135deg, #f0a500, #e85d04);
+}
+
+/* 圖標動畫 */
+.icon-pulse {
+  animation: icon-pulse-animation 2s infinite;
+}
+
+@keyframes icon-pulse-animation {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* 數據強調樣式 */
+.data-highlight {
+  background: linear-gradient(135deg, #fef3c7, #fde68a);
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.375rem;
+  font-weight: 600;
+  color: #92400e;
+}
+
+/* 悲傷脈動動畫（用於損失數字） */
+@keyframes sad-pulse-animation {
+  0% {
+    color: #ef4444;
+    opacity: 0.7;
+    transform: scale(1);
+  }
+  50% {
+    color: #dc2626;
+    opacity: 1;
+    transform: scale(1.03);
+  }
+  100% {
+    color: #ef4444;
+    opacity: 0.7;
+    transform: scale(1);
+  }
+}
+
+.sad-text-effect {
+  animation: sad-pulse-animation 1.8s infinite ease-in-out;
+}
+
+/* 成功/失敗狀態指示器 */
+.status-success {
+  color: #059669;
+  background-color: #d1fae5;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.status-danger {
+  color: #dc2626;
+  background-color: #fee2e2;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+/* 進度條動畫 */
+.progress-bar {
+  height: 0.5rem;
+  background-color: #e5e7eb;
+  border-radius: 9999px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #10b981, #059669);
+  border-radius: 9999px;
+  transition: width 1s ease;
+  position: relative;
+}
+
+.progress-fill::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  animation: progress-shimmer 2s infinite;
+}
+
+@keyframes progress-shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+/* 額外的互動效果 */
+.interactive-hover {
+  cursor: pointer;
+  user-select: none;
+}
+
+.interactive-hover:active {
+  transform: scale(0.98);
+}
+
+/* 焦點樣式增強 */
+.focus-enhanced:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(226, 62, 87, 0.3);
+  border-color: #e23e57;
+}
+
+/* 滾動條美化 */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
