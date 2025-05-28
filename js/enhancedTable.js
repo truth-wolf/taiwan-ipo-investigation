@@ -554,7 +554,7 @@ function addAttribution() {
   attribution.className = "data-attribution";
   attribution.innerHTML = `
     <p>數據來源：社群成員提供的內部文件截圖。本數據可供媒體及研究機構參考使用，使用時請註明來源為「#終結IPO制度暴力調查網站」。</p>
-    <p>最後更新日期：2025年5月16日</p>
+    <p>最後更新日期：2025年5月28日</p>
   `;
 
   const dataSection = document.querySelector("#data .max-w-content");
