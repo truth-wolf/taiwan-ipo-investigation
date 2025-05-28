@@ -44,7 +44,6 @@
   let ipoSimulationChart = null;
 
   // 交易成本常數 - 營業員自掏腰包
-  const BROKER_BUY_FEE_RATE = (0.1425 * 0.6) / 100; // 0.1425% * 0.6 = 0.0855%
   const BROKER_SELL_FEE_RATE = (0.1425 * 0.6) / 100; // 0.0855%
   const TAX_RATE = 0.1 / 100; // 0.1%
 
@@ -322,11 +321,6 @@
       : "text-gray-500"; // 零 - 灰色
   }
 
-  // 計算買入手續費
-  function calculateBuyFee(price, quantity) {
-    return Math.max(20, price * quantity * BROKER_BUY_FEE_RATE); // 最低手續費20元
-  }
-
   // 計算賣出手續費與稅金
   function calculateSellFeeAndTax(price, quantity) {
     const fee = Math.max(20, price * quantity * BROKER_SELL_FEE_RATE); // 最低手續費20元
@@ -353,7 +347,6 @@
     const subPrice = selectedIpo.subPrice;
     const sharesToBuy = Math.floor(randomAmount / subPrice);
     const actualCost = sharesToBuy * subPrice;
-    const buyFee = calculateBuyFee(subPrice, sharesToBuy);
 
     // 計算賣出價值與費用
     const sellPrice = selectedIpo.monthLow;
@@ -361,7 +354,7 @@
     const sellFeeAndTax = calculateSellFeeAndTax(sellPrice, sharesToBuy);
 
     // 計算總損益
-    const totalLoss = actualCost + buyFee - sellValue + sellFeeAndTax;
+    const totalLoss = actualCost - sellValue + sellFeeAndTax;
     const lossPercent = (totalLoss / actualCost) * 100;
 
     // 更新對帳單
@@ -370,7 +363,6 @@
       randomAmount,
       sharesToBuy,
       actualCost,
-      buyFee,
       sellValue,
       sellFeeAndTax,
       totalLoss,
@@ -390,7 +382,6 @@
     amount,
     shares,
     cost,
-    buyFee,
     sellValue,
     sellFeeAndTax,
     totalLoss,
@@ -430,12 +421,6 @@
           <td class="whitespace-nowrap px-2 py-2 text-gray-700">買入成本</td>
           <td class="whitespace-nowrap px-2 py-2 text-gray-900">${formatNumber(
             cost
-          )} 元</td>
-        </tr>
-        <tr>
-          <td class="whitespace-nowrap px-2 py-2 text-gray-700">買入手續費</td>
-          <td class="whitespace-nowrap px-2 py-2 text-gray-900">${formatNumber(
-            buyFee
           )} 元</td>
         </tr>
         <tr>

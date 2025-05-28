@@ -895,3 +895,56 @@ table {
 canvas {
   max-width: 100%;
 }
+
+/* 調整對齊問題 */
+#account-statement table,
+#pressure-simulation {
+  width: 100%;
+  margin: 0;
+}
+
+/* 確保表格內容正確對齊 */
+#account-statement th,
+#account-statement td {
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+}
+
+#account-statement th:first-child,
+#account-statement td:first-child {
+  padding-left: 0;
+}
+
+#account-statement th:last-child,
+#account-statement td:last-child {
+  padding-right: 0;
+}
+
+/* 調整營業員心理壓力區塊內容對齊 */
+.pressure-quote,
+.broker-monologue {
+  margin-left: 0;
+  margin-right: 0;
+  width: 100%;
+}
+
+/* 確保內容容器不會偏移 */
+#account-statement .p-6,
+#pressure-simulation .p-4 {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+@media (max-width: 640px) {
+  #account-statement .p-6,
+  #pressure-simulation .p-4 {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+
+  #account-statement th,
+  #account-statement td {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+}
