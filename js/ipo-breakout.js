@@ -311,6 +311,19 @@
     });
   }
 
+  // 特大數字格式化（億為單位）
+  function formatLargeNumber(num) {
+    if (typeof num !== "number" || isNaN(num)) return "-";
+
+    // 轉換為億
+    const billion = num / 100000000;
+
+    return billion.toLocaleString("zh-TW", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
+  }
+
   // 紅漲綠跌 - 調整表格顏色
   function getPriceClass(value) {
     if (typeof value !== "number" || isNaN(value)) return "text-gray-500";
@@ -343,9 +356,12 @@
     const randomAmount =
       Math.floor(Math.random() * (6000000 - 300000 + 1)) + 300000;
 
-    // 計算買入數量與成本
+    // 計算買入數量與成本 - 改為以張為單位 (1張 = 1000股)
     const subPrice = selectedIpo.subPrice;
-    const sharesToBuy = Math.floor(randomAmount / subPrice);
+    // 計算可購買張數 (最少1張)
+    const lotsToBuy = Math.max(1, Math.floor(randomAmount / subPrice / 1000));
+    // 股數 = 張數 * 1000
+    const sharesToBuy = lotsToBuy * 1000;
     const actualCost = sharesToBuy * subPrice;
 
     // 計算賣出價值與費用
@@ -361,6 +377,7 @@
     updateStatementUI(
       selectedIpo,
       randomAmount,
+      lotsToBuy,
       sharesToBuy,
       actualCost,
       sellValue,
@@ -380,6 +397,7 @@
   function updateStatementUI(
     ipo,
     amount,
+    lots,
     shares,
     cost,
     sellValue,
@@ -410,6 +428,12 @@
             ipo.subPrice,
             2
           )} 元/股</td>
+        </tr>
+        <tr>
+          <td class="whitespace-nowrap px-2 py-2 text-gray-700">可購張數</td>
+          <td class="whitespace-nowrap px-2 py-2 text-gray-900">${formatNumber(
+            lots
+          )} 張 (每張1,000股)</td>
         </tr>
         <tr>
           <td class="whitespace-nowrap px-2 py-2 text-gray-700">可購股數</td>
@@ -454,6 +478,16 @@
       totalLoss > 0
         ? "text-lg font-bold text-green-600" // 虧損 - 綠色
         : "text-lg font-bold text-red-600"; // 獲利 - 紅色
+
+    // 更新總責任額顯示（如果存在該元素）
+    const totalResponsibilityElem = document.querySelector(
+      ".total-responsibility strong"
+    );
+    if (totalResponsibilityElem) {
+      // 將49,107,660萬元轉換為億元
+      const totalValue = 49107660 * 10000; // 萬轉元
+      totalResponsibilityElem.textContent = formatLargeNumber(totalValue); // 顯示為億
+    }
   }
 
   // 更新壓力模擬
@@ -468,39 +502,73 @@
       BROKER_MONOLOGUES[Math.floor(Math.random() * BROKER_MONOLOGUES.length)];
     document.getElementById("broker-monologue").innerHTML = randomMonologue;
 
-    // 計算壓力指數
-    let stressValue = 50; // 基礎壓力值
+    // 計算壓力指數 - 浮誇版本
+    let stressValue = 60; // 基礎壓力值提高
+    const randomExtra = Math.floor(Math.random() * 40); // 隨機增加0-40%基礎壓力
+    stressValue += randomExtra;
 
     // 根據虧損金額和比例調整壓力值
     if (totalLoss > 0) {
       // 虧損情況
-      const amountFactor = Math.min((amount / 1000000) * 10, 20); // 金額因素，最高加20%
-      const lossFactor = Math.min(Math.abs(lossPercent), 30); // 虧損率因素，最高加30%
+      const amountFactor = Math.min((amount / 1000000) * 15, 30); // 金額因素，最高加30%
+      const lossFactor = Math.min(Math.abs(lossPercent) * 1.2, 40); // 虧損率因素，最高加40%
       stressValue += amountFactor + lossFactor;
+
+      // 額外隨機因素，有機會導致壓力暴表
+      if (Math.random() < 0.3) {
+        // 30%機率增加額外壓力
+        stressValue += Math.floor(Math.random() * 40) + 10; // 增加10-50%額外壓力
+      }
     } else {
       // 獲利情況，降低壓力
       stressValue -= Math.min(Math.abs(lossPercent) * 1.5, 20);
     }
 
-    // 確保在合理範圍內
-    stressValue = Math.max(10, Math.min(stressValue, 95));
+    // 不設上限，允許超過100%
+    stressValue = Math.max(10, stressValue); // 只設最低值
 
     // 更新UI
-    document.querySelector(".stress-bar").style.width = `${stressValue}%`;
-    document.getElementById("stress-percent").textContent = `${Math.round(
-      stressValue
-    )}%`;
-
-    // 根據壓力調整顏色
     const stressMeter = document.querySelector(".stress-bar");
-    if (stressValue > 80) {
-      stressMeter.style.backgroundColor = "#e23e57"; // 高壓力 - 主題紅色
+    const stressLevel = document.getElementById("stress-level");
+    const stressPercent = document.getElementById("stress-percent");
+    const pressureSimulation = document.getElementById("pressure-simulation");
+
+    // 設定壓力條寬度
+    let displayWidth = stressValue;
+    if (stressValue > 100) {
+      displayWidth = 100; // 寬度最多100%，但視覺效果表現更多
+    }
+
+    stressMeter.style.width = `${displayWidth}%`;
+    stressPercent.textContent = `${Math.round(stressValue)}%`;
+
+    // 移除所有特殊類別
+    stressMeter.classList.remove("extreme", "overflow");
+    stressLevel.classList.remove("extreme");
+    stressPercent.classList.remove("extreme");
+    pressureSimulation.classList.remove("extreme-stress");
+
+    // 根據壓力調整顏色和特效
+    if (stressValue > 150) {
+      // 極端壓力情況 - 視覺爆表
+      stressMeter.classList.add("extreme", "overflow");
+      stressLevel.classList.add("extreme");
+      stressPercent.classList.add("extreme");
+      stressMeter.style.backgroundColor = "#dc2626"; // 深紅色
+      pressureSimulation.classList.add("extreme-stress"); // 添加震動效果
+    } else if (stressValue > 100) {
+      // 過度壓力 - 視覺溢出
+      stressMeter.classList.add("overflow");
+      stressPercent.classList.add("extreme");
+      stressMeter.style.backgroundColor = "#ef4444"; // 紅色
+    } else if (stressValue > 80) {
+      stressMeter.style.backgroundColor = "#f59e0b"; // 橙色
     } else if (stressValue > 60) {
-      stressMeter.style.backgroundColor = "#f0a500"; // 中高壓力 - 警示色
+      stressMeter.style.backgroundColor = "#eab308"; // 黃色
     } else if (stressValue > 40) {
-      stressMeter.style.backgroundColor = "#1a5d7a"; // 中等壓力 - 主題藍色
+      stressMeter.style.backgroundColor = "#84cc16"; // 黃綠色
     } else {
-      stressMeter.style.backgroundColor = "#22c55e"; // 低壓力 - 綠色
+      stressMeter.style.backgroundColor = "#22c55e"; // 綠色
     }
   }
 
@@ -790,6 +858,29 @@
 
     // 開始載入數據
     loadAndProcessData();
+
+    // 處理數據來源文本，使其獨立一行
+    document.querySelectorAll("span").forEach((span) => {
+      if (span.textContent.includes("基於實際IPO數據與模擬買賣時機")) {
+        span.className = "data-source-note";
+      }
+    });
+
+    // 處理總責任額的顯示
+    document.querySelectorAll("span[title]").forEach((span) => {
+      if (span.textContent.includes("加權總責任額")) {
+        span.className = "total-responsibility";
+        const strong = span.querySelector("strong");
+        if (strong) {
+          // 將49,107,660萬元轉換為億元
+          const valueText = strong.textContent.replace(/,/g, "");
+          const value = parseInt(valueText) * 10000; // 萬轉元
+          strong.textContent = formatLargeNumber(value); // 顯示為億
+          // 更新單位文本
+          span.innerHTML = span.innerHTML.replace("萬元", "億元");
+        }
+      }
+    });
   }
 
   // 確保在DOM準備就緒後初始化

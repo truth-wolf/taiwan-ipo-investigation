@@ -37,37 +37,207 @@
   box-shadow: 0 4px 12px rgba(250, 204, 21, 0.15);
 }
 
-/* 壓力指數條 - 增強動畫 */
+/* 浮誇的壓力指數條設計 */
 .stress-bar {
   transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1),
     background-color 0.8s ease;
-  background: linear-gradient(90deg, #22c55e, #eab308, #f59e0b, #ef4444);
+  background: linear-gradient(
+    90deg,
+    #22c55e,
+    #eab308,
+    #f59e0b,
+    #ef4444,
+    #dc2626
+  );
   box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
+  position: relative;
+  overflow: visible !important; /* 允許溢出效果 */
+}
+
+/* 壓力條過高時的動態效果 */
+.stress-bar.extreme {
+  animation: pulse-danger 1.5s infinite;
+}
+
+.stress-bar.extreme::before {
+  content: "危險";
+  top: -20px;
+  right: -10px;
+}
+
+/* 壓力溢出效果 */
+.stress-bar.overflow {
+  box-shadow: 0 0 10px #ef4444, 0 0 20px #dc2626;
+}
+
+.stress-bar.overflow::before {
+  content: "超載";
+  position: absolute;
+  right: -5px;
+  top: -20px;
+  font-size: 0.75rem;
+  background-color: #dc2626;
+  color: white;
+  padding: 0.125rem 0.375rem;
+  border-radius: 0.25rem;
+  font-weight: bold;
+  animation: warning-blink 1s infinite;
+  box-shadow: 0 0 10px rgba(220, 38, 38, 0.7);
+}
+
+.stress-bar.overflow::after {
+  content: "";
+  position: absolute;
+  right: -5px;
+  top: -5px;
+  bottom: -5px;
+  width: 10px;
+  background: radial-gradient(circle at center, #ef4444 0%, transparent 70%);
+  filter: blur(3px);
+  animation: stress-overflow 2s infinite;
+}
+
+/* 壓力邊框效果 */
+#stress-level {
   position: relative;
 }
 
-.stress-bar::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.3),
-    transparent
-  );
-  animation: shimmer 2s infinite;
+#stress-level.extreme {
+  border: 1px solid rgba(220, 38, 38, 0.5);
 }
 
-@keyframes shimmer {
+/* 壓力值顯示增強 */
+#stress-percent.extreme {
+  animation: stress-text-blink 1s infinite;
+  color: #dc2626;
+  text-shadow: 0 0 5px rgba(220, 38, 38, 0.5);
+}
+
+/* 動畫定義 */
+@keyframes pulse-danger {
   0% {
-    transform: translateX(-100%);
+    box-shadow: 0 0 5px #ef4444;
+  }
+  50% {
+    box-shadow: 0 0 15px #dc2626;
   }
   100% {
-    transform: translateX(100%);
+    box-shadow: 0 0 5px #ef4444;
+  }
+}
+
+@keyframes blink-extreme {
+  0% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes stress-overflow {
+  0% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 0.9;
+  }
+  100% {
+    opacity: 0.3;
+  }
+}
+
+@keyframes stress-text-blink {
+  0% {
+    opacity: 0.7;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.7;
+  }
+}
+
+@keyframes warning-blink {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.1);
+  }
+}
+
+/* 極端壓力情況時整個容器輕微震動 */
+#pressure-simulation.extreme-stress {
+  animation: stress-shake 0.5s infinite;
+}
+
+@keyframes stress-shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-1px);
+  }
+  75% {
+    transform: translateX(1px);
+  }
+}
+
+/* 亮紅色脈動背景 */
+.stress-bar.extreme {
+  background: linear-gradient(90deg, #ef4444, #dc2626, #b91c1c);
+  background-size: 200% auto;
+  animation: stress-gradient 2s linear infinite, pulse-danger 1.5s infinite;
+}
+
+@keyframes stress-gradient {
+  0% {
+    background-position: 0% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
+}
+
+/* 極端壓力條的後面有煙霧效果 */
+.stress-bar.extreme::after {
+  content: "";
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  width: 30px;
+  height: 30px;
+  background: radial-gradient(
+    circle at center,
+    rgba(220, 38, 38, 0.8) 0%,
+    transparent 70%
+  );
+  filter: blur(5px);
+  border-radius: 50%;
+  animation: smoke-effect 3s infinite;
+}
+
+@keyframes smoke-effect {
+  0% {
+    opacity: 0.3;
+    transform: scale(0.8) translateY(0);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.2) translateY(-3px);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.8) translateY(-8px);
   }
 }
 
@@ -412,10 +582,12 @@
   max-height: 400px; /* 最大高度限制 */
 }
 
-/* 圖表底部標籤調整 */
+/* 圖表底部標籤排版改善 */
 .mt-4.flex.flex-wrap {
-  justify-content: center; /* 中心對齊 */
-  gap: 0.75rem; /* 添加間距 */
+  justify-content: center;
+  gap: 0.75rem;
+  display: flex;
+  flex-wrap: wrap;
 }
 
 /* 表格容器樣式加強 - 確保手機上正確顯示 */
@@ -660,13 +832,23 @@
   .mt-4.flex.flex-wrap {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 0.5rem;
-    text-align: left;
+    gap: 0.75rem 1.25rem;
+    margin: 1rem 0;
   }
 
-  .mt-4.flex.flex-wrap > div:last-child {
+  .mt-4.flex.flex-wrap > div:nth-child(1),
+  .mt-4.flex.flex-wrap > div:nth-child(2) {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+  }
+
+  .mt-4.flex.flex-wrap > div:nth-child(3) {
     grid-column: span 2;
     justify-content: center;
+    display: flex;
+    align-items: center;
+    margin-top: 0.5rem;
   }
 
   /* 優化表格顯示 */
@@ -776,7 +958,7 @@
 
   /* 價格走勢圖底部標籤改為單列 */
   .mt-4.flex.flex-wrap {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr 1fr;
   }
 
   .mt-4.flex.flex-wrap > div:last-child {
@@ -803,7 +985,20 @@
 
   /* 改進對帳單區塊在手機上的顯示 */
   #account-statement {
-    margin: 0 -0.5rem;
+    margin: 0;
+    width: 100%;
+  }
+
+  #account-statement > div {
+    border-radius: 0.5rem;
+    width: 100%;
+    margin: 0;
+  }
+
+  #account-statement .overflow-x-auto {
+    margin: 0;
+    padding: 0;
+    width: 100%;
   }
 
   #account-statement .whitespace-nowrap {
@@ -833,6 +1028,19 @@
 
   #loss-summary .text-xl {
     font-size: 1rem;
+  }
+
+  .mt-4.flex.flex-wrap {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .mt-4.flex.flex-wrap > div {
+    font-size: 0.75rem;
+  }
+
+  .mt-4.flex.flex-wrap > div .w-3.h-3 {
+    width: 0.5rem;
+    height: 0.5rem;
   }
 }
 
@@ -947,4 +1155,136 @@ canvas {
     padding-left: 0.5rem;
     padding-right: 0.5rem;
   }
+}
+
+/* 修正simulation-result區塊內容溢出問題 */
+#simulation-result {
+  overflow: hidden;
+  width: 100%;
+}
+
+#simulation-result > div {
+  overflow: hidden;
+}
+
+/* 調整對帳單和心理壓力區塊 */
+#account-statement,
+#pressure-simulation {
+  max-width: 100%;
+}
+
+#account-statement table {
+  table-layout: fixed;
+}
+
+#account-statement table td,
+#account-statement table th {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
+}
+
+/* 特別處理壓力區塊 */
+.pressure-quote,
+.broker-monologue {
+  padding: 1rem;
+  margin: 0.75rem 0;
+  width: auto;
+  box-sizing: border-box;
+}
+
+@media (max-width: 640px) {
+  #simulation-result {
+    gap: 1.5rem;
+  }
+
+  #account-statement .p-6 {
+    padding: 1rem;
+  }
+
+  #pressure-simulation .p-4 {
+    padding: 0.75rem;
+  }
+}
+
+/* 對帳單區域修正 - 移除多餘間隔 */
+#account-statement {
+  width: 100%;
+  margin: 0;
+  padding: 0; /* 移除padding */
+  overflow: visible; /* 修改overflow行為 */
+}
+
+#account-statement .p-6,
+#account-statement > div {
+  margin: 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+#account-statement table {
+  width: 100%;
+}
+
+/* 隱藏dataTables_info元素 */
+.dataTables_info {
+  display: none !important;
+}
+
+/* 數據來源說明獨立一行 */
+.data-source-note {
+  display: block;
+  width: 100%;
+  text-align: center;
+  margin: 0.75rem auto;
+  font-size: 0.9rem;
+  color: #6b7280;
+}
+
+/* 總責任額顯示樣式 */
+.total-responsibility {
+  font-weight: 600;
+}
+
+.total-responsibility strong {
+  font-size: 1.1em;
+}
+
+/* 修正對帳單區塊 - 確保全寬度無間隔 */
+@media (max-width: 640px) {
+  #account-statement {
+    margin: 0;
+    width: 100%;
+  }
+
+  #account-statement > div {
+    border-radius: 0.5rem;
+    width: 100%;
+    margin: 0;
+  }
+
+  #account-statement .overflow-x-auto {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  #account-statement {
+    margin: 0;
+  }
+
+  #account-statement > div {
+    padding: 0.75rem !important;
+  }
+}
+
+/* 區塊間距調整 */
+.lg\:col-span-2.bg-white.p-8 {
+  margin-bottom: 2rem;
+}
+
+#simulation-result {
+  margin-bottom: 3rem;
 }
