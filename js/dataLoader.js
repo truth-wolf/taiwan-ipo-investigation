@@ -209,7 +209,7 @@ function analyzeDataForInsights(data) {
     }
 
     const [startStr, endStr] = periodStr.split("-");
-    let startDate = parseMinguoDate(startStr.trim());
+    const startDate = parseMinguoDate(startStr.trim());
     let endDate = parseMinguoDate(endStr.trim());
 
     // 處理只有月日的結束日期（沒有年份）
@@ -234,10 +234,10 @@ function analyzeDataForInsights(data) {
   let totalDays = 0; // 總募集天數
   let totalEntriesForAvgDays = 0; // 有效募集期間數量
   const monthCounts = {}; // 各月份商品數量統計
-  let dailyRespArray = []; // 每日責任額陣列
+  const dailyRespArray = []; // 每日責任額陣列
   let peakAmt = 0; // 單日最高責任額
   let peakDateInfo = "—"; // 最高責任額的日期資訊
-  let yearMonthCounts = {}; // 按年月統計的商品數量
+  const yearMonthCounts = {}; // 按年月統計的商品數量
 
   // 分析每筆數據
   data.forEach((item) => {
@@ -389,7 +389,7 @@ function updateStatElement(id, value, fractionDigits = 0) {
     return;
   }
 
-  let textValue =
+  const textValue =
     typeof value === "number" ? value.toFixed(fractionDigits) : String(value);
   element.textContent = textValue;
 

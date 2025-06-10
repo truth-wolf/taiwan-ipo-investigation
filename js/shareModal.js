@@ -1,6 +1,9 @@
 /**
- * shareModal.js - 終結IPO制度暴力專案模態窗功能
- * 整合歡迎模態窗與分享模態窗功能
+ * 📦 模組：終結IPO制度暴力專案模態窗功能
+ * 🕒 最後更新：2025-06-10T21:49:33+08:00
+ * 🧑‍💻 作者/更新者：@DigitalSentinel
+ * 🔢 版本：v1.2.0
+ * 📝 摘要：整合歡迎模態窗與分享模態窗功能
  *
  * 功能特點：
  * 1. 自適應響應式設計
@@ -58,7 +61,7 @@ window.shareModal = (function () {
           </div>
 
           <div class="share-link-container">
-            <input type="text" class="share-link" value="https://truth-wolf.github.io/taiwan-ipo-investigation/" readonly id="shareLinkInput">
+                                <input type="text" class="share-link" value="https://truth-wolf.github.io/taiwan-ipo-investigation/" readonly id="shareLinkInput">
             <button class="copy-button" id="copyLinkBtn">
               <i class="fas fa-copy"></i>
             </button>
@@ -125,16 +128,16 @@ window.shareModal = (function () {
 
   // 社群連結配置
   const links = {
-    shareForm: "https://forms.gle/zz4hmjxWBnHUQQWS9",
+    shareForm: 'https://forms.gle/zz4hmjxWBnHUQQWS9',
     lineCommunity:
-      "https://line.me/ti/g2/eG-fTuz5i-g7ZAqoRCzDkvIv1kN-3PWVGY4E3g",
-    threads: "https://www.threads.com/@anti_ipo?igshid=NTc4MTIwNjQ2YQ%3D%3D",
+      'https://line.me/ti/g2/eG-fTuz5i-g7ZAqoRCzDkvIv1kN-3PWVGY4E3g',
+    threads: 'https://www.threads.com/@anti_ipo?igshid=NTc4MTIwNjQ2YQ%3D%3D',
     share: window.location.origin + window.location.pathname,
   };
 
   // 初始化函數
   function init() {
-    console.log("ShareModal: 初始化模態窗...");
+    console.log('ShareModal: 初始化模態窗...');
     createModals();
     injectCSS();
     cacheElements();
@@ -142,8 +145,8 @@ window.shareModal = (function () {
     createFloatingShareButton();
 
     // 發送初始化完成事件通知
-    console.log("ShareModal: 初始化完成");
-    document.dispatchEvent(new CustomEvent("modalsReady"));
+    console.log('ShareModal: 初始化完成');
+    document.dispatchEvent(new CustomEvent('modalsReady'));
 
     return {
       showShareModal,
@@ -162,31 +165,31 @@ window.shareModal = (function () {
     ensureFontAwesomeLoaded();
 
     // 創建包含模態窗的容器
-    const modalsContainer = document.createElement("div");
-    modalsContainer.id = "modalsContainer";
+    const modalsContainer = document.createElement('div');
+    modalsContainer.id = 'modalsContainer';
     modalsContainer.innerHTML = modalHTML;
 
     // 附加到 body
     document.body.appendChild(modalsContainer);
-    console.log("ShareModal: 模態窗DOM已創建");
+    console.log('ShareModal: 模態窗DOM已創建');
   }
 
   // 確保 FontAwesome 已被載入
   function ensureFontAwesomeLoaded() {
     if (!document.querySelector('link[href*="font-awesome"]')) {
-      const fontAwesomeLink = document.createElement("link");
-      fontAwesomeLink.rel = "stylesheet";
+      const fontAwesomeLink = document.createElement('link');
+      fontAwesomeLink.rel = 'stylesheet';
       fontAwesomeLink.href =
-        "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css";
+        'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css';
       fontAwesomeLink.integrity =
-        "sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ==";
-      fontAwesomeLink.crossOrigin = "anonymous";
+        'sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ==';
+      fontAwesomeLink.crossOrigin = 'anonymous';
       document.head.appendChild(fontAwesomeLink);
-      console.log("ShareModal: FontAwesome 已載入");
+      console.log('ShareModal: FontAwesome 已載入');
     }
 
     // 添加內嵌font-awesome備用樣式，防止圖標顯示問題
-    const faBackupStyle = document.createElement("style");
+    const faBackupStyle = document.createElement('style');
     faBackupStyle.textContent = `
       @font-face {
         font-family: 'Font Awesome 5 Free';
@@ -265,12 +268,12 @@ window.shareModal = (function () {
   // 注入 CSS 樣式
   function injectCSS() {
     // 避免重複添加
-    if (document.getElementById("shareModalStyles")) {
+    if (document.getElementById('shareModalStyles')) {
       return;
     }
 
-    const styleElement = document.createElement("style");
-    styleElement.id = "shareModalStyles";
+    const styleElement = document.createElement('style');
+    styleElement.id = 'shareModalStyles';
     styleElement.textContent = `
       /* ----------------- 共用模態窗樣式 ----------------- */
       .modal-overlay {
@@ -788,30 +791,30 @@ window.shareModal = (function () {
     `;
     document.head.appendChild(styleElement);
 
-    console.log("ShareModal: CSS 樣式已注入");
+    console.log('ShareModal: CSS 樣式已注入');
   }
 
   // 獲取並緩存元素引用
   function cacheElements() {
     // 分享模態窗元素
-    shareModal = document.getElementById("shareModal");
+    shareModal = document.getElementById('shareModal');
     shareElements = {
-      closeBtn: document.getElementById("closeShareModal"),
-      shareFormBtn: document.getElementById("shareForm"),
-      joinCommunityBtn: document.getElementById("joinCommunity"),
-      followThreadsBtn: document.getElementById("followThreads"),
-      copyLinkBtn: document.getElementById("copyLink"),
-      copyBtnInline: document.getElementById("copyLinkBtn"),
-      shareLinkInput: document.getElementById("shareLinkInput"),
-      copiedMsg: document.getElementById("copiedMsg"),
+      closeBtn: document.getElementById('closeShareModal'),
+      shareFormBtn: document.getElementById('shareForm'),
+      joinCommunityBtn: document.getElementById('joinCommunity'),
+      followThreadsBtn: document.getElementById('followThreads'),
+      copyLinkBtn: document.getElementById('copyLink'),
+      copyBtnInline: document.getElementById('copyLinkBtn'),
+      shareLinkInput: document.getElementById('shareLinkInput'),
+      copiedMsg: document.getElementById('copiedMsg'),
     };
 
     // 歡迎模態窗元素
-    welcomeModal = document.getElementById("welcomeModal");
+    welcomeModal = document.getElementById('welcomeModal');
     welcomeElements = {
-      closeBtn: document.getElementById("closeWelcomeModal"),
-      actionBtn: document.getElementById("welcomeAction"),
-      dontShowAgainCheckbox: document.getElementById("dontShowWelcomeAgain"),
+      closeBtn: document.getElementById('closeWelcomeModal'),
+      actionBtn: document.getElementById('welcomeAction'),
+      dontShowAgainCheckbox: document.getElementById('dontShowWelcomeAgain'),
     };
 
     // 設置分享連結
@@ -819,46 +822,46 @@ window.shareModal = (function () {
       shareElements.shareLinkInput.value = links.share;
     }
 
-    console.log("ShareModal: 元素引用已緩存");
+    console.log('ShareModal: 元素引用已緩存');
   }
 
   // 綁定事件處理函數
   function bindEvents() {
     // 分享模態窗事件
     if (shareElements.closeBtn) {
-      shareElements.closeBtn.addEventListener("click", hideShareModal);
+      shareElements.closeBtn.addEventListener('click', hideShareModal);
     }
 
     if (shareElements.shareFormBtn) {
-      shareElements.shareFormBtn.addEventListener("click", () => {
+      shareElements.shareFormBtn.addEventListener('click', () => {
         markUserInteraction();
-        window.open(links.shareForm, "_blank");
+        window.open(links.shareForm, '_blank');
       });
     }
 
     if (shareElements.joinCommunityBtn) {
-      shareElements.joinCommunityBtn.addEventListener("click", () => {
+      shareElements.joinCommunityBtn.addEventListener('click', () => {
         markUserInteraction();
-        window.open(links.lineCommunity, "_blank");
+        window.open(links.lineCommunity, '_blank');
       });
     }
 
     if (shareElements.followThreadsBtn) {
-      shareElements.followThreadsBtn.addEventListener("click", () => {
+      shareElements.followThreadsBtn.addEventListener('click', () => {
         markUserInteraction();
-        window.open(links.threads, "_blank");
+        window.open(links.threads, '_blank');
       });
     }
 
     if (shareElements.copyLinkBtn) {
-      shareElements.copyLinkBtn.addEventListener("click", function () {
+      shareElements.copyLinkBtn.addEventListener('click', function () {
         markUserInteraction();
         copyToClipboard();
       });
     }
 
     if (shareElements.copyBtnInline) {
-      shareElements.copyBtnInline.addEventListener("click", function () {
+      shareElements.copyBtnInline.addEventListener('click', function () {
         markUserInteraction();
         copyToClipboard();
       });
@@ -866,28 +869,28 @@ window.shareModal = (function () {
 
     // 歡迎模態窗事件
     if (welcomeElements.closeBtn) {
-      welcomeElements.closeBtn.addEventListener("click", () => {
+      welcomeElements.closeBtn.addEventListener('click', () => {
         handleWelcomeModalClose();
       });
     }
 
     if (welcomeElements.actionBtn) {
-      welcomeElements.actionBtn.addEventListener("click", () => {
-        console.log("ShareModal: 參與行動按鈕被點擊");
+      welcomeElements.actionBtn.addEventListener('click', () => {
+        console.log('ShareModal: 參與行動按鈕被點擊');
         handleWelcomeModalClose();
 
         // 添加延遲以確保歡迎模態窗已完全關閉
         setTimeout(() => {
-          console.log("ShareModal: 準備顯示分享模態窗");
+          console.log('ShareModal: 準備顯示分享模態窗');
           // 直接使用window.shareModalControls來調用showShareModal
           if (
             window.shareModalControls &&
-            typeof window.shareModalControls.showShareModal === "function"
+            typeof window.shareModalControls.showShareModal === 'function'
           ) {
             window.shareModalControls.showShareModal();
-            console.log("ShareModal: 分享模態窗已顯示");
+            console.log('ShareModal: 分享模態窗已顯示');
           } else {
-            console.error("ShareModal: showShareModal函數未定義");
+            console.error('ShareModal: showShareModal函數未定義');
           }
         }, 500);
       });
@@ -895,12 +898,12 @@ window.shareModal = (function () {
 
     if (welcomeElements.dontShowAgainCheckbox) {
       welcomeElements.dontShowAgainCheckbox.addEventListener(
-        "change",
+        'change',
         function () {
           if (this.checked) {
-            localStorage.setItem("endipo_dont_show_welcome", "true");
+            localStorage.setItem('endipo_dont_show_welcome', 'true');
           } else {
-            localStorage.removeItem("endipo_dont_show_welcome");
+            localStorage.removeItem('endipo_dont_show_welcome');
           }
         }
       );
@@ -908,7 +911,7 @@ window.shareModal = (function () {
 
     // 點擊模態窗外部關閉
     if (shareModal) {
-      shareModal.addEventListener("click", (e) => {
+      shareModal.addEventListener('click', e => {
         if (e.target === shareModal) {
           hideShareModal();
           markUserInteraction();
@@ -917,7 +920,7 @@ window.shareModal = (function () {
     }
 
     if (welcomeModal) {
-      welcomeModal.addEventListener("click", (e) => {
+      welcomeModal.addEventListener('click', e => {
         if (e.target === welcomeModal) {
           handleWelcomeModalClose();
         }
@@ -925,38 +928,38 @@ window.shareModal = (function () {
     }
 
     // 按 ESC 關閉模態窗
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape") {
-        if (shareModal.classList.contains("active")) {
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') {
+        if (shareModal.classList.contains('active')) {
           hideShareModal();
           markUserInteraction();
-        } else if (welcomeModal.classList.contains("active")) {
+        } else if (welcomeModal.classList.contains('active')) {
           handleWelcomeModalClose();
         }
       }
     });
 
     // 添加額外的共享按鈕事件處理
-    const shareBtn = document.getElementById("share-btn");
-    const mobileShareBtn = document.getElementById("mobile-share-btn");
+    const shareBtn = document.getElementById('share-btn');
+    const mobileShareBtn = document.getElementById('mobile-share-btn');
 
     if (shareBtn) {
-      shareBtn.addEventListener("click", () => {
+      shareBtn.addEventListener('click', () => {
         showShareModal();
         markUserInteraction();
       });
-      console.log("ShareModal: 主導航分享按鈕已綁定");
+      console.log('ShareModal: 主導航分享按鈕已綁定');
     }
 
     if (mobileShareBtn) {
-      mobileShareBtn.addEventListener("click", () => {
+      mobileShareBtn.addEventListener('click', () => {
         showShareModal();
         markUserInteraction();
       });
-      console.log("ShareModal: 行動版導航分享按鈕已綁定");
+      console.log('ShareModal: 行動版導航分享按鈕已綁定');
     }
 
-    console.log("ShareModal: 事件處理函數已綁定");
+    console.log('ShareModal: 事件處理函數已綁定');
   }
 
   // 處理歡迎模態窗關閉
@@ -968,13 +971,13 @@ window.shareModal = (function () {
       welcomeElements.dontShowAgainCheckbox &&
       welcomeElements.dontShowAgainCheckbox.checked
     ) {
-      localStorage.setItem("endipo_dont_show_welcome", "true");
+      localStorage.setItem('endipo_dont_show_welcome', 'true');
     }
 
     // 只有在兩個模態窗都關閉時，才恢復計數器動畫
     if (
-      !shareModal.classList.contains("active") &&
-      !welcomeModal.classList.contains("active")
+      !shareModal.classList.contains('active') &&
+      !welcomeModal.classList.contains('active')
     ) {
       resumeCounterAnimations();
     }
@@ -982,40 +985,40 @@ window.shareModal = (function () {
 
   // 標記用戶已與分享功能互動
   function markUserInteraction() {
-    localStorage.setItem("endipo_user_interacted", "true");
+    localStorage.setItem('endipo_user_interacted', 'true');
     // 設定用戶交互標記後，確保幫助提示不顯示
     updateHelpTooltipVisibility(false);
     // 將用戶標記為"不再自動顯示"
-    localStorage.setItem("endipo_disable_auto_welcome", "true");
+    localStorage.setItem('endipo_disable_auto_welcome', 'true');
   }
 
   // 更新幫助提示的顯示狀態
   function updateHelpTooltipVisibility(isAutoShow) {
-    const helpTooltip = document.querySelector(".help-tooltip");
+    const helpTooltip = document.querySelector('.help-tooltip');
     if (helpTooltip) {
       // 只在自動顯示時才顯示幫助提示
-      helpTooltip.style.display = isAutoShow ? "flex" : "none";
+      helpTooltip.style.display = isAutoShow ? 'flex' : 'none';
     }
   }
 
   // 顯示分享模態窗
   function showShareModal() {
     if (shareModal) {
-      shareModal.classList.add("active");
-      document.body.style.overflow = "hidden"; // 防止背景滾動
-      console.log("ShareModal: 分享模態窗顯示");
+      shareModal.classList.add('active');
+      document.body.style.overflow = 'hidden'; // 防止背景滾動
+      console.log('ShareModal: 分享模態窗顯示');
     }
   }
 
   // 隱藏分享模態窗
   function hideShareModal() {
     if (shareModal) {
-      shareModal.classList.remove("active");
-      document.body.style.overflow = ""; // 恢復背景滾動
-      console.log("ShareModal: 分享模態窗隱藏");
+      shareModal.classList.remove('active');
+      document.body.style.overflow = ''; // 恢復背景滾動
+      console.log('ShareModal: 分享模態窗隱藏');
 
       // 只有在兩個模態窗都關閉時，才恢復計數器動畫
-      if (!welcomeModal.classList.contains("active")) {
+      if (!welcomeModal.classList.contains('active')) {
         resumeCounterAnimations();
       }
     }
@@ -1024,26 +1027,26 @@ window.shareModal = (function () {
   // 顯示歡迎模態窗
   function showWelcomeModal(isAutoShow = false) {
     if (welcomeModal) {
-      welcomeModal.classList.add("active");
-      document.body.style.overflow = "hidden"; // 防止背景滾動
+      welcomeModal.classList.add('active');
+      document.body.style.overflow = 'hidden'; // 防止背景滾動
 
       // 更新幫助提示的顯示狀態
       updateHelpTooltipVisibility(isAutoShow);
 
-      console.log("ShareModal: 歡迎模態窗顯示");
+      console.log('ShareModal: 歡迎模態窗顯示');
     }
   }
 
   // 隱藏歡迎模態窗
   function hideWelcomeModal() {
     if (welcomeModal) {
-      welcomeModal.classList.remove("active");
-      document.body.style.overflow = ""; // 恢復背景滾動
-      console.log("ShareModal: 歡迎模態窗隱藏");
+      welcomeModal.classList.remove('active');
+      document.body.style.overflow = ''; // 恢復背景滾動
+      console.log('ShareModal: 歡迎模態窗隱藏');
 
       // 更新最後顯示時間
       localStorage.setItem(
-        "endipo_welcome_last_shown",
+        'endipo_welcome_last_shown',
         new Date().getTime().toString()
       );
     }
@@ -1059,15 +1062,15 @@ window.shareModal = (function () {
         navigator.clipboard
           .writeText(shareElements.shareLinkInput.value)
           .then(() => showCopiedMessage())
-          .catch((err) => {
-            console.error("無法複製: ", err);
+          .catch(err => {
+            console.error('無法複製: ', err);
             // 備用方案
-            document.execCommand("copy");
+            document.execCommand('copy');
             showCopiedMessage();
           });
       } catch (err) {
         // 舊版瀏覽器備用方案
-        document.execCommand("copy");
+        document.execCommand('copy');
         showCopiedMessage();
       }
     }
@@ -1076,19 +1079,19 @@ window.shareModal = (function () {
   // 顯示複製成功訊息
   function showCopiedMessage() {
     if (shareElements.copiedMsg) {
-      shareElements.copiedMsg.classList.add("visible");
+      shareElements.copiedMsg.classList.add('visible');
       setTimeout(() => {
-        shareElements.copiedMsg.classList.remove("visible");
+        shareElements.copiedMsg.classList.remove('visible');
       }, 2000);
     }
   }
 
   // 檢查是否首次訪問並顯示歡迎模態窗
   function checkFirstVisit() {
-    const visited = localStorage.getItem("endipo_visited");
+    const visited = localStorage.getItem('endipo_visited');
 
     if (!visited) {
-      localStorage.setItem("endipo_visited", "true");
+      localStorage.setItem('endipo_visited', 'true');
       return true;
     }
 
@@ -1098,24 +1101,24 @@ window.shareModal = (function () {
   // 檢查定時模態窗顯示
   function checkTimedModalDisplay() {
     // 檢查是否選擇了"不再顯示"
-    const dontShowAgain = localStorage.getItem("endipo_dont_show_welcome");
-    if (dontShowAgain === "true") {
+    const dontShowAgain = localStorage.getItem('endipo_dont_show_welcome');
+    if (dontShowAgain === 'true') {
       return;
     }
 
     // 檢查用戶是否已經與分享按鈕互動，如果互動過則不再自動顯示
-    const userInteracted = localStorage.getItem("endipo_user_interacted");
-    if (userInteracted === "true") {
+    const userInteracted = localStorage.getItem('endipo_user_interacted');
+    if (userInteracted === 'true') {
       return;
     }
 
     // 檢查是否禁用自動顯示（點擊分享後設置）
-    const disableAutoShow = localStorage.getItem("endipo_disable_auto_welcome");
-    if (disableAutoShow === "true") {
+    const disableAutoShow = localStorage.getItem('endipo_disable_auto_welcome');
+    if (disableAutoShow === 'true') {
       return;
     }
 
-    const lastShownTime = localStorage.getItem("endipo_welcome_last_shown");
+    const lastShownTime = localStorage.getItem('endipo_welcome_last_shown');
     const currentTime = new Date().getTime();
 
     // 如果是首次訪問或者超過5分鐘未顯示
@@ -1124,8 +1127,8 @@ window.shareModal = (function () {
       currentTime - parseInt(lastShownTime) > 5 * 60 * 1000
     ) {
       showWelcomeModal(true); // 標記為自動顯示
-      localStorage.setItem("endipo_welcome_last_shown", currentTime.toString());
-      console.log("ShareModal: 定時顯示歡迎模態窗");
+      localStorage.setItem('endipo_welcome_last_shown', currentTime.toString());
+      console.log('ShareModal: 定時顯示歡迎模態窗');
     }
   }
 
@@ -1134,12 +1137,12 @@ window.shareModal = (function () {
     // 先暫停計數器動畫
     pauseCounterAnimations();
 
-    console.log("ShareModal: 檢查是否顯示歡迎模態窗");
+    console.log('ShareModal: 檢查是否顯示歡迎模態窗');
 
     // 檢查是否選擇了"不再顯示"
-    const dontShowAgain = localStorage.getItem("endipo_dont_show_welcome");
-    if (dontShowAgain === "true") {
-      console.log("ShareModal: 用戶選擇不再顯示，跳過顯示歡迎模態窗");
+    const dontShowAgain = localStorage.getItem('endipo_dont_show_welcome');
+    if (dontShowAgain === 'true') {
+      console.log('ShareModal: 用戶選擇不再顯示，跳過顯示歡迎模態窗');
       resumeCounterAnimations();
       return;
     }
@@ -1147,10 +1150,10 @@ window.shareModal = (function () {
     // 立即顯示歡迎模態窗
     showWelcomeModal(false);
     localStorage.setItem(
-      "endipo_welcome_last_shown",
+      'endipo_welcome_last_shown',
       new Date().getTime().toString()
     );
-    console.log("ShareModal: 顯示歡迎模態窗");
+    console.log('ShareModal: 顯示歡迎模態窗');
 
     // 設置定時器，每分鐘檢查一次
     setInterval(() => {
@@ -1162,11 +1165,11 @@ window.shareModal = (function () {
   function pauseCounterAnimations() {
     if (
       window.animationsModule &&
-      typeof window.animationsModule.pauseCounters === "function"
+      typeof window.animationsModule.pauseCounters === 'function'
     ) {
       window.animationsModule.pauseCounters();
     } else {
-      console.log("ShareModal: 計數器動畫暫停功能不可用");
+      console.log('ShareModal: 計數器動畫暫停功能不可用');
       // 設置一個全局標記，讓動畫模組知道需要暫停計數器
       window.shouldPauseCounters = true;
     }
@@ -1176,11 +1179,11 @@ window.shareModal = (function () {
   function resumeCounterAnimations() {
     if (
       window.animationsModule &&
-      typeof window.animationsModule.resumeCounters === "function"
+      typeof window.animationsModule.resumeCounters === 'function'
     ) {
       window.animationsModule.resumeCounters();
     } else {
-      console.log("ShareModal: 計數器動畫恢復功能不可用");
+      console.log('ShareModal: 計數器動畫恢復功能不可用');
       // 移除全局標記，讓動畫模組知道可以開始計數器
       window.shouldPauseCounters = false;
     }
@@ -1196,31 +1199,31 @@ window.shareModal = (function () {
 window.markUserInteraction = function () {
   if (
     window.shareModalControls &&
-    typeof window.shareModalControls.markUserInteraction === "function"
+    typeof window.shareModalControls.markUserInteraction === 'function'
   ) {
     window.shareModalControls.markUserInteraction();
   } else {
     // 備用方案，直接設置localStorage
-    localStorage.setItem("endipo_user_interacted", "true");
-    localStorage.setItem("endipo_disable_auto_welcome", "true");
+    localStorage.setItem('endipo_user_interacted', 'true');
+    localStorage.setItem('endipo_disable_auto_welcome', 'true');
 
     // 嘗試更新幫助提示的顯示狀態
-    const helpTooltip = document.querySelector(".help-tooltip");
+    const helpTooltip = document.querySelector('.help-tooltip');
     if (helpTooltip) {
-      helpTooltip.style.display = "none";
+      helpTooltip.style.display = 'none';
     }
   }
 };
 
 // 創建懸浮式分享按鈕
 function createFloatingShareButton() {
-  const floatingShareBtn = document.createElement("div");
-  floatingShareBtn.id = "floating-share-btn";
-  floatingShareBtn.className = "floating-share-btn";
+  const floatingShareBtn = document.createElement('div');
+  floatingShareBtn.id = 'floating-share-btn';
+  floatingShareBtn.className = 'floating-share-btn';
   floatingShareBtn.innerHTML = '<i class="fas fa-paper-plane"></i>';
 
   // 為懸浮按鈕添加樣式
-  const style = document.createElement("style");
+  const style = document.createElement('style');
   style.textContent = `
     .floating-share-btn {
       position: fixed;
@@ -1303,12 +1306,12 @@ function createFloatingShareButton() {
   document.head.appendChild(style);
 
   // 添加點擊事件
-  floatingShareBtn.addEventListener("click", () => {
+  floatingShareBtn.addEventListener('click', () => {
     window.shareModalControls.showShareModal();
     window.markUserInteraction();
 
     // 移除彈跳動畫
-    floatingShareBtn.classList.remove("bouncing");
+    floatingShareBtn.classList.remove('bouncing');
   });
 
   // 添加到頁面
@@ -1316,7 +1319,7 @@ function createFloatingShareButton() {
 
   // 初始脈動動畫
   setTimeout(() => {
-    floatingShareBtn.classList.add("pulse");
+    floatingShareBtn.classList.add('pulse');
 
     // 設置閒置監測
     setupIdleMonitoring(floatingShareBtn);
@@ -1333,8 +1336,8 @@ function setupIdleMonitoring(button) {
   // 重置閒置計時器
   function resetIdleTime() {
     idleTime = 0;
-    button.classList.remove("bouncing");
-    button.classList.add("pulse");
+    button.classList.remove('bouncing');
+    button.classList.add('pulse');
   }
 
   // 更新閒置時間
@@ -1343,8 +1346,8 @@ function setupIdleMonitoring(button) {
 
     if (idleTime >= maxIdleTime) {
       // 超過閒置時間，開始彈跳動畫
-      button.classList.remove("pulse");
-      button.classList.add("bouncing");
+      button.classList.remove('pulse');
+      button.classList.add('bouncing');
     }
   }
 
@@ -1352,18 +1355,18 @@ function setupIdleMonitoring(button) {
   idleTimer = setInterval(updateIdleTime, idleInterval);
 
   // 監聽用戶活動
-  ["mousemove", "mousedown", "keypress", "touchstart", "scroll"].forEach(
-    (event) => {
+  ['mousemove', 'mousedown', 'keypress', 'touchstart', 'scroll'].forEach(
+    event => {
       document.addEventListener(event, resetIdleTime);
     }
   );
 }
 
-document.addEventListener("DOMContentLoaded", function () {
-  console.log("ShareModal: DOM內容已載入");
+document.addEventListener('DOMContentLoaded', function () {
+  console.log('ShareModal: DOM內容已載入');
   try {
     window.shareModalControls = window.shareModal.init();
-    console.log("ShareModal: 控制器已初始化");
+    console.log('ShareModal: 控制器已初始化');
 
     // 確保全局API正確
     if (!window.showShareModal && window.shareModalControls.showShareModal) {
@@ -1379,26 +1382,26 @@ document.addEventListener("DOMContentLoaded", function () {
       // 初始化歡迎模態窗與定時顯示功能
       if (
         window.shareModalControls &&
-        typeof window.shareModalControls.checkAndShowWelcomeModal === "function"
+        typeof window.shareModalControls.checkAndShowWelcomeModal === 'function'
       ) {
         window.shareModalControls.checkAndShowWelcomeModal();
-        console.log("ShareModal: 檢查並顯示歡迎模態窗");
+        console.log('ShareModal: 檢查並顯示歡迎模態窗');
       } else {
-        console.error("ShareModal: 無法調用checkAndShowWelcomeModal函數");
+        console.error('ShareModal: 無法調用checkAndShowWelcomeModal函數');
       }
     }, 1000);
   } catch (e) {
-    console.error("ShareModal: 初始化時發生錯誤", e);
+    console.error('ShareModal: 初始化時發生錯誤', e);
   }
 
-  console.log("ShareModal: 初始化完成");
+  console.log('ShareModal: 初始化完成');
 });
 
 // 為了確保在某些瀏覽器下DOMContentLoaded事件可能已觸發的情況，添加額外檢查
-if (document.readyState === "loading") {
-  console.log("ShareModal: 文檔仍在加載中，監聽DOMContentLoaded事件");
+if (document.readyState === 'loading') {
+  console.log('ShareModal: 文檔仍在加載中，監聽DOMContentLoaded事件');
 } else {
-  console.log("ShareModal: 文檔已完成加載，立即初始化");
+  console.log('ShareModal: 文檔已完成加載，立即初始化');
   // 文檔已完成加載，立即初始化
   if (!window.shareModalControls) {
     window.shareModalControls = window.shareModal.init();
@@ -1407,10 +1410,10 @@ if (document.readyState === "loading") {
     setTimeout(() => {
       if (
         window.shareModalControls &&
-        typeof window.shareModalControls.checkAndShowWelcomeModal === "function"
+        typeof window.shareModalControls.checkAndShowWelcomeModal === 'function'
       ) {
         window.shareModalControls.checkAndShowWelcomeModal();
-        console.log("ShareModal: 已初始化並顯示歡迎模態窗");
+        console.log('ShareModal: 已初始化並顯示歡迎模態窗');
       }
     }, 1000);
   }

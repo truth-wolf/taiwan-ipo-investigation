@@ -1,5 +1,10 @@
 /**
- * main.js - 主要交互功能實現
+ * 📦 模組：主要交互功能實現
+ * 🕒 最後更新：2025-06-10T21:49:33+08:00
+ * 🧑‍💻 作者/更新者：@DigitalSentinel
+ * 🔢 版本：v1.2.0
+ * 📝 摘要：網站核心互動功能與使用者體驗控制
+ * 
  * 這個文件負責網站所有的互動功能，包括：
  * - 捲動動畫與進度追蹤
  * - 數據視覺化與計數器動畫
@@ -816,7 +821,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // 數字計數動畫
   const animateCounter = (element, target) => {
-    let start = 0;
+    const start = 0;
     const duration = 1500;
     const startTime = performance.now();
 
@@ -843,7 +848,7 @@ document.addEventListener("DOMContentLoaded", function () {
     moodParticles.classList.remove("hidden");
     moodParticles.innerHTML = "";
 
-    let particleCount = 30;
+    const particleCount = 30;
     let colors = ["#FFD700", "#FF6B6B", "#4ECDC4"];
 
     if (mood === "angry") {

@@ -31,7 +31,7 @@
 }
 
 .paper-effect::after {
-  content: "";
+  content: '';
   position: absolute;
   top: 0;
   right: 0;
@@ -49,7 +49,9 @@
 
 /* 數據圖表悬停效果 */
 .data-bar {
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
 }
 
 .data-bar:hover {
@@ -63,7 +65,7 @@
 }
 
 .timeline-dot::after {
-  content: "";
+  content: '';
   position: absolute;
   top: 50%;
   left: 50%;
@@ -98,7 +100,7 @@
 }
 
 .copy-btn::before {
-  content: "";
+  content: '';
   position: absolute;
   top: 0;
   left: -100%;
@@ -229,7 +231,7 @@ table tbody tr:hover {
 
 #quote-text::after,
 #inner-thought-text::after {
-  content: "|";
+  content: '|';
   display: inline-block;
   animation: blink 1s infinite;
 }
@@ -246,7 +248,9 @@ table tbody tr:hover {
 
 /* 導航欄滾動效果 */
 header {
-  transition: transform 0.3s ease, background-color 0.3s ease,
+  transition:
+    transform 0.3s ease,
+    background-color 0.3s ease,
     box-shadow 0.3s ease;
 }
 
@@ -277,7 +281,9 @@ header.visible {
 
 /* 圖表標籤動畫 */
 .data-bar span {
-  transition: opacity 0.5s ease, transform 0.5s ease;
+  transition:
+    opacity 0.5s ease,
+    transform 0.5s ease;
 }
 
 .data-bar.animate span {
@@ -327,7 +333,7 @@ header a:not(.btn-primary):hover {
 }
 
 header a:not(.btn-primary):hover::after {
-  content: "";
+  content: '';
   position: absolute;
   left: 0;
   bottom: -4px;
@@ -358,7 +364,7 @@ header a:not(.btn-primary):hover::after {
 }
 
 .alert-circle::before {
-  content: "";
+  content: '';
   position: absolute;
   top: -50%;
   left: -50%;
@@ -387,7 +393,7 @@ h1.newspaper-title {
 }
 
 h1.newspaper-title::after {
-  content: "";
+  content: '';
   position: absolute;
   bottom: -10px;
   left: 0;
@@ -463,7 +469,7 @@ table {
 }
 
 #template-content {
-  font-family: "Courier New", monospace;
+  font-family: 'Courier New', monospace;
   line-height: 1.5;
   white-space: pre-wrap;
   overflow-y: auto;
@@ -689,7 +695,9 @@ select {
 .right-timeline .fade-in {
   opacity: 0;
   transform: translateY(20px);
-  transition: opacity 0.6s ease, transform 0.6s ease;
+  transition:
+    opacity 0.6s ease,
+    transform 0.6s ease;
 }
 
 .left-timeline .fade-in.visible,
@@ -749,30 +757,104 @@ th.sort-desc i.fas {
   position: relative;
   background: rgba(255, 255, 255, 0.05);
   border-radius: 0.75rem;
-  padding: 1rem;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+  padding: 0;
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
     0 2px 4px -1px rgba(0, 0, 0, 0.06);
   transition: all 0.3s ease;
+  min-height: 420px;
+  height: auto;
+  overflow: visible;
 }
 
 .chart-container:hover {
   transform: translateY(-2px);
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+  box-shadow:
+    0 10px 15px -3px rgba(0, 0, 0, 0.1),
     0 4px 6px -2px rgba(0, 0, 0, 0.05);
 }
 
 .chart-container canvas {
   width: 100% !important;
   height: 100% !important;
+  min-height: 280px !important;
+}
+
+/* IPO價格圖表特殊樣式 */
+#ipo-price-chart {
+  min-height: 350px !important;
+  max-height: 400px !important;
+}
+
+/* 其他圖表容器修復 */
+#time-series-chart,
+#broker-chart {
+  min-height: 350px !important;
+  max-height: none !important;
+  height: 350px !important;
+}
+
+/* 圖表標題樣式 */
+.chart-title {
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: #374151;
+  border-bottom: 1px solid #e5e7eb;
+  margin-bottom: 0;
+  padding: 1rem 1.5rem;
+  background: rgba(249, 250, 251, 0.8);
+  border-radius: 0.75rem 0.75rem 0 0;
+}
+
+/* 圖表內容區域 */
+.chart-container .p-4 {
+  padding: 1.5rem !important;
+  padding-bottom: 1rem !important;
+}
+
+/* 損益總結區樣式增強 */
+#loss-summary {
+  transition: all 0.3s ease;
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+#loss-summary:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 8px 12px -2px rgba(0, 0, 0, 0.15),
+    0 4px 8px -2px rgba(0, 0, 0, 0.08);
 }
 
 /* 確保圖表容器在不同尺寸下保持合適的比例 */
 @media (max-width: 768px) {
   .chart-container {
-    min-height: 300px;
+    min-height: 380px;
+    height: auto;
   }
 
   .chart-container.radar-chart-inner {
-    min-height: 350px;
+    min-height: 420px;
+  }
+
+  #ipo-price-chart {
+    min-height: 320px !important;
+  }
+
+  #time-series-chart,
+  #broker-chart {
+    min-height: 320px !important;
+    height: 320px !important;
+  }
+
+  .chart-title {
+    font-size: 1rem;
+    padding: 0.8rem 1rem;
+  }
+
+  .chart-container .p-4 {
+    padding: 1rem !important;
+    padding-bottom: 0.8rem !important;
   }
 }

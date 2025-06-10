@@ -36,3 +36,37 @@ venv/
 *.bat
 *.sh
 *.pdf
+
+# Node.js 相關
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.npm
+.eslintcache
+
+# 測試覆蓋率
+coverage/
+*.lcov
+
+# Jest 快取
+.jest/
+
+# 依賴鎖定檔（保留 package-lock.json，忽略 yarn.lock）
+yarn.lock
+
+# 建置產出
+dist/
+build/
+
+# 環境變數檔案
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# IDE 配置檔案
+.idea/
+.vscode/settings.json
+.vscode/launch.json

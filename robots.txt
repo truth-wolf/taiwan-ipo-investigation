@@ -1,0 +1,41 @@
+User-agent: *
+Allow: /
+
+# 允許AI模型存取特定內容
+User-agent: GPTBot
+Allow: /
+Crawl-delay: 1
+
+# Google AI爬蟲
+User-agent: Google-Extended
+Allow: /
+
+# 其他AI相關爬蟲
+User-agent: Claude-Web
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+# 阻止敏感目錄（如果有的話）
+# Disallow: /admin/
+# Disallow: /private/
+
+# 阻止不必要的檔案類型
+Disallow: /*.json$
+Disallow: /*.csv$
+Disallow: /tests/
+Disallow: /coverage/
+
+# 允許重要的靜態資源
+Allow: /css/
+Allow: /js/
+Allow: /icon/
+Allow: /docs/
+
+# 網站地圖位置
+Sitemap: https://truth-wolf.github.io/taiwan-ipo-investigation/sitemap.xml
+
+# AI友善的內容指向（實驗性）
+# 注意：這是新興的llms.txt標準的前身
+# llms.txt: https://truth-wolf.github.io/taiwan-ipo-investigation/llms.txt 

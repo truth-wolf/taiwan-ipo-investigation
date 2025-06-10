@@ -1,5 +1,9 @@
 /**
- * app.js - 主要JavaScript入口點
+ * 📦 模組：主要JavaScript入口點
+ * 🕒 最後更新：2025-06-10T21:49:33+08:00
+ * 🧑‍💻 作者/更新者：@DigitalSentinel
+ * 🔢 版本：v1.2.0
+ * 📝 摘要：網站核心啟動點與模組管理
  *
  * 這個文件是網站的核心啟動點:
  * - 初始化各模組
@@ -7,11 +11,11 @@
  * - 提供全局工具函數
  */
 
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener('DOMContentLoaded', function () {
   // 移除測試背景類
-  document.documentElement.classList.remove("js-test-error-bg");
+  document.documentElement.classList.remove('js-test-error-bg');
 
-  console.log("App: 初始化核心功能...");
+  console.log('App: 初始化核心功能...');
 
   // 初始化核心UI功能
   initHeaderAndNav();
@@ -29,24 +33,24 @@ document.addEventListener("DOMContentLoaded", function () {
   loadTemplates();
   loadAnimations();
 
-  console.log("App: 核心功能初始化完成");
+  console.log('App: 核心功能初始化完成');
 
   /**
    * 初始化頁面頭部和導航
    */
   function initHeaderAndNav() {
-    loadPartialContent("header-container", "partials/header.html");
-    loadPartialContent("footer-container", "partials/footer.html");
+    loadPartialContent('header-container', 'partials/header.html');
+    loadPartialContent('footer-container', 'partials/footer.html');
   }
 
   /**
    * 初始化滾動事件
    */
   function initScrollEvents() {
-    const progressLine = document.querySelector(".progress-line");
+    const progressLine = document.querySelector('.progress-line');
     if (!progressLine) return;
 
-    window.addEventListener("scroll", function () {
+    window.addEventListener('scroll', function () {
       updateProgressBar(progressLine);
       updateFixedHeader();
       updateFadeElements();
@@ -60,7 +64,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const windowHeight = window.innerHeight;
     const documentHeight = document.documentElement.scrollHeight - windowHeight;
     const scrollTop = window.scrollY;
-    const width = (scrollTop / documentHeight) * 100 + "%";
+    const width = (scrollTop / documentHeight) * 100 + '%';
     progressLine.style.width = width;
   }
 
@@ -68,22 +72,22 @@ document.addEventListener("DOMContentLoaded", function () {
    * 更新固定頭部
    */
   function updateFixedHeader() {
-    const header = document.querySelector("header");
+    const header = document.querySelector('header');
     if (!header) return;
 
     const scrollPosition = window.scrollY;
 
     if (scrollPosition > 100) {
-      header.classList.add("scrolled");
+      header.classList.add('scrolled');
     } else {
-      header.classList.remove("scrolled");
+      header.classList.remove('scrolled');
     }
 
     // 處理向上滾動時顯示導航
     if (scrollPosition < this.lastScrollPosition || scrollPosition < 50) {
-      header.classList.add("visible");
+      header.classList.add('visible');
     } else {
-      header.classList.remove("visible");
+      header.classList.remove('visible');
     }
 
     this.lastScrollPosition = scrollPosition;
@@ -93,12 +97,12 @@ document.addEventListener("DOMContentLoaded", function () {
    * 更新淡入元素
    */
   function updateFadeElements() {
-    document.querySelectorAll(".fade-in:not(.visible)").forEach((el) => {
+    document.querySelectorAll('.fade-in:not(.visible)').forEach(el => {
       const elementTop = el.getBoundingClientRect().top;
       const elementVisible = 150;
 
       if (elementTop < window.innerHeight - elementVisible) {
-        el.classList.add("visible");
+        el.classList.add('visible');
       }
     });
   }
@@ -108,10 +112,10 @@ document.addEventListener("DOMContentLoaded", function () {
    * 修復錨點跳轉問題
    */
   function initSmoothScroll() {
-    document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
-      anchor.addEventListener("click", function (e) {
-        const targetId = this.getAttribute("href");
-        if (targetId === "#") return;
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        const targetId = this.getAttribute('href');
+        if (targetId === '#') return;
 
         const targetElement = document.querySelector(targetId);
 
@@ -125,14 +129,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
           window.scrollTo({
             top: y,
-            behavior: "smooth",
+            behavior: 'smooth',
           });
 
           // 如果行動選單打開，則關閉它
-          const mobileMenu = document.querySelector(".mobile-menu");
-          if (mobileMenu && !mobileMenu.classList.contains("hidden")) {
-            mobileMenu.classList.add("hidden");
-            document.body.style.overflow = "";
+          const mobileMenu = document.querySelector('.mobile-menu');
+          if (mobileMenu && !mobileMenu.classList.contains('hidden')) {
+            mobileMenu.classList.add('hidden');
+            document.body.style.overflow = '';
           }
         }
       });
@@ -143,29 +147,29 @@ document.addEventListener("DOMContentLoaded", function () {
    * 初始化行動選單
    */
   function initMobileMenu() {
-    const menuToggle = document.querySelector(".menu-toggle");
-    const mobileMenu = document.querySelector(".mobile-menu");
-    const menuClose = document.querySelector(".menu-close");
+    const menuToggle = document.querySelector('.menu-toggle');
+    const mobileMenu = document.querySelector('.mobile-menu');
+    const menuClose = document.querySelector('.menu-close');
 
     if (!menuToggle || !mobileMenu || !menuClose) return;
 
-    menuToggle.addEventListener("click", function () {
-      mobileMenu.classList.remove("hidden");
-      mobileMenu.classList.add("flex");
-      document.body.style.overflow = "hidden";
+    menuToggle.addEventListener('click', function () {
+      mobileMenu.classList.remove('hidden');
+      mobileMenu.classList.add('flex');
+      document.body.style.overflow = 'hidden';
     });
 
-    menuClose.addEventListener("click", function () {
-      mobileMenu.classList.add("hidden");
-      mobileMenu.classList.remove("flex");
-      document.body.style.overflow = "";
+    menuClose.addEventListener('click', function () {
+      mobileMenu.classList.add('hidden');
+      mobileMenu.classList.remove('flex');
+      document.body.style.overflow = '';
     });
 
-    mobileMenu.querySelectorAll("a").forEach((link) => {
-      link.addEventListener("click", function () {
-        mobileMenu.classList.add("hidden");
-        mobileMenu.classList.remove("flex");
-        document.body.style.overflow = "";
+    mobileMenu.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', function () {
+        mobileMenu.classList.add('hidden');
+        mobileMenu.classList.remove('flex');
+        document.body.style.overflow = '';
       });
     });
   }
@@ -174,23 +178,23 @@ document.addEventListener("DOMContentLoaded", function () {
    * 初始化回到頂部按鈕
    */
   function initBackToTop() {
-    const backToTop = document.getElementById("back-to-top");
+    const backToTop = document.getElementById('back-to-top');
     if (!backToTop) return;
 
-    window.addEventListener("scroll", function () {
+    window.addEventListener('scroll', function () {
       if (window.scrollY > 500) {
-        backToTop.classList.remove("opacity-0", "invisible", "translate-y-10");
-        backToTop.classList.add("opacity-100", "visible", "translate-y-0");
+        backToTop.classList.remove('opacity-0', 'invisible', 'translate-y-10');
+        backToTop.classList.add('opacity-100', 'visible', 'translate-y-0');
       } else {
-        backToTop.classList.add("opacity-0", "invisible", "translate-y-10");
-        backToTop.classList.remove("opacity-100", "visible", "translate-y-0");
+        backToTop.classList.add('opacity-0', 'invisible', 'translate-y-10');
+        backToTop.classList.remove('opacity-100', 'visible', 'translate-y-0');
       }
     });
 
-    backToTop.addEventListener("click", function () {
+    backToTop.addEventListener('click', function () {
       window.scrollTo({
         top: 0,
-        behavior: "smooth",
+        behavior: 'smooth',
       });
     });
   }
@@ -199,44 +203,44 @@ document.addEventListener("DOMContentLoaded", function () {
    * 初始化彩蛋功能
    */
   function initSecretFeature() {
-    const secretTrigger = document.getElementById("secret-trigger");
-    const secretContent = document.getElementById("secret-content");
-    const secretClose = document.getElementById("secret-close");
-    const secretUnderstand = document.getElementById("secret-understand");
+    const secretTrigger = document.getElementById('secret-trigger');
+    const secretContent = document.getElementById('secret-content');
+    const secretClose = document.getElementById('secret-close');
+    const secretUnderstand = document.getElementById('secret-understand');
 
     if (!secretTrigger || !secretContent || !secretClose || !secretUnderstand)
       return;
 
     let secretClickCount = 0;
 
-    secretTrigger.addEventListener("click", function () {
+    secretTrigger.addEventListener('click', function () {
       secretClickCount++;
 
       if (secretClickCount >= 3) {
-        secretContent.classList.remove("hidden");
-        secretContent.classList.add("flex");
+        secretContent.classList.remove('hidden');
+        secretContent.classList.add('flex');
         secretClickCount = 0;
-        document.body.style.overflow = "hidden";
+        document.body.style.overflow = 'hidden';
       }
     });
 
-    secretClose.addEventListener("click", function () {
-      secretContent.classList.add("hidden");
-      secretContent.classList.remove("flex");
-      document.body.style.overflow = "";
+    secretClose.addEventListener('click', function () {
+      secretContent.classList.add('hidden');
+      secretContent.classList.remove('flex');
+      document.body.style.overflow = '';
     });
 
-    secretUnderstand.addEventListener("click", function () {
-      secretContent.classList.add("hidden");
-      secretContent.classList.remove("flex");
-      document.body.style.overflow = "";
+    secretUnderstand.addEventListener('click', function () {
+      secretContent.classList.add('hidden');
+      secretContent.classList.remove('flex');
+      document.body.style.overflow = '';
     });
 
-    document.addEventListener("keydown", function (e) {
-      if (e.ctrlKey && e.shiftKey && e.key === "X") {
-        secretContent.classList.remove("hidden");
-        secretContent.classList.add("flex");
-        document.body.style.overflow = "hidden";
+    document.addEventListener('keydown', function (e) {
+      if (e.ctrlKey && e.shiftKey && e.key === 'X') {
+        secretContent.classList.remove('hidden');
+        secretContent.classList.add('flex');
+        document.body.style.overflow = 'hidden';
       }
     });
   }
@@ -245,85 +249,85 @@ document.addEventListener("DOMContentLoaded", function () {
    * 初始化分享功能
    */
   function initShareFeature() {
-    const shareBtn = document.getElementById("share-btn");
-    const mobileShareBtn = document.getElementById("mobile-share-btn");
-    const shareModal = document.getElementById("share-modal");
-    const shareClose = document.getElementById("share-close");
-    const copyLink = document.getElementById("copy-link");
+    const shareBtn = document.getElementById('share-btn');
+    const mobileShareBtn = document.getElementById('mobile-share-btn');
+    const shareModal = document.getElementById('share-modal');
+    const shareClose = document.getElementById('share-close');
+    const copyLink = document.getElementById('copy-link');
 
     if (!shareBtn || !shareModal || !shareClose) return;
 
-    shareBtn.addEventListener("click", function () {
-      shareModal.classList.remove("hidden");
-      shareModal.classList.add("flex");
-      document.body.style.overflow = "hidden";
+    shareBtn.addEventListener('click', function () {
+      shareModal.classList.remove('hidden');
+      shareModal.classList.add('flex');
+      document.body.style.overflow = 'hidden';
     });
 
     if (mobileShareBtn) {
-      mobileShareBtn.addEventListener("click", function () {
-        shareModal.classList.remove("hidden");
-        shareModal.classList.add("flex");
+      mobileShareBtn.addEventListener('click', function () {
+        shareModal.classList.remove('hidden');
+        shareModal.classList.add('flex');
 
-        const mobileMenu = document.querySelector(".mobile-menu");
+        const mobileMenu = document.querySelector('.mobile-menu');
         if (mobileMenu) {
-          mobileMenu.classList.add("hidden");
-          mobileMenu.classList.remove("flex");
+          mobileMenu.classList.add('hidden');
+          mobileMenu.classList.remove('flex');
         }
       });
     }
 
-    shareClose.addEventListener("click", function () {
-      shareModal.classList.add("hidden");
-      shareModal.classList.remove("flex");
-      document.body.style.overflow = "";
+    shareClose.addEventListener('click', function () {
+      shareModal.classList.add('hidden');
+      shareModal.classList.remove('flex');
+      document.body.style.overflow = '';
     });
 
-    shareModal.addEventListener("click", function (e) {
+    shareModal.addEventListener('click', function (e) {
       if (e.target === shareModal) {
-        shareModal.classList.add("hidden");
-        shareModal.classList.remove("flex");
-        document.body.style.overflow = "";
+        shareModal.classList.add('hidden');
+        shareModal.classList.remove('flex');
+        document.body.style.overflow = '';
       }
     });
 
     if (copyLink) {
-      copyLink.addEventListener("click", function () {
-        const linkInput = copyLink.parentElement.querySelector("input");
+      copyLink.addEventListener('click', function () {
+        const linkInput = copyLink.parentElement.querySelector('input');
         linkInput.select();
-        document.execCommand("copy");
-        showToast("連結已複製！");
+        document.execCommand('copy');
+        showToast('連結已複製！');
       });
     }
 
-    document.querySelectorAll(".share-link").forEach((link) => {
-      link.addEventListener("click", function (e) {
+    document.querySelectorAll('.share-link').forEach(link => {
+      link.addEventListener('click', function (e) {
         e.preventDefault();
 
         const platform =
-          this.querySelector("span")?.textContent.trim().toLowerCase() || "";
+          this.querySelector('span')?.textContent.trim().toLowerCase() || '';
         const url = encodeURIComponent(window.location.href);
         const text = encodeURIComponent(
-          "台灣證券業IPO與ETF募集制度黑幕揭密 - #終結IPO制度暴力"
+          '台灣證券業IPO與ETF募集制度黑幕揭密 - #終結IPO制度暴力'
         );
-        let shareUrl = "";
+        let shareUrl = '';
 
         switch (platform) {
-          case "facebook":
+          case 'facebook':
             shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
             break;
-          case "twitter":
+          case 'twitter':
             shareUrl = `https://twitter.com/intent/tweet?url=${url}&text=${text}`;
             break;
-          case "linkedin":
+          case 'linkedin':
             shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${url}`;
             break;
-          case "whatsapp":
+          case 'whatsapp':
             shareUrl = `https://api.whatsapp.com/send?text=${text}%20${url}`;
             break;
         }
 
         if (shareUrl) {
-          window.open(shareUrl, "_blank", "width=600,height=400");
+          window.open(shareUrl, '_blank', 'width=600,height=400');
         }
       });
     });
@@ -333,10 +337,10 @@ document.addEventListener("DOMContentLoaded", function () {
    * 載入範本模組
    */
   function loadTemplates() {
-    if (typeof window.templateModule === "function") {
+    if (typeof window.templateModule === 'function') {
       window.templateModule();
     } else {
-      console.warn("範本模組尚未載入");
+      console.warn('範本模組尚未載入');
     }
   }
 
@@ -344,10 +348,10 @@ document.addEventListener("DOMContentLoaded", function () {
    * 載入動畫模組
    */
   function loadAnimations() {
-    if (typeof window.animationsModule === "function") {
+    if (typeof window.animationsModule === 'function') {
       window.animationsModule();
     } else {
-      console.warn("動畫模組尚未載入");
+      console.warn('動畫模組尚未載入');
     }
   }
 
@@ -359,21 +363,21 @@ document.addEventListener("DOMContentLoaded", function () {
     if (!container) return;
 
     fetch(url)
-      .then((response) => {
+      .then(response => {
         if (!response.ok)
           throw new Error(`HTTP error! status: ${response.status}`);
         return response.text();
       })
-      .then((html) => {
+      .then(html => {
         container.innerHTML = html;
         // 觸發內容載入完成事件
         document.dispatchEvent(
-          new CustomEvent("partialContentLoaded", {
+          new CustomEvent('partialContentLoaded', {
             detail: { containerId, url },
           })
         );
       })
-      .catch((error) => {
+      .catch(error => {
         console.error(`載入 ${url} 失敗:`, error);
         container.innerHTML = `<div class="text-red-500 p-4">內容載入失敗</div>`;
       });
@@ -385,24 +389,24 @@ document.addEventListener("DOMContentLoaded", function () {
  * 全局可用
  */
 window.showToast = function (message) {
-  let toastEl = document.getElementById("copy-toast");
+  const toastEl = document.getElementById('copy-toast');
   if (!toastEl) {
-    console.warn("Toast element #copy-toast not found.");
+    console.warn('Toast element #copy-toast not found.');
     return;
   }
 
-  const messageSpan = toastEl.querySelector("span");
+  const messageSpan = toastEl.querySelector('span');
   if (messageSpan) {
     messageSpan.textContent = message;
   } else {
     toastEl.textContent = message;
   }
 
-  toastEl.classList.remove("opacity-0", "invisible");
-  toastEl.classList.add("opacity-100", "visible");
+  toastEl.classList.remove('opacity-0', 'invisible');
+  toastEl.classList.add('opacity-100', 'visible');
 
   setTimeout(function () {
-    toastEl.classList.remove("opacity-100", "visible");
-    toastEl.classList.add("opacity-0", "invisible");
+    toastEl.classList.remove('opacity-100', 'visible');
+    toastEl.classList.add('opacity-0', 'invisible');
   }, 3000);
 };

@@ -102,7 +102,7 @@ taiwan-ipo-investigation/
 
 ## 🚀 快速開始
 
-### 本地瀏覽
+### 本地開發
 
 1. Clone 專案:
 
@@ -111,38 +111,44 @@ taiwan-ipo-investigation/
    cd taiwan-ipo-investigation
    ```
 
-2. 啟動簡易 HTTP 伺服器:
+2. 安裝前端依賴 (可選):
 
    ```bash
-   python3 -m http.server 8000
+   npm install
    ```
 
-3. 瀏覽網站:
+3. 啟動開發伺服器:
+
+   ```bash
+   # 方式一：使用 Python 簡易伺服器
+   npm run dev
+   
+   # 方式二：使用 live-server (需先 npm install)
+   npm run dev:live
+   ```
+
+4. 瀏覽網站:
    打開 `http://localhost:8000` 即可
 
-### Docker 部署
+### 🌐 GitHub Pages 部署 (推薦)
 
-1. 建立 Dockerfile:
+本專案已針對 GitHub Pages 純前端部署最佳化：
 
-   ```dockerfile
-   FROM nginx:alpine
-   COPY . /usr/share/nginx/html
-   ```
+1. **自動部署**：推送至 `main` 分支自動觸發部署
+2. **手動建置**：`npm run build:static` 產生靜態檔案
+3. **本地預覽**：`npm run pages:preview` 模擬部署環境
 
-2. 構建映像:
+詳細部署說明請參考 [部署指南](docs/DEPLOYMENT.md)。
 
-   ```bash
-   docker build -t taiwan-ipo-site .
-   ```
+### Docker 部署 (可選)
 
-3. 執行容器:
+```bash
+# 建置映像
+docker build -t taiwan-ipo-site .
 
-   ```bash
-   docker run -d -p 8000:80 --name taiwan-ipo-site taiwan-ipo-site
-   ```
-
-4. 存取服務:
-   打開 `http://localhost:8000`
+# 執行容器
+docker run -d -p 8000:80 --name taiwan-ipo-site taiwan-ipo-site
+```
 
 ## ⚙️ 環境變數
 
@@ -173,4 +179,4 @@ taiwan-ipo-investigation/
 ## 📬 聯絡方式
 
 - Issues: [https://github.com/truth-wolf/taiwan-ipo-investigation/issues](https://github.com/truth-wolf/taiwan-ipo-investigation/issues)
-- 維護者: truth-wolf
+- 維護者: DigitalSentinel

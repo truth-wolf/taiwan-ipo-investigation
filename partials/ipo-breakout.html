@@ -50,7 +50,6 @@
       </div>
     </div>
 
-    <!-- 主要模擬結果區域 -->
     <div
       id="simulation-result"
       class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-16"
@@ -70,29 +69,38 @@
           </h3>
         </div>
 
-        <div id="account-statement">
+        <div id="account-statement" class="space-y-6">
           <div
-            class="border-2 border-neutral-200 rounded-xl bg-gradient-to-br from-neutral-50 to-white"
+            class="bg-gradient-to-r from-neutral-50 to-neutral-100 p-4 rounded-xl"
           >
             <table class="min-w-full">
               <thead>
-                <tr class="border-b-2 border-neutral-200">
+                <tr
+                  class="border-b border-neutral-200 bg-neutral-50/50 hover:bg-neutral-100/50 transition-colors"
+                >
                   <th
-                    class="text-left text-neutral-600 py-3 font-semibold px-2"
+                    class="text-left text-neutral-700 py-3 font-semibold px-4 text-sm"
                   >
                     項目
                   </th>
                   <th
-                    class="text-right text-neutral-600 py-3 font-semibold px-2"
+                    class="text-right text-neutral-700 py-3 font-semibold px-4 text-sm"
                   >
                     數值
                   </th>
                 </tr>
               </thead>
-              <tbody id="statement-details" class="divide-y divide-neutral-100">
-                <tr>
-                  <td class="py-3 text-neutral-600 px-2">隨機責任額度</td>
-                  <td class="text-right py-3 px-2">
+              <tbody
+                id="statement-details"
+                class="divide-y divide-neutral-100/70"
+              >
+                <tr
+                  class="hover:bg-neutral-50/30 transition-colors duration-200"
+                >
+                  <td class="px-4 py-3 text-sm font-medium text-neutral-700">
+                    隨機責任額度
+                  </td>
+                  <td class="px-4 py-3 text-sm text-right">
                     <div class="inline-flex items-center">
                       <div
                         class="animate-spin rounded-full h-4 w-4 border-2 border-primary border-t-transparent mr-2"
@@ -108,16 +116,21 @@
           <!-- 損益總結區 - 增強視覺效果 -->
           <div
             id="loss-summary"
-            class="mt-6 border-t-4 border-primary bg-gradient-to-r from-red-50 to-orange-50 rounded-xl"
+            class="p-6 mt-6 border-t-4 border-primary bg-gradient-to-r from-red-50 to-orange-50 rounded-xl transition-all duration-300 hover:shadow-md hover:scale-[1.02] transform"
           >
-            <div class="flex items-center justify-between">
+            <div class="flex items-center justify-between mb-4">
               <div class="flex items-center">
-                <i class="fas fa-calculator text-primary text-2xl mr-3"></i>
+                <i
+                  class="fas fa-calculator text-primary text-2xl mr-3 flex-shrink-0"
+                ></i>
                 <span class="text-xl font-semibold text-neutral-800"
                   >總計損益：</span
                 >
               </div>
-              <span id="total-loss-amount" class="text-2xl font-bold">
+              <span
+                id="total-loss-amount"
+                class="text-2xl font-bold transition-colors duration-300"
+              >
                 <div class="inline-flex items-center">
                   <div
                     class="animate-pulse h-6 w-20 bg-neutral-300 rounded mr-2"
@@ -126,10 +139,12 @@
                 </div>
               </span>
             </div>
-            <p class="text-sm text-neutral-500 mt-3 flex items-center">
-              <i class="fas fa-info-circle mr-2"></i>
-              上述金額僅為模擬情境，實際損益因個案而異。數據來源為真實IPO歷史價格。
-            </p>
+            <div class="text-sm text-neutral-500 flex items-start">
+              <i class="fas fa-info-circle mr-2 mt-0.5 flex-shrink-0"></i>
+              <p class="leading-relaxed">
+                上述金額僅為模擬情境，實際損益因個案而異。數據來源為真實IPO歷史價格。
+              </p>
+            </div>
           </div>
         </div>
       </div>
@@ -246,9 +261,9 @@
 
       <div
         class="chart-container bg-gradient-to-br from-neutral-50 to-white p-6 rounded-xl border border-neutral-200"
-        style="position: relative; height: 400px"
+        style="position: relative; height: 450px; min-height: 400px"
       >
-        <canvas id="ipo-price-chart"></canvas>
+        <canvas id="ipo-price-chart" style="max-height: 380px"></canvas>
       </div>
 
       <div

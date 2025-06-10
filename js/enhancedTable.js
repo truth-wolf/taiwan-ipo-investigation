@@ -1,5 +1,9 @@
 /**
- * enhancedTable.js - 增強型表格處理和互動功能
+ * 📦 模組：增強型表格處理和互動功能
+ * 🕒 最後更新：2025-06-10T21:49:33+08:00
+ * 🧑‍💻 作者/更新者：@DigitalSentinel
+ * 🔢 版本：v1.2.0
+ * 📝 摘要：提供產品視圖切換、表格下載、篩選和數據統計功能
  *
  * 提供下列功能:
  * - 產品視圖和經典視圖切換
@@ -379,8 +383,8 @@ function createDataStats() {
   }));
 
   let weightedTotalAmount = 0;
-  let formulaParts = [];
-  let missingBrokers = new Set();
+  const formulaParts = [];
+  const missingBrokers = new Set();
 
   parsed.forEach((item) => {
     const brokerName = item.broker ? item.broker.trim() : "未知券商";
@@ -528,7 +532,7 @@ function animateCounters() {
     function step(now) {
       const elapsed = now - start;
       const progress = Math.min(elapsed / duration, 1);
-      let value = progress * rawTarget;
+      const value = progress * rawTarget;
 
       if (decimals > 0) {
         const fixed = value.toFixed(decimals);
@@ -735,7 +739,7 @@ function downloadCSV(data, isProductView, branchCounts) {
       "產品,募集期間," + uniqueBrokers.join(",") + ",平均責任額\n";
 
     sortedProducts.forEach((product) => {
-      let row = [product.name, product.period];
+      const row = [product.name, product.period];
       let productTotalAmount = 0;
       let productBrokerCount = 0;
       uniqueBrokers.forEach((broker) => {
@@ -760,7 +764,7 @@ function downloadCSV(data, isProductView, branchCounts) {
 
     // 加權總責任額計算 (CSV)
     let weightedGrandTotalAmount = 0;
-    let missingBrokersForCsvGrandTotal = new Set();
+    const missingBrokersForCsvGrandTotal = new Set();
     if (branchCounts && Object.keys(branchCounts).length > 0) {
       data.forEach((item) => {
         const brokerName = item[0] ? item[0].trim() : "未知券商";
@@ -788,7 +792,7 @@ function downloadCSV(data, isProductView, branchCounts) {
       );
     }
 
-    let totalRow = ["加權總責任額", ""]; // 更新標籤
+    const totalRow = ["加權總責任額", ""]; // 更新標籤
     uniqueBrokers.forEach((broker) => {
       // 券商各自的總額（非加權）
       const brokerTotal = data
@@ -866,7 +870,7 @@ function downloadExcel(data, isProductView, branchCounts) {
       BOM + "產品,募集期間," + uniqueBrokers.join(",") + ",平均責任額\n";
 
     sortedProducts.forEach((product) => {
-      let row = [product.name, product.period];
+      const row = [product.name, product.period];
       let productTotalAmount = 0;
       let productBrokerCount = 0;
       uniqueBrokers.forEach((broker) => {
@@ -891,7 +895,7 @@ function downloadExcel(data, isProductView, branchCounts) {
 
     // 加權總責任額計算 (Excel)
     let weightedGrandTotalAmountExcel = 0;
-    let missingBrokersForExcelGrandTotal = new Set();
+    const missingBrokersForExcelGrandTotal = new Set();
     if (branchCounts && Object.keys(branchCounts).length > 0) {
       data.forEach((item) => {
         const brokerName = item[0] ? item[0].trim() : "未知券商";
@@ -919,7 +923,7 @@ function downloadExcel(data, isProductView, branchCounts) {
       );
     }
 
-    let totalRow = ["加權總責任額", ""]; // 更新標籤
+    const totalRow = ["加權總責任額", ""]; // 更新標籤
     uniqueBrokers.forEach((broker) => {
       const brokerTotal = data
         .filter((item) => item[0] === broker)
@@ -1007,7 +1011,7 @@ function downloadPDF(data, isProductView, branchCounts) {
     const uniqueBrokers = [...new Set(data.map((item) => item[0]))].sort();
     const head = [["產品", "募集期間", ...uniqueBrokers, "平均責任額"]];
     const body = sortedProducts.map((product) => {
-      let row = [product.name, product.period];
+      const row = [product.name, product.period];
       let productTotalAmount = 0;
       let productBrokerCount = 0;
       uniqueBrokers.forEach((broker) => {
@@ -1030,7 +1034,7 @@ function downloadPDF(data, isProductView, branchCounts) {
 
     // 加權總責任額計算 (PDF)
     let weightedGrandTotalAmountPdf = 0;
-    let missingBrokersForPdfGrandTotal = new Set();
+    const missingBrokersForPdfGrandTotal = new Set();
     if (branchCounts && Object.keys(branchCounts).length > 0) {
       data.forEach((item) => {
         const brokerName = item[0] ? item[0].trim() : "未知券商";
@@ -1058,7 +1062,7 @@ function downloadPDF(data, isProductView, branchCounts) {
       );
     }
 
-    let totalRowData = ["加權總責任額", ""]; // 更新標籤
+    const totalRowData = ["加權總責任額", ""]; // 更新標籤
     uniqueBrokers.forEach((broker) => {
       const brokerTotal = data
         .filter((item) => item[0] === broker)

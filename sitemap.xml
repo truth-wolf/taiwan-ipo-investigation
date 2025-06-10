@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:news="http://www.google.com/schemas/sitemap-news/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml"
+        xmlns:mobile="http://www.google.com/schemas/sitemap-mobile/1.0"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+
+  <!-- 主頁面 - 最高優先級 -->
+  <url>
+    <loc>https://truth-wolf.github.io/taiwan-ipo-investigation/</loc>
+    <lastmod>2025-06-11T02:28:37+08:00</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+    <mobile:mobile/>
+  </url>
+
+  <!-- IPO分析專頁 -->
+  <url>
+    <loc>https://truth-wolf.github.io/taiwan-ipo-investigation/IPO.html</loc>
+    <lastmod>2025-06-11T02:28:37+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <mobile:mobile/>
+  </url>
+
+  <!-- IPO詳細視圖頁面 -->
+  <url>
+    <loc>https://truth-wolf.github.io/taiwan-ipo-investigation/IPO-view.html</loc>
+    <lastmod>2025-06-11T02:28:37+08:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+    <mobile:mobile/>
+  </url>
+
+  <!-- 重要靜態資源 -->
+  <url>
+    <loc>https://truth-wolf.github.io/taiwan-ipo-investigation/README.md</loc>
+    <lastmod>2025-06-11T02:28:37+08:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+  <url>
+    <loc>https://truth-wolf.github.io/taiwan-ipo-investigation/CHANGELOG.md</loc>
+    <lastmod>2025-06-11T02:28:37+08:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+
+  <!-- AI友善內容文件 -->
+  <url>
+    <loc>https://truth-wolf.github.io/taiwan-ipo-investigation/llms.txt</loc>
+    <lastmod>2025-06-11T02:28:37+08:00</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+</urlset> 

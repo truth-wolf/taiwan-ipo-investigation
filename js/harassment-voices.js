@@ -301,7 +301,7 @@ class HarassmentVoicesModule {
     ];
     const text = content;
 
-    for (let company of companies) {
+    for (const company of companies) {
       if (text.includes(company)) {
         return company + "證券";
       }

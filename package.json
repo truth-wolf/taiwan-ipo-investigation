@@ -1,0 +1,65 @@
+{
+  "name": "taiwan-ipo-investigation",
+  "version": "1.4.0",
+  "type": "module",
+  "description": "揭露台灣證券業 IPO 與 ETF 募集制度黑幕的專案網站",
+  "main": "index.html",
+  "scripts": {
+    "dev": "python3 -m http.server 8000",
+    "dev:live": "live-server --port=8000 --open=/index.html",
+    "build": "npm run build:static",
+    "build:static": "echo '🔄 建置靜態檔案...' && mkdir -p build && npm run copy:assets && echo '✅ 靜態檔案建置完成'",
+    "copy:assets": "cp -r *.html css js partials txt icon docs *.csv *.json build/ 2>/dev/null || true",
+    "validate": "npm run lint:js && npm run test:js",
+    "validate:full": "npm run validate && npm run lint:python && npm run test:python",
+    "lint:js": "eslint js/ *.js --fix",
+    "lint:css": "stylelint css/**/*.css --fix",
+    "lint:python": "ruff check *.py --fix && black *.py",
+    "test": "npm run test:js",
+    "test:js": "jest",
+    "test:python": "pytest -v",
+    "serve": "python3 -m http.server 8000",
+    "serve:build": "cd build && python3 -m http.server 8000",
+    "pages:preview": "npm run build:static && npm run serve:build",
+    "format": "prettier --write '**/*.{js,css,html,md}'",
+    "clean": "rm -rf build coverage node_modules/.cache",
+    "lighthouse": "lighthouse http://localhost:8000 --output=html --output-path=reports/lighthouse-report.html --chrome-flags='--headless --no-sandbox' --only-categories=seo,performance,accessibility",
+    "lighthouse:all": "lighthouse http://localhost:8000 --output=html --output-path=reports/lighthouse-full.html --chrome-flags='--headless --no-sandbox'"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/truth-wolf/taiwan-ipo-investigation.git"
+  },
+  "keywords": [
+    "taiwan",
+    "ipo",
+    "investigation",
+    "data-visualization",
+    "securities",
+    "whistleblowing"
+  ],
+  "author": "DigitalSentinel",
+  "license": "MIT",
+  "devDependencies": {
+    "@eslint/js": "^9.0.0",
+    "eslint": "^9.0.0",
+    "eslint-plugin-security": "^3.0.0",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
+    "lighthouse": "^12.6.1",
+    "lighthouse-ci": "^1.13.1",
+    "live-server": "^1.2.2",
+    "prettier": "^3.3.0",
+    "stylelint": "^16.0.0",
+    "stylelint-config-standard": "^36.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "python": ">=3.8"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ]
+}

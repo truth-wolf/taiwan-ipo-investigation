@@ -131,7 +131,7 @@ function initEasterEgg() {
 // 激活互動式彩蛋
 function activateEasterEgg() {
   // 先檢查彩蛋內容是否已經載入
-  let easterEggSection = document.getElementById('easter-egg-section');
+  const easterEggSection = document.getElementById('easter-egg-section');
   
   if (easterEggSection) {
     // 已存在，直接顯示
