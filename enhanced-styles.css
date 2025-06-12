@@ -755,16 +755,17 @@ th.sort-desc i.fas {
 /* 圖表容器樣式 */
 .chart-container {
   position: relative;
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.95);
   border-radius: 0.75rem;
   padding: 0;
   box-shadow:
     0 4px 6px -1px rgba(0, 0, 0, 0.1),
     0 2px 4px -1px rgba(0, 0, 0, 0.06);
   transition: all 0.3s ease;
-  min-height: 420px;
+  min-height: 450px;
   height: auto;
   overflow: visible;
+  border: 1px solid rgba(229, 231, 235, 0.8);
 }
 
 .chart-container:hover {
@@ -777,7 +778,19 @@ th.sort-desc i.fas {
 .chart-container canvas {
   width: 100% !important;
   height: 100% !important;
-  min-height: 280px !important;
+  min-height: 350px !important;
+  display: block;
+}
+
+/* 數據可視化容器 */
+.data-visualization {
+  margin: 2rem 0;
+  padding: 0 1rem;
+}
+
+.data-visualization .chart-container {
+  min-height: 450px;
+  width: 100%;
 }
 
 /* IPO價格圖表特殊樣式 */
@@ -791,7 +804,7 @@ th.sort-desc i.fas {
 #broker-chart {
   min-height: 350px !important;
   max-height: none !important;
-  height: 350px !important;
+  height: 100% !important;
 }
 
 /* 圖表標題樣式 */
@@ -802,8 +815,9 @@ th.sort-desc i.fas {
   border-bottom: 1px solid #e5e7eb;
   margin-bottom: 0;
   padding: 1rem 1.5rem;
-  background: rgba(249, 250, 251, 0.8);
+  background: rgba(249, 250, 251, 0.9);
   border-radius: 0.75rem 0.75rem 0 0;
+  backdrop-filter: blur(10px);
 }
 
 /* 圖表內容區域 */
@@ -818,6 +832,8 @@ th.sort-desc i.fas {
   box-shadow:
     0 4px 6px -1px rgba(0, 0, 0, 0.1),
     0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  margin-top: 3rem !important;
+  border: 1px solid rgba(229, 231, 235, 0.6);
 }
 
 #loss-summary:hover {
@@ -830,8 +846,16 @@ th.sort-desc i.fas {
 /* 確保圖表容器在不同尺寸下保持合適的比例 */
 @media (max-width: 768px) {
   .chart-container {
-    min-height: 380px;
+    min-height: 400px;
     height: auto;
+    margin-bottom: 1.5rem;
+  }
+
+  .data-visualization {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    margin: 1.5rem 0;
+    padding: 0 0.5rem;
   }
 
   .chart-container.radar-chart-inner {
@@ -839,13 +863,13 @@ th.sort-desc i.fas {
   }
 
   #ipo-price-chart {
-    min-height: 320px !important;
+    min-height: 300px !important;
   }
 
   #time-series-chart,
   #broker-chart {
-    min-height: 320px !important;
-    height: 320px !important;
+    min-height: 300px !important;
+    height: 100% !important;
   }
 
   .chart-title {
@@ -856,5 +880,15 @@ th.sort-desc i.fas {
   .chart-container .p-4 {
     padding: 1rem !important;
     padding-bottom: 0.8rem !important;
+  }
+
+  /* 損益總結區在手機版的樣式 */
+  #loss-summary {
+    margin-top: 2rem !important;
+    padding: 1.5rem;
+  }
+
+  #loss-summary .text-xl {
+    font-size: 1.1rem;
   }
 }

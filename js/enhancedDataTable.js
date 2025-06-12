@@ -822,8 +822,6 @@ function addTotalInformation(data, currentBranchCountsMap) {
 // 初始化數據視覺化
 function initDataVisualizations(data) {
   console.log('初始化數據視覺化');
-  // const tableInfo = document.querySelector(".table-info"); // 原來的定位方式
-  // if (!tableInfo) return;
 
   // 確保先移除可能已存在的舊圖表容器，避免重複添加
   const existingViz = document.querySelector('.data-visualization');
@@ -833,26 +831,50 @@ function initDataVisualizations(data) {
 
   const visualizationContainer = document.createElement('div');
   visualizationContainer.className =
-    'data-visualization grid grid-cols-1 md:grid-cols-2 gap-8 mt-8';
+    'data-visualization grid grid-cols-1 md:grid-cols-2 gap-8 mt-12 mb-8';
 
-  // tableInfo.parentNode.insertBefore(
-  //   visualizationContainer,
-  //   tableInfo.nextSibling
-  // ); // 原來的插入方式
+  // 優先選擇更穩定的容器來放置圖表
+  let targetContainer = document.querySelector('.table-info');
+  if (!targetContainer) {
+    targetContainer = document.querySelector('.overflow-x-auto');
+  }
+  if (!targetContainer) {
+    targetContainer = document.querySelector('.max-w-content');
+  }
 
-  // 將圖表容器附加到 .overflow-x-auto 區域的末尾，以獲得更穩定的佈局
-  const mainContentArea = document.querySelector('.overflow-x-auto');
-  if (mainContentArea) {
-    mainContentArea.appendChild(visualizationContainer);
+  if (targetContainer) {
+    // 在目標容器後插入圖表容器
+    if (targetContainer.nextSibling) {
+      targetContainer.parentNode.insertBefore(
+        visualizationContainer,
+        targetContainer.nextSibling
+      );
+    } else {
+      targetContainer.parentNode.appendChild(visualizationContainer);
+    }
   } else {
-    console.error('找不到 .overflow-x-auto 容器來附加數據視覺化區塊');
-    // 作為備用，嘗試附加到 body，但這可能不是理想的佈局
-    document.body.appendChild(visualizationContainer);
+    console.error('找不到適當的容器來附加數據視覺化區塊');
+    // 作為備用，將圖表添加到頁面主要內容區域
+    const mainContent = document.querySelector('section');
+    if (mainContent) {
+      mainContent.appendChild(visualizationContainer);
+    }
   }
 
   try {
+    // 確保 Chart.js 已載入
+    if (typeof Chart === 'undefined') {
+      console.error('Chart.js 未載入，無法創建圖表');
+      return;
+    }
+
     createBrokerComparisonChart(data, visualizationContainer);
     createTimeSeriesChart(data, visualizationContainer);
+
+    // 添加圖表載入完成後的尺寸調整
+    setTimeout(() => {
+      window.dispatchEvent(new Event('resize'));
+    }, 100);
   } catch (error) {
     console.error('圖表初始化失敗:', error);
   }
@@ -879,54 +901,77 @@ function createBrokerComparisonChart(data, container) {
   chartContainer.className = 'chart-container bg-white rounded-lg shadow-card';
   chartContainer.innerHTML = `
     <div class="chart-title p-4">各券商總責任額比較</div>
-    <div class="p-4 pb-6">
-      <canvas id="broker-chart" height="350"></canvas>
+    <div class="p-4 pb-6" style="position: relative; height: 400px;">
+      <canvas id="broker-chart"></canvas>
     </div>
   `;
   container.appendChild(chartContainer);
 
-  const ctx = document.getElementById('broker-chart').getContext('2d');
-  new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels: labels,
-      datasets: [
-        {
-          label: '總責任額 (萬元)',
-          data: chartData,
-          backgroundColor: 'rgba(26, 93, 122, 0.7)',
-          borderColor: 'rgba(26, 93, 122, 1)',
-          borderWidth: 1,
+  // 等待DOM更新後再初始化圖表
+  setTimeout(() => {
+    const canvas = document.getElementById('broker-chart');
+    if (!canvas) {
+      console.error('找不到券商圖表 canvas 元素');
+      return;
+    }
+
+    const ctx = canvas.getContext('2d');
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: labels,
+        datasets: [
+          {
+            label: '總責任額 (萬元)',
+            data: chartData,
+            backgroundColor: 'rgba(26, 93, 122, 0.7)',
+            borderColor: 'rgba(26, 93, 122, 1)',
+            borderWidth: 1,
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            display: true,
+            position: 'top',
+            labels: {
+              font: {
+                size: 12,
+              },
+            },
+          },
+          tooltip: {
+            callbacks: {
+              label: function (context) {
+                return `${
+                  context.dataset.label
+                }: ${context.raw.toLocaleString()} 萬元`;
+              },
+            },
+          },
         },
-      ],
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: { display: true, position: 'top' },
-        tooltip: {
-          callbacks: {
-            label: function (context) {
-              return `${
-                context.dataset.label
-              }: ${context.raw.toLocaleString()} 萬元`;
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: {
+              callback: function (value) {
+                return value.toLocaleString();
+              },
+            },
+          },
+          x: {
+            ticks: {
+              maxRotation: 45,
+              minRotation: 0,
             },
           },
         },
       },
-      scales: {
-        y: {
-          beginAtZero: true,
-          ticks: {
-            callback: function (value) {
-              return value.toLocaleString();
-            },
-          },
-        },
-      },
-    },
-  });
+    });
+  }, 50);
 }
 
 // 創建責任額時間趨勢圖表
@@ -963,78 +1008,125 @@ function createTimeSeriesChart(data, container) {
   chartContainer.className = 'chart-container bg-white rounded-lg shadow-card';
   chartContainer.innerHTML = `
     <div class="chart-title p-4">責任額時間趨勢</div>
-    <div class="p-4 pb-6">
-      <canvas id="time-series-chart" height="350"></canvas>
+    <div class="p-4 pb-6" style="position: relative; height: 400px;">
+      <canvas id="time-series-chart"></canvas>
     </div>
   `;
   container.appendChild(chartContainer);
 
-  const ctx = document.getElementById('time-series-chart').getContext('2d');
-  new Chart(ctx, {
-    type: 'line',
-    data: {
-      labels: sortedDates,
-      datasets: [
-        {
-          label: '平均責任額 (萬元)',
-          data: averageData,
-          backgroundColor: 'rgba(226, 62, 87, 0.2)',
-          borderColor: 'rgba(226, 62, 87, 1)',
-          borderWidth: 2,
-          tension: 0.3,
-          fill: true,
+  // 等待DOM更新後再初始化圖表
+  setTimeout(() => {
+    const canvas = document.getElementById('time-series-chart');
+    if (!canvas) {
+      console.error('找不到時間序列圖表 canvas 元素');
+      return;
+    }
+
+    const ctx = canvas.getContext('2d');
+    new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: sortedDates,
+        datasets: [
+          {
+            label: '平均責任額 (萬元)',
+            data: averageData,
+            backgroundColor: 'rgba(226, 62, 87, 0.2)',
+            borderColor: 'rgba(226, 62, 87, 1)',
+            borderWidth: 2,
+            tension: 0.3,
+            fill: true,
+          },
+          {
+            label: '最高責任額 (萬元)',
+            data: maxData,
+            backgroundColor: 'rgba(26, 93, 122, 0.2)',
+            borderColor: 'rgba(26, 93, 122, 1)',
+            borderWidth: 2,
+            tension: 0.3,
+            fill: false,
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            display: true,
+            position: 'top',
+            labels: {
+              font: {
+                size: 12,
+              },
+            },
+          },
+          tooltip: {
+            callbacks: {
+              label: function (context) {
+                return `${
+                  context.dataset.label
+                }: ${context.raw.toLocaleString()} 萬元`;
+              },
+            },
+          },
         },
-        {
-          label: '最高責任額 (萬元)',
-          data: maxData,
-          backgroundColor: 'rgba(26, 93, 122, 0.2)',
-          borderColor: 'rgba(26, 93, 122, 1)',
-          borderWidth: 2,
-          tension: 0.3,
-          fill: false,
-        },
-      ],
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: { display: true, position: 'top' },
-        tooltip: {
-          callbacks: {
-            label: function (context) {
-              return `${
-                context.dataset.label
-              }: ${context.raw.toLocaleString()} 萬元`;
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: {
+              callback: function (value) {
+                return value.toLocaleString();
+              },
+            },
+          },
+          x: {
+            ticks: {
+              maxRotation: 45,
+              minRotation: 0,
             },
           },
         },
       },
-      scales: {
-        y: {
-          beginAtZero: true,
-          ticks: {
-            callback: function (value) {
-              return value.toLocaleString();
-            },
-          },
-        },
-      },
-    },
-  });
+    });
+  }, 50);
 }
 
 // 設置事件監聽器
 function setupEventListeners() {
+  // 視窗大小改變時重新調整圖表
+  let resizeTimeout;
   window.addEventListener('resize', function () {
-    if (
-      window.innerWidth >= 768 &&
-      !productTableInitialized &&
-      csvData.length > 0
-    ) {
-      prepareProductTableContainer();
-      initViewButtons();
-    }
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(function () {
+      // 通知所有 Chart.js 實例重新調整大小
+      if (typeof Chart !== 'undefined') {
+        Chart.helpers.each(Chart.instances, function (instance) {
+          instance.resize();
+        });
+      }
+
+      // 檢查並重新初始化表格
+      if (
+        window.innerWidth >= 768 &&
+        !productTableInitialized &&
+        csvData.length > 0
+      ) {
+        prepareProductTableContainer();
+        initViewButtons();
+      }
+    }, 250);
+  });
+
+  // 頁面載入完成後確保圖表正確顯示
+  document.addEventListener('DOMContentLoaded', function () {
+    setTimeout(function () {
+      if (typeof Chart !== 'undefined') {
+        Chart.helpers.each(Chart.instances, function (instance) {
+          instance.resize();
+        });
+      }
+    }, 500);
   });
 }
 
