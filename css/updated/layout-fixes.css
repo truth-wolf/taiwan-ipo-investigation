@@ -50,7 +50,7 @@
 
 /* 針對具體的對帳單容器 */
 #simulation-result {
-  margin-bottom: 0 !important; /* 移除底部外距 */
+  margin-bottom: 2rem !important; /* 恢復整個模擬結果區塊的底部外距 */
 }
 
 /* 營業員自購模擬對帳單的主要容器 */
