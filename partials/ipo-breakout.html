@@ -292,23 +292,29 @@
       id="detailed-data-section"
       class="bg-white p-8 rounded-2xl shadow-card fade-in border border-neutral-200 hidden"
     >
-      <div class="flex justify-between items-center mb-6">
-        <div class="flex items-center">
+      <div
+        class="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6 gap-4"
+      >
+        <div class="flex items-center flex-1">
           <div
-            class="w-12 h-12 bg-secondary bg-opacity-10 rounded-full flex items-center justify-center mr-4"
+            class="w-12 h-12 bg-secondary bg-opacity-10 rounded-full flex items-center justify-center mr-4 flex-shrink-0"
           >
             <i class="fas fa-table text-secondary text-xl"></i>
           </div>
-          <div>
-            <h3 class="text-2xl font-bold text-neutral-800">IPO價格詳細數據</h3>
-            <p class="text-neutral-600 text-sm mt-1">
+          <div class="flex-1 min-w-0">
+            <h3
+              class="text-xl sm:text-2xl font-bold text-neutral-800 leading-tight"
+            >
+              IPO價格詳細數據
+            </h3>
+            <p class="text-neutral-600 text-sm mt-1 leading-relaxed">
               完整的IPO上市後價格表現統計
             </p>
           </div>
         </div>
         <button
           id="hideDetailedData"
-          class="text-neutral-400 hover:text-primary transition-colors duration-200 p-2 rounded-lg hover:bg-neutral-100"
+          class="hidden sm:block text-neutral-400 hover:text-primary transition-colors duration-200 p-2 rounded-lg hover:bg-neutral-100 flex-shrink-0"
           title="關閉詳細數據"
         >
           <i class="fas fa-times text-xl"></i>
@@ -319,7 +325,7 @@
         <div
           class="bg-gradient-to-r from-neutral-50 to-white p-4 rounded-xl border border-neutral-200"
         >
-          <table class="min-w-full divide-y divide-neutral-200">
+          <table class="ipo-table min-w-full divide-y divide-neutral-200">
             <thead class="bg-gradient-to-r from-neutral-100 to-neutral-50">
               <tr>
                 <th

@@ -6,20 +6,77 @@
  * 📝 摘要：IPO破發數據載入、模擬計算與壓力分析功能
  */
 
-// IPO破發模組 - 修復版本
-(function () {
+(() => {
   'use strict';
+
+  // 調試模式開關 - 設為 true 可看到詳細載入過程
+  const DEBUG_MODE = true;
+
+  // 全域變數
+  let allIpoData = [];
+  let ipoSimulationChart = null;
+
+  // 增強版診斷日誌函數
+  function logDiagnostic(message, obj) {
+    if (DEBUG_MODE) {
+      if (obj) {
+        console.log(`[IPO調試] ${message}`, obj);
+      } else {
+        console.log(`[IPO調試] ${message}`);
+      }
+    }
+  }
+
+  // 添加全局調試函數，可在控制台手動調用
+  window.ipoDebug = {
+    showData: () => {
+      console.log('當前載入的IPO數據:', allIpoData);
+      console.log(`數據數量: ${allIpoData.length}`);
+    },
+    reloadData: () => {
+      console.log('重新載入數據...');
+      loadAndProcessData();
+    },
+    checkTable: () => {
+      const tableBody = document.getElementById('ipo-data-table-body');
+      if (tableBody) {
+        const rows = tableBody.querySelectorAll('tr');
+        console.log(`表格中有 ${rows.length} 行數據`);
+
+        let foundHighRisk = 0;
+        rows.forEach((row, index) => {
+          const firstCell = row.querySelector('td');
+          if (firstCell && firstCell.textContent.includes('高風險')) {
+            foundHighRisk++;
+            console.log(
+              `找到高風險項目在第 ${index + 1} 行:`,
+              firstCell.textContent.split('\n')[0].trim()
+            );
+          }
+        });
+
+        console.log(`表格中共有 ${foundHighRisk} 個高風險項目`);
+      } else {
+        console.log('找不到表格元素');
+      }
+    },
+  };
+
+  // 顯示調試提示
+  if (DEBUG_MODE) {
+    console.log(
+      '%c[IPO調試模式已啟用]',
+      'color: #ff6b35; font-weight: bold; font-size: 14px;'
+    );
+    console.log('可用調試功能:');
+    console.log('- ipoDebug.showData() - 顯示當前載入的數據');
+    console.log('- ipoDebug.reloadData() - 重新載入數據');
+    console.log('- ipoDebug.checkTable() - 檢查表格內容');
+  }
 
   console.log('IPO破發模組初始化開始...');
 
-  // 增強錯誤診斷
-  function logDiagnostic(message, obj) {
-    if (obj) {
-      console.log(`[IPO診斷] ${message}`, obj);
-    } else {
-      console.log(`[IPO診斷] ${message}`);
-    }
-  }
+  // logDiagnostic 函數已在上方定義
 
   // 檢查關鍵DOM元素是否存在
   const checkDomElements = function () {
@@ -46,10 +103,6 @@
 
     return allFound;
   };
-
-  // 全局變數定義
-  let allIpoData = [];
-  let ipoSimulationChart = null;
 
   // 交易成本常數 - 營業員自掏腰包
   const BROKER_SELL_FEE_RATE = (0.1425 * 0.6) / 100; // 0.0855%
@@ -132,21 +185,37 @@
 
       if (parsedData.length > 0) {
         logDiagnostic('CSV頭部:', parsedData[0]);
+        logDiagnostic('CSV最後一行:', parsedData[parsedData.length - 1]);
       }
 
+      let validDataCount = 0;
+      let invalidDataCount = 0;
+      const invalidRows = [];
+
       allIpoData = parsedData
-        .map(item => {
+        .map((item, index) => {
           const subPrice = parseFloat(item['募集價格']);
           const dayLow = parseFloat(item['掛牌當天最低']);
           const monthLow = parseFloat(item['掛盤後一個月最低']);
 
+          // 更寬鬆的數據驗證邏輯
           if (
             isNaN(subPrice) ||
             isNaN(dayLow) ||
             isNaN(monthLow) ||
-            subPrice <= 0
+            subPrice <= 0 ||
+            dayLow <= 0 ||
+            monthLow <= 0
           ) {
-            console.warn('[IPO警告] 跳過無效數據行:', item);
+            console.warn(`[IPO警告] 跳過無效數據行 ${index + 2}:`, item);
+            invalidRows.push({
+              line: index + 2,
+              name: item['股票名稱'],
+              subPrice: item['募集價格'],
+              dayLow: item['掛牌當天最低'],
+              monthLow: item['掛盤後一個月最低'],
+            });
+            invalidDataCount++;
             return null;
           }
 
@@ -155,7 +224,9 @@
           const lossMonth1Amount = subPrice - monthLow;
           const lossMonth1Percent = ((monthLow - subPrice) / subPrice) * 100;
 
-          return {
+          validDataCount++;
+
+          const result = {
             name: item['股票名稱'] ? item['股票名稱'].trim() : 'N/A',
             date: item['上市日'] ? item['上市日'].trim() : 'N/A',
             subPrice,
@@ -166,12 +237,23 @@
             lossMonth1Amount,
             lossMonth1Percent,
           };
+
+          return result;
         })
         .filter(item => item !== null);
 
-      logDiagnostic(`數據處理完成，有效數據 ${allIpoData.length} 行`);
+      logDiagnostic(`數據處理完成:`);
+      logDiagnostic(`- 有效數據: ${validDataCount} 行`);
+      logDiagnostic(`- 無效數據: ${invalidDataCount} 行`);
+      logDiagnostic(`- 最終數據數量: ${allIpoData.length} 行`);
+
+      if (invalidRows.length > 0) {
+        logDiagnostic('無效數據行詳情:', invalidRows);
+      }
+
       if (allIpoData.length > 0) {
         logDiagnostic('第一筆處理後資料:', allIpoData[0]);
+        logDiagnostic('最後一筆處理後資料:', allIpoData[allIpoData.length - 1]);
       }
 
       if (allIpoData.length === 0) {
@@ -185,6 +267,21 @@
       calculateAndDisplayStats(allIpoData);
       logDiagnostic('填充數據表格...');
       populateDataTable(allIpoData);
+
+      // 自動顯示詳細數據表格，以便用戶查看所有數據
+      const detailedSection = document.getElementById('detailed-data-section');
+      if (detailedSection) {
+        detailedSection.classList.remove('hidden');
+        logDiagnostic('已自動顯示詳細數據表格');
+
+        // 更新切換按鈕的文字
+        const toggleBtn = document.getElementById('toggleDetailedView');
+        if (toggleBtn) {
+          toggleBtn.innerHTML =
+            '<i class="fas fa-eye-slash mr-2"></i>隱藏完整數據';
+        }
+      }
+
       logDiagnostic('執行首次模擬...');
       runSimulation(); // 執行第一次模擬
       logDiagnostic('IPO破發模組初始化完成');
@@ -221,7 +318,9 @@
     }
 
     // 分析標頭
-    const headers = lines[0].split(',').map(header => header.trim());
+    const headers = lines[0]
+      .split(',')
+      .map(header => header.trim().replace(/"/g, ''));
     logDiagnostic(`CSV標頭: ${headers.join(', ')}`);
 
     // 檢查必要欄位是否存在
@@ -244,15 +343,39 @@
     }
 
     const data = [];
+    let skippedLines = 0;
 
     for (let i = 1; i < lines.length; i++) {
-      if (!lines[i].trim()) {
-        logDiagnostic(`跳過空白行 ${i}`);
+      const line = lines[i].trim();
+
+      if (!line) {
+        logDiagnostic(`跳過空白行 ${i + 1}`);
+        skippedLines++;
         continue;
       }
 
-      // 簡化處理：直接分割，不處理複雜的引號情況
-      const values = lines[i].split(',').map(val => val.trim());
+      // 改進的CSV行解析 - 處理包含逗號的字段
+      const values = [];
+      let currentValue = '';
+      let inQuotes = false;
+
+      for (let j = 0; j < line.length; j++) {
+        const char = line[j];
+
+        if (char === '"') {
+          inQuotes = !inQuotes;
+        } else if (char === ',' && !inQuotes) {
+          values.push(currentValue.trim().replace(/^"|"$/g, ''));
+          currentValue = '';
+        } else {
+          currentValue += char;
+        }
+      }
+
+      // 添加最後一個值
+      if (currentValue !== '') {
+        values.push(currentValue.trim().replace(/^"|"$/g, ''));
+      }
 
       // 檢查值的數量是否與標頭匹配
       if (values.length !== headers.length) {
@@ -261,6 +384,9 @@
             headers.length
           })不匹配`
         );
+        console.warn(`行內容: ${line}`);
+        console.warn(`解析結果: [${values.join(', ')}]`);
+
         // 嘗試修復：如果值太少，填充空值；如果太多，截斷
         if (values.length < headers.length) {
           values.push(...Array(headers.length - values.length).fill(''));
@@ -277,7 +403,19 @@
       data.push(entry);
     }
 
-    logDiagnostic(`成功解析 ${data.length} 行CSV數據`);
+    logDiagnostic(
+      `CSV解析完成，成功處理 ${data.length} 行數據，跳過 ${skippedLines} 空白行`
+    );
+
+    // 檢查最後幾行數據
+    if (data.length > 0) {
+      logDiagnostic('解析後的最後三行數據:');
+      const lastThree = data.slice(-3);
+      lastThree.forEach((item, index) => {
+        logDiagnostic(`倒數第${3 - index}行:`, item);
+      });
+    }
+
     return data;
   }
 
@@ -762,20 +900,49 @@
   // 填充數據表格
   function populateDataTable(data) {
     const tableBody = document.getElementById('ipo-data-table-body');
-    if (!tableBody) return;
+    if (!tableBody) {
+      console.error('[IPO錯誤] 找不到數據表格元素 ipo-data-table-body');
+      return;
+    }
 
     if (data.length === 0) {
       tableBody.innerHTML = `<tr><td colspan="7" class="text-center p-4 text-gray-500">無可用數據</td></tr>`;
       return;
     }
 
+    logDiagnostic(`開始填充數據表格，共 ${data.length} 行數據`);
+
+    // 按上市日期排序（最新的在前）
+    const sortedData = [...data].sort((a, b) => {
+      const dateA = new Date(a.date.replace(/\//g, '-'));
+      const dateB = new Date(b.date.replace(/\//g, '-'));
+      return dateB - dateA; // 降序排列，最新日期在前
+    });
+
+    // 找出月後潛在虧損前10高的項目
+    const top10LossData = [...data]
+      .sort((a, b) => a.lossMonth1Percent - b.lossMonth1Percent) // 升序排列，虧損最大的在前（負數最小）
+      .slice(0, 10)
+      .map(item => item.name);
+
+    logDiagnostic('月後潛在虧損前10高的項目:', top10LossData);
+
     let html = '';
-    data.forEach(item => {
-      html += `
-          <tr>
-            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-700">${
-              item.name
-            }</td>
+    let processedCount = 0;
+
+    sortedData.forEach((item, index) => {
+      try {
+        const isTop10Loss = top10LossData.includes(item.name);
+
+        // 生成行的HTML
+        const rowHtml = `
+          <tr class="hover:bg-neutral-50/30 transition-colors duration-200 ${
+            isTop10Loss ? 'bg-red-50 border-l-4 border-red-400' : ''
+          }">
+            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-700 font-medium">
+              ${item.name}
+              ${isTop10Loss ? '<span class="ml-2 px-2 py-1 bg-red-100 text-red-800 text-xs rounded-full">高風險</span>' : ''}
+            </td>
             <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">${
               item.date
             }</td>
@@ -793,15 +960,120 @@
             )}</td>
             <td class="whitespace-nowrap px-3 py-4 text-sm ${getPriceClass(
               item.lossDay1Percent
-            )} text-right">${formatNumber(item.lossDay1Percent, 1)}%</td>
+            )} text-right font-semibold">${formatNumber(item.lossDay1Percent, 1)}%</td>
             <td class="whitespace-nowrap px-3 py-4 text-sm ${getPriceClass(
               item.lossMonth1Percent
-            )} text-right">${formatNumber(item.lossMonth1Percent, 1)}%</td>
+            )} text-right font-semibold">${formatNumber(item.lossMonth1Percent, 1)}%</td>
           </tr>
         `;
+
+        html += rowHtml;
+        processedCount++;
+
+        // 記錄高風險項目
+        if (isTop10Loss) {
+          logDiagnostic(`高風險項目(位置: ${index + 1}):`, {
+            name: item.name,
+            date: item.date,
+            lossMonth1Percent: item.lossMonth1Percent,
+          });
+        }
+      } catch (error) {
+        console.error(
+          `[IPO錯誤] 處理第 ${index + 1} 行數據時出錯:`,
+          error,
+          item
+        );
+      }
     });
 
+    // 設置表格內容
     tableBody.innerHTML = html;
+
+    logDiagnostic(
+      `數據表格填充完成，成功處理 ${processedCount}/${data.length} 行`
+    );
+
+    // 添加數據統計信息到表格下方
+    addDataStatistics(data, top10LossData.length);
+
+    // 確認高風險項目是否在表格中
+    setTimeout(() => {
+      const rows = tableBody.querySelectorAll('tr');
+      let foundHighRisk = 0;
+      rows.forEach((row, index) => {
+        const firstCell = row.querySelector('td');
+        if (firstCell && firstCell.textContent.includes('高風險')) {
+          foundHighRisk++;
+        }
+      });
+
+      logDiagnostic(`✅ 月後潛在虧損前10高的項目已標記: ${foundHighRisk} 個`);
+    }, 100);
+  }
+
+  // 添加數據統計信息
+  function addDataStatistics(data, top10Count) {
+    const container = document.querySelector(
+      '#detailed-data-section .overflow-x-auto'
+    );
+    if (!container) return;
+
+    // 移除已有的統計信息
+    const existingStats = container.querySelector('.data-statistics');
+    if (existingStats) {
+      existingStats.remove();
+    }
+
+    // 計算統計數據
+    const totalCount = data.length;
+    const breakEvenCount = data.filter(
+      item => item.lossDay1Percent >= 0
+    ).length;
+    const profitableCount = data.filter(
+      item => item.lossMonth1Percent >= 0
+    ).length;
+    const avgDayLoss =
+      data.reduce((sum, item) => sum + item.lossDay1Percent, 0) / totalCount;
+    const avgMonthLoss =
+      data.reduce((sum, item) => sum + item.lossMonth1Percent, 0) / totalCount;
+    const highRiskCount = top10Count || 0;
+
+    const statsHtml = `
+      <div class="data-statistics mt-4 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border border-blue-200">
+        <h4 class="font-semibold text-gray-800 mb-3 flex items-center">
+          <i class="fas fa-chart-bar text-blue-500 mr-2"></i>數據統計概覽
+        </h4>
+        <div class="grid grid-cols-2 md:grid-cols-5 gap-4 text-sm">
+          <div class="text-center">
+            <div class="text-2xl font-bold text-blue-600">${totalCount}</div>
+            <div class="text-gray-600">總數據筆數</div>
+          </div>
+          <div class="text-center">
+            <div class="text-2xl font-bold ${breakEvenCount > 0 ? 'text-green-600' : 'text-red-600'}">${breakEvenCount}</div>
+            <div class="text-gray-600">當日未破發</div>
+          </div>
+          <div class="text-center">
+            <div class="text-2xl font-bold ${profitableCount > 0 ? 'text-green-600' : 'text-red-600'}">${profitableCount}</div>
+            <div class="text-gray-600">月後獲利</div>
+          </div>
+          <div class="text-center">
+            <div class="text-2xl font-bold ${avgMonthLoss >= 0 ? 'text-green-600' : 'text-red-600'}">${formatNumber(avgMonthLoss, 1)}%</div>
+            <div class="text-gray-600">平均月後報酬</div>
+          </div>
+          <div class="text-center">
+            <div class="text-2xl font-bold text-red-600">${highRiskCount}</div>
+            <div class="text-gray-600">高風險項目</div>
+          </div>
+        </div>
+        <div class="mt-3 text-xs text-gray-500 flex items-center">
+          <i class="fas fa-info-circle mr-1"></i>
+          高風險項目為月後潛在虧損前10高的IPO
+        </div>
+      </div>
+    `;
+
+    container.insertAdjacentHTML('afterend', statsHtml);
   }
 
   // 計算並顯示統計數據
