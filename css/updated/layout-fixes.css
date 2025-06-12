@@ -1,0 +1,147 @@
+/* 排版一致性修正 - 圖表區塊與統計卡片間距調整 */
+
+/* 圖表視覺化區塊樣式統一 */
+.data-visualization {
+  /* 移除多餘的上下間距，與stats-grid保持一致 */
+  margin-top: 2rem !important; /* 增加上方外距 */
+  margin-bottom: 2rem !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  /* 移除左右內距 */
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+.data-visualization .chart-container {
+  /* 確保圖表容器內部間距與統計卡片一致 */
+  padding: 0 !important;
+}
+
+.data-visualization .chart-title {
+  /* 圖表標題區域間距調整 */
+  padding: 1rem !important;
+  margin-bottom: 0 !important;
+}
+
+.data-visualization .chart-container > div:not(.chart-title) {
+  /* 圖表內容區域間距調整 */
+  padding: 1rem !important;
+  padding-bottom: 1.5rem !important;
+}
+
+/* 統計網格區塊確保一致性 */
+.stats-grid {
+  margin-top: 1.5rem !important;
+  margin-bottom: 2rem !important;
+}
+
+/* 統計卡片與圖表區塊的視覺對齊 */
+.stats-grid .p-4 {
+  /* 確保統計卡片的內距與圖表標題一致 */
+  padding: 1rem !important;
+}
+
+/* 營業員自購模擬對帳單區塊margin移除 */
+.ipo-breakout-section {
+  /* 移除整個IPO破發section的底部margin */
+  margin-bottom: 0 !important;
+  padding-bottom: 1.25rem !important;
+}
+
+/* 針對具體的對帳單容器 */
+#simulation-result {
+  margin-bottom: 0 !important; /* 移除底部外距 */
+}
+
+/* 營業員自購模擬對帳單的主要容器 */
+.lg\:col-span-2.bg-white.p-8.rounded-2xl.shadow-card.hover-lift.fade-in.border.border-neutral-200 {
+  margin-bottom: 0 !important; /* 移除底部外距 */
+}
+
+/* 對帳單總損益區塊間距調整 */
+#loss-summary {
+  margin-top: 1.5rem !important;
+  margin-bottom: 0 !important;
+}
+
+/* IPO破發section內的最後一個元素 */
+.ipo-breakout-section:last-child,
+.ipo-breakout-section > div:last-child {
+  margin-bottom: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+/* 價格走勢圖區域底部間距移除 */
+.ipo-breakout-section .chart-container:last-of-type {
+  margin-bottom: 0 !important;
+}
+
+/* 詳細數據表格區域底部間距調整 */
+#detailed-data-section {
+  margin-bottom: 0 !important;
+}
+
+/* 確保數據來源說明區域不會產生額外間距 */
+.data-source-note {
+  margin-top: 0.75rem !important;
+  margin-bottom: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+/* 特別針對對帳單區塊的直接選擇器 */
+#account-statement {
+  margin-bottom: 0 !important;
+}
+
+/* 對帳單父容器的底部間距移除 */
+div[id="account-statement"] {
+  margin-bottom: 0 !important;
+}
+
+/* 針對包含對帳單的完整區塊 */
+.lg\:col-span-2 {
+  margin-bottom: 0 !important;
+}
+
+/* 響應式調整 - 手機版本 */
+@media (max-width: 768px) {
+  .data-visualization {
+    margin-bottom: 1.5rem !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    margin-top: 1.5rem !important;
+  }
+  
+  .stats-grid {
+    margin-top: 1rem !important;
+    margin-bottom: 1.5rem !important;
+  }
+  
+  .ipo-breakout-section {
+    padding-bottom: 1rem !important;
+  }
+  
+  .lg\:col-span-2 {
+    margin-bottom: 0 !important;
+  }
+}
+
+/* 平板版本調整 */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .data-visualization {
+    margin-bottom: 1.75rem !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    margin-top: 1.75rem !important;
+  }
+}
+
+/* 確保section間距一致性 */
+section + section {
+  margin-top: 0 !important;
+}
+
+/* 特別針對緊鄰的section調整 */
+.py-20 + .py-20 {
+  padding-top: 3rem !important;
+}
