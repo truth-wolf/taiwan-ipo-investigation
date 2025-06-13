@@ -122,7 +122,7 @@ taiwan-ipo-investigation/
    ```bash
    # 方式一：使用 Python 簡易伺服器
    npm run dev
-   
+
    # 方式二：使用 live-server (需先 npm install)
    npm run dev:live
    ```
